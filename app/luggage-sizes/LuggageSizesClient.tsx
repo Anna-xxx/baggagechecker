@@ -402,7 +402,7 @@ export function LuggageSizesClient() {
                     }}
                   >
                     <span style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, fontWeight: 700 }}>
-                      <AirlineLogo code={a.code} width={48} height={30} radius={7} fontSize={10} />
+                      <AirlineLogo code={a.code} width={34} height={34} radius={7} fontSize={10} />
                       {a.name}
                     </span>
                     <span style={{ fontSize: 12.5, color: '#7a8798', marginLeft: 'auto' }}>

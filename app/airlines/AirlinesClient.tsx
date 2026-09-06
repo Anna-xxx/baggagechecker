@@ -120,7 +120,7 @@ export function AirlinesClient() {
             return (
               <div key={a.code} className="card-hover" style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                  <AirlineLogo code={a.code} width={64} height={40} radius={10} fontSize={12} />
+                  <AirlineLogo code={a.code} width={48} height={48} radius={10} fontSize={12} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: '-.01em' }}>{a.name}</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4, fontSize: 11.5, color: '#8494a8' }}>

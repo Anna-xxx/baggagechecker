@@ -216,7 +216,7 @@ export function HomeClient() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,290px),1fr))', gap: '0 28px' }}>
               {airlines.map((a) => (
                 <div key={a.code} style={{ display: 'flex', gap: 12, padding: '14px 0', borderTop: '1px solid #f0f2f5' }}>
-                  <AirlineLogo code={a.code} width={50} height={34} radius={8} fontSize={10} />
+                  <AirlineLogo code={a.code} width={40} height={40} radius={8} fontSize={10} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6 }}>{a.name}</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 18px', fontSize: 10.5, color: '#7a8798', lineHeight: 1.5 }}>

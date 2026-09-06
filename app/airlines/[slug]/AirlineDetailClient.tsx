@@ -68,7 +68,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
         </p>
 
         <section style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: '20px 22px', display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap', marginBottom: 18 }}>
-          <AirlineLogo code={airline.code} width={92} height={60} radius={12} fontSize={13} />
+          <AirlineLogo code={airline.code} width={64} height={64} radius={12} fontSize={13} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-.025em' }}>{airline.name}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 5, fontSize: 12.5, color: '#8494a8' }}>

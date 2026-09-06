@@ -455,7 +455,7 @@ export function SizeCheckerClient() {
             {AIRLINES.map((row) => (
               <div key={row.name} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.3fr 1fr 1.1fr .85fr', gap: 12, alignItems: 'center', padding: '15px 0', borderBottom: '1px solid #f5f8fb', fontSize: 12.5, color: '#475569', fontVariantNumeric: 'tabular-nums' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 9, fontWeight: 700, color: '#0f1c2e' }}>
-                  <AirlineLogo code={row.code} width={46} height={28} radius={7} fontSize={9} />
+                  <AirlineLogo code={row.code} width={32} height={32} radius={7} fontSize={9} />
                   {row.name}
                 </span>
                 <span>{row.size}</span>
