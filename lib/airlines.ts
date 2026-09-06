@@ -72,12 +72,12 @@ export function airlineDomain(website: string): string {
 }
 
 /**
- * Public logo sources, tried in order. Clearbit's Logo API (keyed by the airline's own domain) tends
- * to return a compact brand mark that stays legible at small sizes; pics.avs.io's wordmark banner
- * (keyed by IATA code) is the fallback for domains Clearbit doesn't have a logo for. AirlineLogo
- * falls back to a plain text badge if both fail to load.
+ * Public logo sources, tried in order. Google's favicon service (keyed by the airline's own domain) is
+ * used first — favicons are designed to stay legible at small square sizes, unlike a full wordmark.
+ * pics.avs.io's wordmark banner (keyed by IATA code) is the fallback for domains with no usable favicon.
+ * AirlineLogo falls back to a plain text badge if both fail to load.
  */
 export function airlineLogoSources(code: string, website: string, width: number, height: number): string[] {
   const size = Math.max(width, height) * 2;
-  return [`https://logo.clearbit.com/${airlineDomain(website)}?size=${size}`, `https://pics.avs.io/${width * 2}/${height * 2}/${code}.png`];
+  return [`https://www.google.com/s2/favicons?domain=${airlineDomain(website)}&sz=${size}`, `https://pics.avs.io/${width * 2}/${height * 2}/${code}.png`];
 }
