@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { airlineLogoUrl } from '@/lib/airlines';
+import { airlineLogoSources } from '@/lib/airlines';
 
 export function AirlineLogo({
   code,
@@ -16,7 +16,9 @@ export function AirlineLogo({
   radius?: number;
   fontSize?: number;
 }) {
-  const [failed, setFailed] = useState(false);
+  const sources = airlineLogoSources(code, width, height);
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const failed = sourceIndex >= sources.length;
 
   return (
     <span
@@ -41,9 +43,10 @@ export function AirlineLogo({
       {!failed && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={airlineLogoUrl(code, width * 2, height * 2)}
+          key={sources[sourceIndex]}
+          src={sources[sourceIndex]}
           alt={`${code} logo`}
-          onError={() => setFailed(true)}
+          onError={() => setSourceIndex((i) => i + 1)}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', background: '#fff' }}
         />
       )}

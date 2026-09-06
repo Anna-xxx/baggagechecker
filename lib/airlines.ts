@@ -67,7 +67,12 @@ export function findAirlineBySlug(slug: string): Airline | undefined {
   return AIRLINES.find((a) => airlineSlug(a.name) === slug);
 }
 
-/** Public logo CDN (Travelpayouts' pics.avs.io), keyed by IATA code. Falls back to a text badge on load error. */
-export function airlineLogoUrl(code: string, width: number, height: number): string {
-  return `https://pics.avs.io/${width}/${height}/${code}.png`;
+/**
+ * Public logo sources keyed by IATA code, tried in order. Kiwi's square icon comes first since it's
+ * a compact symbol that stays legible at small sizes; pics.avs.io's wider wordmark is the second try
+ * for codes Kiwi doesn't have. AirlineLogo falls back to a plain text badge if both fail to load.
+ */
+export function airlineLogoSources(code: string, width: number, height: number): string[] {
+  const squareSize = Math.max(width, height) * 2;
+  return [`https://images.kiwi.com/airlines/${squareSize}/${code}.png`, `https://pics.avs.io/${width * 2}/${height * 2}/${code}.png`];
 }
