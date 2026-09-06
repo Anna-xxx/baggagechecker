@@ -24,17 +24,17 @@ function PhotoPlaceholder({ label, aspectRatio, radius = 0 }: { label: string; a
   );
 }
 
-type HomeAirline = { code: string; name: string; cabin: string; cabinKg: string; checked: string };
+type HomeAirline = { code: string; name: string; website: string; cabin: string; cabinKg: string; checked: string };
 
 const AIRLINES: HomeAirline[] = [
-  { code: 'AF', name: 'Air France', cabin: '55×35×25 cm', cabinKg: '12 kg', checked: '158 cm / 23 kg' },
-  { code: 'AZ', name: 'ITA Airways', cabin: '55×35×25 cm', cabinKg: '8 kg', checked: '158 cm / 23 kg' },
-  { code: 'KL', name: 'KLM Royal Dutch', cabin: '55×35×25 cm', cabinKg: '12 kg', checked: '158 cm / 23 kg' },
-  { code: 'AA', name: 'American Airlines', cabin: '56×36×23 cm', cabinKg: 'No limit', checked: '158 cm / 23 kg' },
-  { code: 'LH', name: 'Lufthansa', cabin: '55×40×23 cm', cabinKg: '8 kg', checked: '158 cm / 23 kg' },
-  { code: 'BA', name: 'British Airways', cabin: '56×45×25 cm', cabinKg: '23 kg', checked: '208 cm / 23 kg' },
-  { code: 'FR', name: 'Ryanair', cabin: '55×40×20 cm', cabinKg: '10 kg', checked: '119 cm / 20 kg' },
-  { code: 'IB', name: 'Iberia', cabin: '56×40×25 cm', cabinKg: '10 kg', checked: '158 cm / 23 kg' },
+  { code: 'AF', name: 'Air France', website: 'https://www.airfrance.com', cabin: '55×35×25 cm', cabinKg: '12 kg', checked: '158 cm / 23 kg' },
+  { code: 'AZ', name: 'ITA Airways', website: 'https://www.ita-airways.com', cabin: '55×35×25 cm', cabinKg: '8 kg', checked: '158 cm / 23 kg' },
+  { code: 'KL', name: 'KLM Royal Dutch', website: 'https://www.klm.com', cabin: '55×35×25 cm', cabinKg: '12 kg', checked: '158 cm / 23 kg' },
+  { code: 'AA', name: 'American Airlines', website: 'https://www.aa.com', cabin: '56×36×23 cm', cabinKg: 'No limit', checked: '158 cm / 23 kg' },
+  { code: 'LH', name: 'Lufthansa', website: 'https://www.lufthansa.com', cabin: '55×40×23 cm', cabinKg: '8 kg', checked: '158 cm / 23 kg' },
+  { code: 'BA', name: 'British Airways', website: 'https://www.britishairways.com', cabin: '56×45×25 cm', cabinKg: '23 kg', checked: '208 cm / 23 kg' },
+  { code: 'FR', name: 'Ryanair', website: 'https://www.ryanair.com', cabin: '55×40×20 cm', cabinKg: '10 kg', checked: '119 cm / 20 kg' },
+  { code: 'IB', name: 'Iberia', website: 'https://www.iberia.com', cabin: '56×40×25 cm', cabinKg: '10 kg', checked: '158 cm / 23 kg' },
 ];
 
 const STEPS = [
@@ -216,7 +216,7 @@ export function HomeClient() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,290px),1fr))', gap: '0 28px' }}>
               {airlines.map((a) => (
                 <div key={a.code} style={{ display: 'flex', gap: 12, padding: '14px 0', borderTop: '1px solid #f0f2f5' }}>
-                  <AirlineLogo code={a.code} width={40} height={40} radius={8} fontSize={10} />
+                  <AirlineLogo code={a.code} website={a.website} width={40} height={40} radius={8} fontSize={10} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6 }}>{a.name}</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 18px', fontSize: 10.5, color: '#7a8798', lineHeight: 1.5 }}>

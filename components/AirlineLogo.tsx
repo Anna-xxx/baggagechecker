@@ -5,18 +5,20 @@ import { airlineLogoSources } from '@/lib/airlines';
 
 export function AirlineLogo({
   code,
+  website,
   width,
   height,
   radius = 8,
   fontSize = 10,
 }: {
   code: string;
+  website: string;
   width: number;
   height: number;
   radius?: number;
   fontSize?: number;
 }) {
-  const sources = airlineLogoSources(code, width, height);
+  const sources = airlineLogoSources(code, website, width, height);
   const [sourceIndex, setSourceIndex] = useState(0);
   const failed = sourceIndex >= sources.length;
 

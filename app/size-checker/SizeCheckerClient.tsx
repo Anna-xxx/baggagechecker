@@ -8,6 +8,7 @@ import { AirlineLogo } from '@/components/AirlineLogo';
 type Airline = {
   name: string;
   code: string;
+  website: string;
   size: string;
   weight: string;
   personal: string;
@@ -19,11 +20,11 @@ type Airline = {
 };
 
 const AIRLINES: Airline[] = [
-  { name: 'Ryanair', code: 'FR', size: '55 × 40 × 20', weight: '10 kg', personal: '40 × 20 × 25', strict: 'Very Strict', bg: '#fee2e2', color: '#b91c1c', max: [55, 40, 20], kg: 10 },
-  { name: 'EasyJet', code: 'U2', size: '56 × 45 × 25', weight: 'No limit', personal: '45 × 36 × 20', strict: 'Moderate', bg: '#fef3c7', color: '#b45309', max: [56, 45, 25], kg: 99 },
-  { name: 'Wizz Air', code: 'W6', size: '55 × 40 × 23', weight: '10 kg', personal: '40 × 30 × 18', strict: 'Strict', bg: '#fee2e2', color: '#b91c1c', max: [55, 40, 23], kg: 10 },
-  { name: 'British Airways', code: 'BA', size: '56 × 45 × 25', weight: '23 kg', personal: '40 × 30 × 15', strict: 'Lenient', bg: '#dcfce7', color: '#15803d', max: [56, 45, 25], kg: 23 },
-  { name: 'Lufthansa', code: 'LH', size: '55 × 40 × 23', weight: '8 kg', personal: '40 × 30 × 10', strict: 'Moderate', bg: '#fef3c7', color: '#b45309', max: [55, 40, 23], kg: 8 },
+  { name: 'Ryanair', code: 'FR', website: 'https://www.ryanair.com', size: '55 × 40 × 20', weight: '10 kg', personal: '40 × 20 × 25', strict: 'Very Strict', bg: '#fee2e2', color: '#b91c1c', max: [55, 40, 20], kg: 10 },
+  { name: 'EasyJet', code: 'U2', website: 'https://www.easyjet.com', size: '56 × 45 × 25', weight: 'No limit', personal: '45 × 36 × 20', strict: 'Moderate', bg: '#fef3c7', color: '#b45309', max: [56, 45, 25], kg: 99 },
+  { name: 'Wizz Air', code: 'W6', website: 'https://wizzair.com', size: '55 × 40 × 23', weight: '10 kg', personal: '40 × 30 × 18', strict: 'Strict', bg: '#fee2e2', color: '#b91c1c', max: [55, 40, 23], kg: 10 },
+  { name: 'British Airways', code: 'BA', website: 'https://www.britishairways.com', size: '56 × 45 × 25', weight: '23 kg', personal: '40 × 30 × 15', strict: 'Lenient', bg: '#dcfce7', color: '#15803d', max: [56, 45, 25], kg: 23 },
+  { name: 'Lufthansa', code: 'LH', website: 'https://www.lufthansa.com', size: '55 × 40 × 23', weight: '8 kg', personal: '40 × 30 × 10', strict: 'Moderate', bg: '#fef3c7', color: '#b45309', max: [55, 40, 23], kg: 8 },
 ];
 
 type DimKey = 'W' | 'H' | 'D' | 'KG';
@@ -455,7 +456,7 @@ export function SizeCheckerClient() {
             {AIRLINES.map((row) => (
               <div key={row.name} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.3fr 1fr 1.1fr .85fr', gap: 12, alignItems: 'center', padding: '15px 0', borderBottom: '1px solid #f5f8fb', fontSize: 12.5, color: '#475569', fontVariantNumeric: 'tabular-nums' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 9, fontWeight: 700, color: '#0f1c2e' }}>
-                  <AirlineLogo code={row.code} width={32} height={32} radius={7} fontSize={9} />
+                  <AirlineLogo code={row.code} website={row.website} width={32} height={32} radius={7} fontSize={9} />
                   {row.name}
                 </span>
                 <span>{row.size}</span>

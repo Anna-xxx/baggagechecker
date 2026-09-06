@@ -67,12 +67,17 @@ export function findAirlineBySlug(slug: string): Airline | undefined {
   return AIRLINES.find((a) => airlineSlug(a.name) === slug);
 }
 
+export function airlineDomain(website: string): string {
+  return website.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '');
+}
+
 /**
- * Public logo sources keyed by IATA code, tried in order. Kiwi's square icon comes first since it's
- * a compact symbol that stays legible at small sizes; pics.avs.io's wider wordmark is the second try
- * for codes Kiwi doesn't have. AirlineLogo falls back to a plain text badge if both fail to load.
+ * Public logo sources, tried in order. Clearbit's Logo API (keyed by the airline's own domain) tends
+ * to return a compact brand mark that stays legible at small sizes; pics.avs.io's wordmark banner
+ * (keyed by IATA code) is the fallback for domains Clearbit doesn't have a logo for. AirlineLogo
+ * falls back to a plain text badge if both fail to load.
  */
-export function airlineLogoSources(code: string, width: number, height: number): string[] {
-  const squareSize = Math.max(width, height) * 2;
-  return [`https://images.kiwi.com/airlines/${squareSize}/${code}.png`, `https://pics.avs.io/${width * 2}/${height * 2}/${code}.png`];
+export function airlineLogoSources(code: string, website: string, width: number, height: number): string[] {
+  const size = Math.max(width, height) * 2;
+  return [`https://logo.clearbit.com/${airlineDomain(website)}?size=${size}`, `https://pics.avs.io/${width * 2}/${height * 2}/${code}.png`];
 }

@@ -8,6 +8,7 @@ import { AirlineLogo } from '@/components/AirlineLogo';
 type Airline = {
   name: string;
   code: string;
+  website: string;
   size: string;
   weight: string;
   max: [number, number, number];
@@ -15,12 +16,12 @@ type Airline = {
 };
 
 const AIRLINES: Airline[] = [
-  { name: 'Ryanair', code: 'FR', size: '55 × 40 × 20 cm', weight: '10 kg', max: [55, 40, 20], kg: 10 },
-  { name: 'EasyJet', code: 'U2', size: '56 × 45 × 25 cm', weight: 'No weight limit', max: [56, 45, 25], kg: 99 },
-  { name: 'Wizz Air', code: 'W6', size: '55 × 40 × 23 cm', weight: '10 kg', max: [55, 40, 23], kg: 10 },
-  { name: 'British Airways', code: 'BA', size: '56 × 45 × 25 cm', weight: '23 kg', max: [56, 45, 25], kg: 23 },
-  { name: 'Lufthansa', code: 'LH', size: '55 × 40 × 23 cm', weight: '8 kg', max: [55, 40, 23], kg: 8 },
-  { name: 'Emirates', code: 'EK', size: '55 × 38 × 20 cm', weight: '7 kg', max: [55, 38, 20], kg: 7 },
+  { name: 'Ryanair', code: 'FR', website: 'https://www.ryanair.com', size: '55 × 40 × 20 cm', weight: '10 kg', max: [55, 40, 20], kg: 10 },
+  { name: 'EasyJet', code: 'U2', website: 'https://www.easyjet.com', size: '56 × 45 × 25 cm', weight: 'No weight limit', max: [56, 45, 25], kg: 99 },
+  { name: 'Wizz Air', code: 'W6', website: 'https://wizzair.com', size: '55 × 40 × 23 cm', weight: '10 kg', max: [55, 40, 23], kg: 10 },
+  { name: 'British Airways', code: 'BA', website: 'https://www.britishairways.com', size: '56 × 45 × 25 cm', weight: '23 kg', max: [56, 45, 25], kg: 23 },
+  { name: 'Lufthansa', code: 'LH', website: 'https://www.lufthansa.com', size: '55 × 40 × 23 cm', weight: '8 kg', max: [55, 40, 23], kg: 8 },
+  { name: 'Emirates', code: 'EK', website: 'https://www.emirates.com', size: '55 × 38 × 20 cm', weight: '7 kg', max: [55, 38, 20], kg: 7 },
 ];
 
 type DimKey = 'W' | 'H' | 'D' | 'KG';
@@ -402,7 +403,7 @@ export function LuggageSizesClient() {
                     }}
                   >
                     <span style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, fontWeight: 700 }}>
-                      <AirlineLogo code={a.code} width={34} height={34} radius={7} fontSize={10} />
+                      <AirlineLogo code={a.code} website={a.website} width={34} height={34} radius={7} fontSize={10} />
                       {a.name}
                     </span>
                     <span style={{ fontSize: 12.5, color: '#7a8798', marginLeft: 'auto' }}>
