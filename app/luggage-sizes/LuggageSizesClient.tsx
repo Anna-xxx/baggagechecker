@@ -519,55 +519,6 @@ export function LuggageSizesClient() {
           )}
         </section>
 
-        {/* Airalo promo */}
-        <section style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24, marginBottom: 34 }}>
-          <p style={{ margin: '0 0 24px', fontSize: 15, fontWeight: 700, letterSpacing: '-.01em' }}>
-            Travelling abroad? Save up to 90% on roaming - get an eSIM in 2 minutes with Airalo.
-          </p>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', padding: '0 clamp(0px,2vw,22px)' }}>
-            <div style={{ flex: 1, minWidth: 260 }}>
-              <h3 style={{ margin: '0 0 8px', fontSize: 'clamp(20px,2.6vw,26px)', fontWeight: 800, letterSpacing: '-.025em' }}>
-                Local, regional and global eSIMs for travellers
-              </h3>
-              <p style={{ margin: 0, fontSize: 13.5, color: '#7a8798' }}>Stay connected, wherever you travel, at affordable rates</p>
-            </div>
-            <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: 10, fontSize: 26, fontWeight: 800, color: '#3f3f46', letterSpacing: '-.03em' }}>
-              <span style={{ display: 'flex', gap: 3, alignItems: 'flex-end' }}>
-                <span style={{ width: 9, height: 18, borderRadius: 4, background: '#f5a15b' }} />
-                <span style={{ width: 9, height: 26, borderRadius: 4, background: '#e0567c' }} />
-                <span style={{ width: 9, height: 22, borderRadius: 4, background: '#8b3f8f' }} />
-              </span>
-              airalo
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 22, padding: '0 clamp(0px,2vw,22px)' }}>
-            <input
-              placeholder="Search data packs for 200+ countries and regions"
-              style={{ flex: 1, minWidth: 220, border: '1px solid #e4eaf1', borderRadius: 8, padding: '15px 18px', fontFamily: 'inherit', fontSize: 14, color: '#0f1c2e', background: '#fff' }}
-            />
-            <button
-              className="btn-search"
-              style={{
-                flex: 'none',
-                minWidth: 'min(100%,290px)',
-                border: 'none',
-                borderRadius: 8,
-                background: '#ec6a5e',
-                color: '#fff',
-                padding: '15px 24px',
-                fontFamily: 'inherit',
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              Search
-            </button>
-          </div>
-          <div style={{ textAlign: 'right', marginTop: 16, padding: '0 clamp(0px,2vw,22px)', fontSize: 11, color: '#b7c1cd' }}>
-            Powered by <b style={{ color: '#8494a8' }}>travelpayouts</b>
-          </div>
-        </section>
       </main>
 
       <Footer />

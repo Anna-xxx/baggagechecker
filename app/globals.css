@@ -123,10 +123,6 @@ input[type='text']:focus {
   background: #f6b12e;
 }
 
-.btn-search:hover {
-  background: #e2584b;
-}
-
 .remove-link:hover {
   color: #b91c1c;
 }
