@@ -1,0 +1,136 @@
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f7f8f9;
+  color: #0f1c2e;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: #0d9488;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0f766e;
+  text-decoration: underline;
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 20px;
+  width: 100%;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  height: 6px;
+  background: #e4eaf1;
+  border-radius: 6px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2.5px solid #14b8a6;
+  box-shadow: 0 1px 3px rgba(15, 28, 46, 0.18);
+  cursor: pointer;
+}
+
+input[type='range']::-moz-range-track {
+  height: 6px;
+  background: #e4eaf1;
+  border-radius: 6px;
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2.5px solid #14b8a6;
+  box-shadow: 0 1px 3px rgba(15, 28, 46, 0.18);
+  cursor: pointer;
+}
+
+input[type='range']:focus,
+input[type='number']:focus,
+input[type='text']:focus {
+  outline: none;
+}
+
+.range-mint input[type='range']::-webkit-slider-thumb {
+  border: 2px solid #5eddc4;
+}
+
+.range-mint input[type='range']::-moz-range-thumb {
+  border: 2px solid #5eddc4;
+}
+
+.range-compact input[type='range']::-webkit-slider-runnable-track {
+  height: 4px;
+}
+
+.range-compact input[type='range']::-webkit-slider-thumb {
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.range-compact input[type='range']::-moz-range-track {
+  height: 4px;
+}
+
+.range-compact input[type='range']::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.card-hover:hover {
+  border-color: #c6ebe5;
+  box-shadow: 0 6px 20px rgba(22, 35, 61, 0.06);
+}
+
+.cta-link:hover {
+  background: #f6b12e;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  background: #f4f6f8;
+  color: #0f1c2e;
+}
+
+.btn-outline:hover {
+  border-color: #14b8a6;
+}
+
+.btn-primary:hover {
+  background: #f6b12e;
+}
+
+.btn-search:hover {
+  background: #e2584b;
+}
+
+.remove-link:hover {
+  color: #b91c1c;
+}
+
+.back-link:hover {
+  color: #0d9488;
+}
