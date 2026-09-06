@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
@@ -241,9 +242,9 @@ export function HomeClient() {
               ))}
             </div>
             <div style={{ textAlign: 'center', paddingTop: 16, borderTop: '1px solid #f0f2f5', marginTop: 4 }}>
-              <a href="#airlines" style={{ fontSize: 12, fontWeight: 700 }}>
-                Show 34 more airlines →
-              </a>
+              <Link href="/airlines" style={{ fontSize: 12, fontWeight: 700 }}>
+                View All Airlines &amp; Baggage Policies →
+              </Link>
             </div>
           </div>
         </div>
