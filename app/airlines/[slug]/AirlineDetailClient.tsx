@@ -105,6 +105,8 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
                 { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
               ];
 
+  const carryOnLinearAddsConstraint = Boolean(cabin.linearCm && (cabin.linearOnly || cabin.w + cabin.h + cabin.d > cabin.linearCm));
+
   const carryOnRows = cabin.linearOnly
     ? [
         { label: 'Maximum total dimensions', value: `${cabin.linearCm} cm (L + W + H)` },
@@ -115,7 +117,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
         { label: 'Max width', value: len(cabin.w) },
         { label: 'Max height', value: len(cabin.h) },
         { label: 'Max depth', value: len(cabin.d) },
-        ...(cabin.linearCm ? [{ label: 'Maximum total dimensions', value: `${cabin.linearCm} cm (L + W + H)` }] : []),
+        ...(carryOnLinearAddsConstraint && cabin.linearCm ? [{ label: 'Maximum total dimensions', value: `${cabin.linearCm} cm (L + W + H)` }] : []),
         { label: 'Max weight', value: cabin.kg ? wt(cabin.kg) : 'No published limit' },
       ];
 
