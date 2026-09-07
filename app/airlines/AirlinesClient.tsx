@@ -11,9 +11,9 @@ function volume(a: Airline) {
   return a.cabin[0] * a.cabin[1] * a.cabin[2];
 }
 
-const LOW_COST_CODES = new Set(['U2', 'F9', '6E', 'FR', 'WN', 'NK', 'VY']);
+const LOW_COST_CODES = new Set(['U2', 'F9', '6E', 'FR', 'WN', 'NK', 'VY', 'W6']);
 const PERSONAL_ITEM_TYPICAL: Record<string, string> = {
-  FR: '40 × 25 × 20 cm',
+  FR: '40 × 30 × 20 cm',
   U2: '45 × 36 × 20 cm',
   VY: '40 × 30 × 20 cm',
   F9: '45 × 35 × 20 cm',
@@ -21,6 +21,7 @@ const PERSONAL_ITEM_TYPICAL: Record<string, string> = {
   '6E': '35 × 25 × 20 cm',
   WN: '42 × 34 × 21 cm',
   BA: '40 × 30 × 15 cm',
+  W6: '40 × 30 × 20 cm',
 };
 
 function airlineType(code: string): 'Low-cost' | 'Full-service' {
