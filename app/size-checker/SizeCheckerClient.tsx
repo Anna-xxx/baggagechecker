@@ -8,7 +8,7 @@ import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
 import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, type PersonalItemRule } from '@/lib/airlines';
 
-type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItemRule; linearCm?: number; verified?: boolean };
+type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItemRule; linearCm?: number; linearOnly?: boolean; verified?: boolean };
 type BagType = 'carryon' | 'personal' | 'checked';
 type Airline = { name: string; code: string; limits: Record<BagType, Limits> };
 
@@ -23,6 +23,8 @@ const AIRLINES: Airline[] = ALL_AIRLINES.map((a) => {
         W: baggage.carryOn.w,
         D: baggage.carryOn.d,
         KG: baggage.carryOn.kg,
+        linearCm: baggage.carryOn.linearCm,
+        linearOnly: baggage.carryOn.linearOnly,
       },
       personal: {
         H: baggage.personal.h ?? 0,
@@ -180,6 +182,53 @@ export function SizeCheckerClient() {
   const checksFor = (a: Airline) => {
     const L = a.limits[type];
 
+    if (type === 'carryon' && L.linearCm) {
+      const total = W + H + D;
+      const maxTotal = L.linearCm;
+      const totalOk = total <= maxTotal;
+      const weightOk = !L.KG || KG <= L.KG;
+      const dimensionChecks = L.linearOnly
+        ? []
+        : [
+            { key: 'W' as DimKey, label: 'Width', mine: W, max: L.W },
+            { key: 'H' as DimKey, label: 'Height', mine: H, max: L.H },
+            { key: 'D' as DimKey, label: 'Depth', mine: D, max: L.D },
+          ].map((f) => {
+            const ok = f.mine <= f.max;
+            return {
+              key: f.key,
+              label: f.label,
+              detail: `${toDisp(f.mine, f.key)} ${lenU} / ${toDisp(f.max, f.key)} ${lenU}`,
+              mark: ok ? '✓' : '✗',
+              color: ok ? '#15803d' : '#b91c1c',
+              over: !ok,
+              excess: ok ? '' : `${toDisp(f.mine - f.max, f.key)} ${lenU} over`,
+            };
+          });
+
+      return [
+        ...dimensionChecks,
+        {
+          key: 'W' as DimKey,
+          label: 'Total dimensions',
+          detail: `${toDisp(total, 'W')} ${lenU} / ${toDisp(maxTotal, 'W')} ${lenU}`,
+          mark: totalOk ? '✓' : '✗',
+          color: totalOk ? '#15803d' : '#b91c1c',
+          over: !totalOk,
+          excess: totalOk ? '' : `${toDisp(total - maxTotal, 'W')} ${lenU} over`,
+        },
+        {
+          key: 'KG' as DimKey,
+          label: 'Weight',
+          detail: L.KG ? `${toDisp(KG, 'KG')} ${wU} / ${toDisp(L.KG, 'KG')} ${wU}` : `${toDisp(KG, 'KG')} ${wU} / no published limit`,
+          mark: weightOk ? '✓' : '✗',
+          color: weightOk ? '#15803d' : '#b91c1c',
+          over: !weightOk,
+          excess: weightOk ? '' : `${toDisp(KG - L.KG, 'KG')} ${wU} over`,
+        },
+      ];
+    }
+
     if (type === 'personal' && L.rule === 'linear') {
       const total = W + H + D;
       const maxTotal = L.linearCm ?? 0;
@@ -258,9 +307,13 @@ export function SizeCheckerClient() {
         const checks = checksFor(a);
         const failed = checks.filter((c) => c.over);
         const limit =
-          type === 'personal' && L.rule === 'linear'
-            ? `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
-            : `${L.W} × ${L.H} × ${L.D} cm${L.KG ? ` · ${L.KG} kg` : ''}`;
+          type === 'carryon' && L.linearCm
+            ? L.linearOnly
+              ? `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
+              : `${L.W} × ${L.H} × ${L.D} cm · ≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
+            : type === 'personal' && L.rule === 'linear'
+              ? `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
+              : `${L.W} × ${L.H} × ${L.D} cm${L.KG ? ` · ${L.KG} kg` : ''}`;
 
         return {
           airline: a,
