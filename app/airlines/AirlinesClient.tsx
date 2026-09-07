@@ -28,6 +28,11 @@ function personalItemSize(a: Airline): string {
   return 'No fixed size published';
 }
 
+function checkedEconomySize(a: Airline): string {
+  const checked = getAirlineBaggage(a).checked;
+  return `${checked.total} cm · ${checked.eco} kg`;
+}
+
 type Sort = 'name' | 'strict' | 'generous';
 type TypeFilter = 'All types' | 'Full-service' | 'Low-cost';
 
@@ -172,7 +177,7 @@ export function AirlinesClient() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1.25fr 1fr', gap: 10 }}>
                   <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px' }}>
-                    <div style={{ fontSize: 10.5, color: '#8494a8', marginBottom: 4 }}>Carry-on max size</div>
+                    <div style={{ fontSize: 11, color: '#57677c', marginBottom: 4 }}>Carry-on max size</div>
                     <div style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
                       {baggage.carryOn.linearOnly
                         ? `≤ ${baggage.carryOn.linearCm} cm total`
@@ -180,18 +185,26 @@ export function AirlinesClient() {
                     </div>
                   </div>
                   <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px' }}>
-                    <div style={{ fontSize: 10.5, color: '#8494a8', marginBottom: 4 }}>{baggage.carryOn.weightRule === 'combinedWithPersonal' ? 'Total cabin weight' : 'Carry-on max weight'}</div>
+                    <div style={{ fontSize: 11, color: '#57677c', marginBottom: 4 }}>{baggage.carryOn.weightRule === 'combinedWithPersonal' ? 'Total cabin weight' : 'Carry-on max weight'}</div>
                     <div style={{ fontSize: 12.5, fontWeight: 700, color: kgColor }}>
                       {baggage.carryOn.kg ? `${baggage.carryOn.kg} kg${baggage.carryOn.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : 'No published limit'}
                     </div>
                   </div>
                 </div>
 
-                <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px', display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                  <span style={{ fontSize: 10.5, color: '#8494a8' }}>
-                    Personal item
-                  </span>
-                  <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{personalItemSize(a)}</span>
+                <div style={{ display: 'grid', gap: 6 }}>
+                  <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px', display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                    <span style={{ fontSize: 11, color: '#57677c' }}>
+                      Personal item <span style={{ color: '#57677c' }}>({baggage.personal.verified ? 'published' : 'typical'})</span>
+                    </span>
+                    <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{personalItemSize(a)}</span>
+                  </div>
+                  <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px', display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                    <span style={{ fontSize: 11, color: '#57677c' }}>
+                      Checked, economy <span style={{ color: '#57677c' }}>({baggage.checked.verified ? 'published' : 'standard'})</span>
+                    </span>
+                    <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{checkedEconomySize(a)}</span>
+                  </div>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, color: '#a9b4c2' }}>
