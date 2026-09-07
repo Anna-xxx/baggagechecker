@@ -8,7 +8,7 @@ import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
 import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, type PersonalItemRule } from '@/lib/airlines';
 
-type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItemRule; linearCm?: number; linearOnly?: boolean; verified?: boolean };
+type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItemRule; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; verified?: boolean };
 type BagType = 'carryon' | 'personal' | 'checked';
 type Airline = { name: string; code: string; limits: Record<BagType, Limits> };
 
@@ -25,6 +25,8 @@ const AIRLINES: Airline[] = ALL_AIRLINES.map((a) => {
         KG: baggage.carryOn.kg,
         linearCm: baggage.carryOn.linearCm,
         linearOnly: baggage.carryOn.linearOnly,
+        manualCheck: baggage.carryOn.manualCheck,
+        note: baggage.carryOn.note,
       },
       personal: {
         H: baggage.personal.h ?? 0,
@@ -301,6 +303,19 @@ export function SizeCheckerClient() {
             bg: '#fdf8ee',
             showAdvice: true,
             advice: `${a.name} does not publish a fixed three-dimension personal-item limit that this checker can validate automatically. Check the airline rule for your fare before travel.`,
+          };
+        }
+
+        if (type === 'carryon' && L.manualCheck) {
+          return {
+            airline: a,
+            checks: [],
+            limit: L.note ?? 'Carry-on rule varies by route or aircraft',
+            verdict: 'Check airline',
+            color: '#b45309',
+            bg: '#fdf8ee',
+            showAdvice: true,
+            advice: L.note ?? `${a.name} has route- or aircraft-dependent carry-on rules. Check the operating flight before travel.`,
           };
         }
 
