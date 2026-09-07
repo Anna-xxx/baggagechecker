@@ -297,6 +297,16 @@ export function SizeCheckerClient() {
     setChecked(false);
   };
 
+  const formatLimit = (L: Limits) => {
+    if (type === 'personal') {
+      if (L.rule === 'linear') return `≤ ${L.linearCm} cm total`;
+      if (L.rule === 'fitUnderSeat') return 'Must fit under seat';
+      if (L.rule === 'notSeparate') return 'No separate item';
+      if (L.rule === 'unknown') return 'No fixed size published';
+    }
+    return `${L.W} × ${L.H} × ${L.D} cm`;
+  };
+
   const q = query.trim().toLowerCase();
   const options = AIRLINES.filter((a) => !q || a.name.toLowerCase().includes(q) || a.code.toLowerCase().includes(q)).slice(0, 40);
   const noMatches = q.length > 0 && options.length === 0;
@@ -553,7 +563,7 @@ export function SizeCheckerClient() {
                       <AirlineLogo code={a.code} website={websiteFor(a.code)} width={32} height={24} radius={6} fontSize={9} />
                       <span style={{ flex: 1, minWidth: 0, fontSize: 13.5, fontWeight: 700, color: '#0f1c2e' }}>{a.name}</span>
                       <span style={{ fontSize: 11.5, color: '#8494a8', whiteSpace: 'nowrap' }}>
-                        {L.W} × {L.H} × {L.D} cm
+                        {formatLimit(L)}
                       </span>
                       <span style={{ fontSize: 12, fontWeight: 800, color: '#14b8a6', width: 12, textAlign: 'center' }}>{on ? '✓' : ''}</span>
                     </button>
