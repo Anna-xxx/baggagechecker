@@ -180,7 +180,7 @@ export function AirlinesClient() {
                     </div>
                   </div>
                   <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px' }}>
-                    <div style={{ fontSize: 10.5, color: '#8494a8', marginBottom: 4 }}>{baggage.carryOn.weightRule === 'combinedWithPersonal' ? 'Combined cabin weight' : 'Carry-on max weight'}</div>
+                    <div style={{ fontSize: 10.5, color: '#8494a8', marginBottom: 4 }}>{baggage.carryOn.weightRule === 'combinedWithPersonal' ? 'Total cabin weight' : 'Carry-on max weight'}</div>
                     <div style={{ fontSize: 12.5, fontWeight: 700, color: kgColor }}>
                       {baggage.carryOn.kg ? `${baggage.carryOn.kg} kg${baggage.carryOn.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : 'No published limit'}
                     </div>
