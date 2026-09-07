@@ -447,14 +447,14 @@ export const AIRLINES: Airline[] = [
     country: 'Australia',
     website: 'https://www.qantas.com',
     baggageUrl: 'https://www.qantas.com/en-au/baggage/carry-on',
-    carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
+    carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true, linearCm: 115, manualCheck: true, note: 'International Economy: 1 piece up to 7 kg. Premium Economy, Business and First: 2 pieces up to 7 kg each. Domestic and Dash 8 rules differ.' },
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
     classAllowances: [
       { name: 'Economy', carryOn: 'International: 1 overhead bag · 7 kg + personal item', checkedBags: 'Domestic: 1 bag · Americas: 1 bag · Elsewhere: weight concept', weightPerBag: '23 kg domestic · 32 kg Americas · 30 kg total elsewhere', note: 'Domestic mainline carry-on can be up to 14 kg total; Dash 8 services are stricter.', verified: true },
-      { name: 'Premium Economy', carryOn: 'International: up to 14 kg total, max 10 kg per item', checkedBags: 'Domestic: 2 bags · Americas: 2 bags · Elsewhere: weight concept', weightPerBag: '23 kg domestic · 32 kg Americas · 40 kg total elsewhere', verified: true },
-      { name: 'Business', carryOn: 'International: up to 14 kg total, max 10 kg per item', checkedBags: 'Domestic/Americas: 2 bags · Elsewhere: weight concept', weightPerBag: '32 kg per piece where piece concept applies · 40 kg total elsewhere', verified: true },
-      { name: 'First', carryOn: 'International: up to 14 kg total, max 10 kg per item', checkedBags: 'Americas: 3 bags · Elsewhere: weight concept', weightPerBag: '32 kg per piece in Americas · 50 kg total elsewhere', verified: true },
+      { name: 'Premium Economy', carryOn: 'International: 2 bags · 7 kg each', checkedBags: 'Domestic: 2 bags · Americas: 2 bags · Elsewhere: weight concept', weightPerBag: '23 kg domestic · 32 kg Americas · 40 kg total elsewhere', verified: true },
+      { name: 'Business', carryOn: 'International: 2 bags · 7 kg each', checkedBags: 'Domestic/Americas: 2 bags · Elsewhere: weight concept', weightPerBag: '32 kg per piece where piece concept applies · 40 kg total elsewhere', verified: true },
+      { name: 'First', carryOn: 'International: 2 bags · 7 kg each', checkedBags: 'Americas: 3 bags · Elsewhere: weight concept', weightPerBag: '32 kg per piece in Americas · 50 kg total elsewhere', verified: true },
     ],
   },
   {
@@ -467,7 +467,7 @@ export const AIRLINES: Airline[] = [
     personal: { rule: 'unknown', kg: 0, verified: false },
     checked: { w: 55, h: 80, d: 30, kg: 25, total: 158, eco: 25, biz: 32, bags: '1–2 bags depending on fare', verified: true },
     classAllowances: [
-      { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: '25–35 kg total or 2 bags', weightPerBag: '23 kg on Americas/Africa piece routes', note: 'Allowance varies by Economy Lite / Classic / Convenience / Comfort and route.', verified: true },
+      { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: '20–35 kg total or 1–2 bags', weightPerBag: '23 kg on Americas/Africa piece routes', note: 'Lite / Classic / Convenience / Comfort and route determine the exact allowance; Brazil cabin allowance is 10 kg.', verified: true },
       { name: 'Business', carryOn: '2 bags · 15 kg combined', checkedBags: '40 kg total or 2 bags', weightPerBag: '32 kg on Americas/Africa piece routes', verified: true },
       { name: 'First', carryOn: '2 bags · 15 kg combined', checkedBags: '50 kg total or 2 bags', weightPerBag: '32 kg on Americas/Africa piece routes', verified: true },
     ],
