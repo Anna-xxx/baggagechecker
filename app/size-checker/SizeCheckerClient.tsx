@@ -6,11 +6,11 @@ import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, type PersonalItemRule } from '@/lib/airlines';
+import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, type PersonalItemRule, type CarryOnVariant } from '@/lib/airlines';
 
-type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItemRule; checkedRule?: 'linear' | 'dimensions'; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none'; verified?: boolean };
+type Limits = { H: number; W: number; D: number; KG: number; allowed?: boolean; rule?: PersonalItemRule; checkedRule?: 'linear' | 'dimensions'; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none'; verified?: boolean };
 type BagType = 'carryon' | 'personal' | 'checked';
-type Airline = { name: string; code: string; limits: Record<BagType, Limits> };
+type Airline = { name: string; code: string; limits: Record<BagType, Limits>; carryOnVariants?: CarryOnVariant[] };
 
 type CheckedVariant = {
   id: string;
@@ -113,6 +113,7 @@ const AIRLINES: Airline[] = ALL_AIRLINES.map((a) => {
   return {
     name: a.name,
     code: a.code,
+    carryOnVariants: a.carryOnVariants,
     limits: {
       carryon: {
         H: baggage.carryOn.h,
@@ -242,6 +243,7 @@ export function SizeCheckerClient() {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [checkedVariantByCode, setCheckedVariantByCode] = useState<Record<string, string>>({});
+  const [carryOnVariantByCode, setCarryOnVariantByCode] = useState<Record<string, string>>({});
 
   const weightKey: DimKey = type === 'checked' ? 'KGC' : 'KG';
   const weightMax = type === 'checked' ? 45 : 32;
