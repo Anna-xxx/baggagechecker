@@ -365,7 +365,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.jal.co.jp/jp/en/inter/baggage/inflight/',
     carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115 },
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { w: 55, h: 80, d: 30, kg: 23, total: 203, eco: 23, biz: 32, bags: '2 in Economy/Premium Economy; 3 in Business/First', verified: true },
     classAllowances: [
       { name: 'Economy', carryOn: '1 bag + personal item · 10 kg combined', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
       { name: 'Premium Economy', carryOn: '1 bag + personal item · 10 kg combined', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
@@ -381,12 +381,11 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.jetblue.com/help/carry-on-bags',
     carryOn: { w: 35.56, h: 55.88, d: 22.86, kg: 0, verified: true },
     personal: { rule: 'dimensions', w: 33, h: 43.2, d: 20.32, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare/market dependent; Mint includes 2 bags', verified: true },
     classAllowances: [
-      { name: 'Blue Basic / Blue / Blue Extra', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid on most non-transatlantic routes', weightPerBag: '23 kg', note: 'On transatlantic Blue/Blue Extra, the first checked bag is normally included; Blue Basic remains paid.', verified: true },
-      { name: 'Blue Plus', carryOn: '1 carry-on + 1 personal item', checkedBags: '1 bag included', weightPerBag: '23 kg', verified: true },
-      { name: 'EvenMore', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid on most non-transatlantic routes', weightPerBag: '23 kg', note: 'EvenMore and EvenMore Flex include 1 checked bag on UK/Europe routes; EvenMore Base does not.', verified: true },
-      { name: 'Mint', carryOn: '1 carry-on + 1 personal item', checkedBags: '2 bags included', weightPerBag: '32 kg', verified: true },
+      { name: 'Main Base / Main / Main Flex', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid on most routes', weightPerBag: '23 kg', note: 'Checked-bag price and inclusions vary by market; verify the booked fare.', verified: true },
+      { name: 'EvenMore Base / EvenMore / EvenMore Flex', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid on most routes', weightPerBag: '23 kg', note: 'Some international markets may include a bag; use the booked fare allowance.', verified: true },
+      { name: 'Mint / Mint Flex', carryOn: '1 carry-on + 1 personal item', checkedBags: '2 bags included', weightPerBag: '32 kg', verified: true },
     ],
   },
   {
@@ -401,7 +400,7 @@ export const AIRLINES: Airline[] = [
     classAllowances: [
       { name: 'Economy Basic', carryOn: 'Small underseat bag only', checkedBags: '0 bags', weightPerBag: '—', note: 'Availability of Basic depends on market.', verified: true },
       { name: 'Economy Light / Standard / Flex', carryOn: '1 bag + small bag · 12 kg combined', checkedBags: '0–1 bag', weightPerBag: '23 kg', note: 'Light normally has no checked bag; Standard/Flex normally include 1.', verified: true },
-      { name: 'Premium Comfort', carryOn: '2 bags + small bag · 18 kg combined', checkedBags: '0–2 bags', weightPerBag: '23 kg', note: 'Light has no checked bag; Standard/Flex normally include 2.', verified: true },
+      { name: 'Premium Comfort', carryOn: '2 bags + small bag · 12 kg combined', checkedBags: '0–2 bags', weightPerBag: '23 kg', note: 'Light has no checked bag; Standard/Flex normally include 2.', verified: true },
       { name: 'Business', carryOn: '2 bags + small bag · 18 kg combined', checkedBags: '1–2 bags', weightPerBag: '32 kg', note: 'Business Light normally includes 1; Standard/Flex normally include 2.', verified: true },
     ],
   },
