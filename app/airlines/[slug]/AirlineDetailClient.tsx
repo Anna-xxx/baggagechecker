@@ -163,12 +163,13 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
     },
   ];
 
-  const classes = [
-    { name: 'Economy', cabin: '1 bag + item', bags: `1 × ${info.eco} kg`, weight: wt(info.eco) },
-    { name: 'Premium Economy', cabin: '1 bag + item', bags: `2 × ${info.eco} kg`, weight: wt(info.eco) },
-    { name: 'Business', cabin: '2 bags + item', bags: `2 × ${info.biz} kg`, weight: wt(info.biz) },
-    { name: 'First', cabin: '2 bags + item', bags: `3 × ${info.biz} kg`, weight: wt(info.biz) },
-  ];
+  const classes = (airline.classAllowances ?? []).map((row) => ({
+    name: row.name,
+    cabin: row.carryOn,
+    bags: row.checkedBags,
+    weight: row.weightPerBag,
+    note: row.note,
+  }));
 
   const fees = [
     { label: 'Extra checked bag', value: '$75 – $120' },
