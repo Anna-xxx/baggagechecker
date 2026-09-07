@@ -21,10 +21,10 @@ function airlineType(code: string): 'Low-cost' | 'Full-service' {
 function personalItemSize(a: Airline): string {
   const baggage = getAirlineBaggage(a);
   const b = baggage.personal;
-  if (baggage.personalRule === 'dimensions') return `${b.h} × ${b.w} × ${b.d} cm`;
-  if (baggage.personalRule === 'linear') return `≤ ${baggage.personalLinearCm} cm total`;
-  if (baggage.personalRule === 'fitUnderSeat') return 'Must fit under seat';
-  if (baggage.personalRule === 'notSeparate') return 'No separate item';
+  if (b.rule === 'dimensions') return `${b.h} × ${b.w} × ${b.d} cm`;
+  if (b.rule === 'linear') return `≤ ${b.linearCm} cm total`;
+  if (b.rule === 'fitUnderSeat') return 'Must fit under seat';
+  if (b.rule === 'notSeparate') return 'No separate item';
   return 'No fixed size published';
 }
 
