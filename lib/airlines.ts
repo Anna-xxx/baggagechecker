@@ -59,7 +59,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.aircanada.com/ca/en/aco/home/plan/baggage/carry-on.html',
     carryOn: { w: 40, h: 55, d: 23, kg: 0, verified: true },
     personal: { rule: 'dimensions', w: 43, h: 33, d: 16, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy on most fares', verified: true },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare-dependent; Premium Economy and Business generally include 2 bags', verified: true, rule: 'linear', note: 'Maximum standard size is 158 cm total. Economy and Premium Economy use 23 kg per bag; Business/Signature uses 32 kg per bag. Exact free bag count depends on fare and itinerary.' },
     classAllowances: [
       { name: 'Economy Basic', carryOn: 'Personal item only on certain itineraries', checkedBags: 'Varies by route', weightPerBag: '23 kg', note: 'Economy Basic carry-on restrictions apply on certain itineraries for tickets purchased on or after 3 Jan 2025.', verified: true },
       { name: 'Economy Standard / Flex / Comfort / Latitude', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Varies by fare/route', weightPerBag: '23 kg', verified: true },
@@ -75,7 +75,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://wwws.airfrance.es/en/information/bagages/bagage-cabine-soute',
     carryOn: { w: 35, h: 55, d: 25, kg: 12, verified: true, weightRule: 'combinedWithPersonal', note: '12 kg combined across cabin bag and personal item.' },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business', verified: true },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare-dependent', verified: true, rule: 'linear', note: 'Maximum standard size is 158 cm total. Economy/Premium: 23 kg per bag. Business/La Première: 32 kg per bag. Included bag count depends on fare and route.' },
     classAllowances: [
       { name: 'Economy', carryOn: '0–1 hand bag + 1 small bag', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', note: 'Cabin items: 12 kg combined.', verified: true },
       { name: 'Premium', carryOn: '2 hand bags + 1 small bag', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', note: 'Cabin items: 12 kg combined.', verified: true },
@@ -91,7 +91,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.airindia.com/in/en/travel-information/baggage-guidelines/cabin-baggage.html',
     carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true, linearCm: 115 },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 3, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Route and fare dependent', verified: true, rule: 'linear', manualCheck: true, note: 'Air India mixes weight and piece concepts by route. Each piece must stay within 158 cm; Economy/Premium piece routes use up to 23 kg per piece and Business/First up to 32 kg. Check the booked route for the actual allowance.' },
     classAllowances: [
       { name: 'Economy Value', carryOn: '1 bag · 7 kg', checkedBags: 'Domestic: 15 kg · International: route dependent', weightPerBag: '23 kg max on piece routes', note: 'International allowance varies by destination; on many Europe/US/Canada/Japan piece routes Economy Value is 1 × 23 kg.', verified: true },
       { name: 'Economy Classic', carryOn: '1 bag · 7 kg', checkedBags: 'Domestic: 20 kg · International: route dependent', weightPerBag: '23 kg max on piece routes', note: 'On many piece-concept international routes this is 2 × 23 kg.', verified: true },
@@ -111,7 +111,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.ita-airways.com/es/en/book-and-prepare/travel-information/baggage/carry-on-baggage',
     carryOn: { w: 40, h: 55, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Economy Light 0; Economy 1; Premium Economy 2; Business usually 2', verified: true, rule: 'linear', note: 'Each checked bag may measure up to 158 cm total. Economy/Premium use 23 kg per piece; Business normally 32 kg per piece, with domestic Italy exceptions.' },
     classAllowances: [
       { name: 'Economy Light', carryOn: '1 bag · 8 kg + personal item', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'Economy', carryOn: '1 bag · 8 kg + personal item', checkedBags: '1 bag', weightPerBag: '23 kg', note: 'Some routes/fare products include 2 checked bags.', verified: true },
@@ -127,7 +127,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.ana.co.jp/en/eur/travel-information/baggage-information/',
     carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115, manualCheck: true, weightRule: 'combinedWithPersonal', note: 'Standard rule for aircraft with 100+ seats: max 55 × 40 × 25 cm and 115 cm total. On aircraft with fewer than 100 seats, the stricter limit is 45 × 35 × 20 cm and 100 cm total. The 10 kg limit is combined across the carry-on bag and personal item.' },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare-dependent: Economy 0–2; Premium/Business 1–2; First 3', verified: true, rule: 'linear', note: 'ANA international checked bags are limited to 158 cm total per piece. Economy/Premium Economy: 23 kg per piece; Business/First: 32 kg per piece.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 carry-on + 1 personal item · 10 kg combined', checkedBags: '0–2 bags', weightPerBag: '23 kg', note: 'Checked-bag count depends on fare rules.', verified: true },
       { name: 'Premium Economy', carryOn: '1 carry-on + 1 personal item · 10 kg combined', checkedBags: '1–2 bags', weightPerBag: '23 kg', note: 'Checked-bag count depends on fare rules.', verified: true },
@@ -143,7 +143,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.aa.com/web/i18n/travel-info/baggage/carry-on-baggage.html',
     carryOn: { w: 36, h: 56, d: 23, kg: 0, verified: true },
     personal: { rule: 'dimensions', w: 35, h: 45, d: 20, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy (fee applies on most domestic fares)', verified: true },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare and route dependent', verified: true, rule: 'linear', note: 'Standard limit is 158 cm total. Economy/Premium Economy: 23 kg per bag; First/Business free bags: 32 kg per bag. Australia/New Zealand free bags use 32 kg.' },
     classAllowances: [
       { name: 'Basic Economy / Main Cabin', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Varies by fare/route; fees often apply', weightPerBag: '23 kg', verified: true },
       { name: 'Premium Economy', carryOn: '1 carry-on + 1 personal item', checkedBags: '2 bags on many international products', weightPerBag: '23 kg', note: 'Allowance varies by route/product.', verified: true },
@@ -159,7 +159,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.austrian.com/us/en/handgepaeck',
     carryOn: { w: 40, h: 55, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare-dependent', verified: true, rule: 'linear', note: 'Maximum size is 158 cm total. Economy/Premium Economy: 23 kg per piece; Business: 32 kg per piece.' },
     classAllowances: [
       { name: 'Economy Basic · selected short/medium-haul routes', carryOn: '1 personal item only · 40 × 30 × 15 cm', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'Economy Light', carryOn: '1 bag · 8 kg + personal item', checkedBags: '0 bags', weightPerBag: '23 kg if purchased', verified: true },
@@ -178,7 +178,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.britishairways.com/content/en/information/baggage-essentials',
     carryOn: { w: 45, h: 56, d: 25, kg: 23, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business', verified: true },
+    checked: { w: 75, h: 90, d: 43, kg: 23, total: 208, eco: 23, biz: 32, bags: 'Economy 0–1; Premium Economy usually 2; Business 2; First 3', verified: true, rule: 'dimensions', note: 'British Airways publishes a per-bag maximum of 90 × 75 × 43 cm rather than a 158 cm linear limit. Economy/Premium Economy: 23 kg per bag; Business/First: 32 kg per bag.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 cabin bag + 1 hand bag', checkedBags: '1 bag (0 on Economy Basic)', weightPerBag: '23 kg', verified: true },
       { name: 'Premium Economy', carryOn: '1 cabin bag + 1 hand bag', checkedBags: '2 bags on most routes', weightPerBag: '23 kg', note: 'A limited number of routes have a lower checked-bag allowance.', verified: true },
@@ -194,7 +194,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.brusselsairlines.com/us/en/extra-services/baggage/carry-on-baggage',
     carryOn: { w: 40, h: 55, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare-dependent', verified: true, rule: 'linear', note: 'Maximum size is 158 cm total. Economy/Premium Economy: 23 kg per piece; Business: 32 kg per piece.' },
     classAllowances: [
       { name: 'Economy Basic · short/medium haul', carryOn: '1 personal item only · 40 × 30 × 15 cm', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'Economy Light · short/medium haul', carryOn: '1 bag · 8 kg + personal item', checkedBags: '0 bags', weightPerBag: '—', verified: true },
@@ -217,7 +217,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.cathaypacific.com/cx/en_US/baggage/cabin-baggage.html',
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 203, eco: 23, biz: 32, bags: 'Route-dependent weight or piece concept', verified: true, rule: 'linear', manualCheck: true, note: 'Cathay rules vary by route. Most non-Americas routes use a weight concept and allow up to 203 cm per piece; Americas routes use a piece concept with 158 cm per piece. Check the itinerary before relying on an automatic size/weight result.' },
     classAllowances: [
       { name: 'Economy Light', carryOn: '1 bag · 7 kg + personal item', checkedBags: '1 bag', weightPerBag: '23 kg', verified: true },
       { name: 'Economy Essential / Flex', carryOn: '1 bag · 7 kg + personal item', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
