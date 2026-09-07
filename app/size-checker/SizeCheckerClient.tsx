@@ -33,6 +33,7 @@ const CHECKED_VARIANTS: Record<string, CheckedVariant[]> = {
     { id: 'dom-business', label: 'Domestic · Business · max 32 kg per bag', rule: 'linear', total: 158, kg: 32 },
     { id: 'intl-economy-piece', label: 'International piece route · Economy · 23 kg', rule: 'linear', total: 158, kg: 23 },
     { id: 'intl-business-piece', label: 'International piece route · Business/First · 32 kg', rule: 'linear', total: 158, kg: 32 },
+    { id: 'intl-weight', label: 'International weight concept · check ticket', rule: 'linear', total: 158, kg: 0, manualCheck: true, note: 'Air India total checked allowance varies by international route and fare under the weight concept. Use the allowance printed on the ticket.' },
   ],
   EK: [
     { id: 'piece-economy', label: 'Americas/Africa · Economy · 23 kg', rule: 'linear', total: 150, kg: 23 },
@@ -49,6 +50,7 @@ const CHECKED_VARIANTS: Record<string, CheckedVariant[]> = {
     { id: 'intl-25', label: 'International · 25 kg allowance', rule: 'linear', total: 158, kg: 25 },
     { id: 'intl-30', label: 'International · 30 kg allowance', rule: 'linear', total: 158, kg: 30 },
     { id: 'longhaul-32', label: 'Long-haul / premium · max 32 kg per bag', rule: 'linear', total: 158, kg: 32 },
+    { id: 'atr', label: 'ATR-operated flight · check aircraft rule', rule: 'linear', total: 158, kg: 0, manualCheck: true, note: 'IndiGo ATR-operated flights can use a separate checked-baggage dimensional rule. Check the operating aircraft and ticket allowance.' },
   ],
   MH: [
     { id: 'weight-value', label: 'Weight concept · Economy Value · 20 kg', rule: 'linear', total: 158, kg: 20 },
