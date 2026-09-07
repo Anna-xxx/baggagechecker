@@ -67,6 +67,12 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const baggage = getAirlineBaggage(airline);
   const cabin: Bag = baggage.carryOn;
   const personal = baggage.personal;
+  const info = baggage.checked;
+
+  const len = (v: number) => (metric ? `${v} cm` : `${Math.round(v / 2.54)} in`);
+  const wt = (v: number) => (metric ? `${v} kg` : `${Math.round(v * 2.205)} lb`);
+  const dims = (b: Bag) => `${metric ? b.w : Math.round(b.w / 2.54)} × ${metric ? b.h : Math.round(b.h / 2.54)} × ${len(b.d)}`;
+
   const personalBag: Bag = {
     w: personal.w ?? 30,
     h: personal.h ?? 40,
@@ -98,11 +104,6 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
                 { label: 'Dimensions', value: 'No fixed size published' },
                 { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
               ];
-  const info = baggage.checked;
-
-  const len = (v: number) => (metric ? `${v} cm` : `${Math.round(v / 2.54)} in`);
-  const wt = (v: number) => (metric ? `${v} kg` : `${Math.round(v * 2.205)} lb`);
-  const dims = (b: Bag) => `${metric ? b.w : Math.round(b.w / 2.54)} × ${metric ? b.h : Math.round(b.h / 2.54)} × ${len(b.d)}`;
 
   const sourceLabel = `Baggage allowance for ${airline.name} · check fare, route and operating-carrier conditions before travel`;
 
