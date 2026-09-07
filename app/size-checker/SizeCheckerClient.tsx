@@ -6,9 +6,9 @@ import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { AIRLINES as ALL_AIRLINES, getAirlineBaggage } from '@/lib/airlines';
+import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, type PersonalItemRule } from '@/lib/airlines';
 
-type Limits = { H: number; W: number; D: number; KG: number };
+type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItemRule; linearCm?: number; verified?: boolean };
 type BagType = 'carryon' | 'personal' | 'checked';
 type Airline = { name: string; code: string; limits: Record<BagType, Limits> };
 
@@ -25,10 +25,13 @@ const AIRLINES: Airline[] = ALL_AIRLINES.map((a) => {
         KG: baggage.carryOn.kg,
       },
       personal: {
-        H: baggage.personal.h,
-        W: baggage.personal.w,
-        D: baggage.personal.d,
+        H: baggage.personal.h ?? 0,
+        W: baggage.personal.w ?? 0,
+        D: baggage.personal.d ?? 0,
         KG: baggage.personal.kg,
+        rule: baggage.personal.rule,
+        linearCm: baggage.personal.linearCm,
+        verified: baggage.personal.verified,
       },
       checked: {
         H: baggage.checked.h,
@@ -176,6 +179,34 @@ export function SizeCheckerClient() {
 
   const checksFor = (a: Airline) => {
     const L = a.limits[type];
+
+    if (type === 'personal' && L.rule === 'linear') {
+      const total = W + H + D;
+      const maxTotal = L.linearCm ?? 0;
+      const sizeOk = total <= maxTotal;
+      const weightOk = !L.KG || KG <= L.KG;
+      return [
+        {
+          key: 'W' as DimKey,
+          label: 'Total dimensions',
+          detail: `${toDisp(total, 'W')} ${lenU} / ${toDisp(maxTotal, 'W')} ${lenU}`,
+          mark: sizeOk ? '✓' : '✗',
+          color: sizeOk ? '#15803d' : '#b91c1c',
+          over: !sizeOk,
+          excess: sizeOk ? '' : `${toDisp(total - maxTotal, 'W')} ${lenU} over`,
+        },
+        {
+          key: 'KG' as DimKey,
+          label: 'Weight',
+          detail: L.KG ? `${toDisp(KG, 'KG')} ${wU} / ${toDisp(L.KG, 'KG')} ${wU}` : `${toDisp(KG, 'KG')} ${wU} / no published limit`,
+          mark: weightOk ? '✓' : '✗',
+          color: weightOk ? '#15803d' : '#b91c1c',
+          over: !weightOk,
+          excess: weightOk ? '' : `${toDisp(KG - L.KG, 'KG')} ${wU} over`,
+        },
+      ];
+    }
+
     const lim: Record<DimKey, number> = { W: L.W, H: L.H, D: L.D, KG: L.KG || 999, KGC: L.KG || 999 };
     return [
       { key: 'W' as DimKey, label: 'Width' },
@@ -203,13 +234,38 @@ export function SizeCheckerClient() {
 
   const results = checked
     ? chosen.map((a) => {
+        const L = a.limits[type];
+
+        if (type === 'personal' && L.rule && L.rule !== 'dimensions' && L.rule !== 'linear') {
+          const ruleText =
+            L.rule === 'fitUnderSeat'
+              ? 'Must fit under the seat'
+              : L.rule === 'notSeparate'
+                ? 'No separate personal item published'
+                : 'No fixed personal-item dimensions published';
+          return {
+            airline: a,
+            checks: [],
+            limit: ruleText,
+            verdict: 'Check airline',
+            color: '#b45309',
+            bg: '#fdf8ee',
+            showAdvice: true,
+            advice: `${a.name} does not publish a fixed three-dimension personal-item limit that this checker can validate automatically. Check the airline rule for your fare before travel.`,
+          };
+        }
+
         const checks = checksFor(a);
         const failed = checks.filter((c) => c.over);
-        const L = a.limits[type];
+        const limit =
+          type === 'personal' && L.rule === 'linear'
+            ? `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
+            : `${L.W} × ${L.H} × ${L.D} cm${L.KG ? ` · ${L.KG} kg` : ''}`;
+
         return {
           airline: a,
           checks,
-          limit: `${L.W} × ${L.H} × ${L.D} cm${L.KG ? ` · ${L.KG} kg` : ''}`,
+          limit,
           verdict: failed.length === 0 ? 'Fits' : 'Too large',
           color: failed.length === 0 ? '#15803d' : '#b91c1c',
           bg: failed.length === 0 ? '#dcfce7' : '#fee2e2',
@@ -223,8 +279,10 @@ export function SizeCheckerClient() {
     : [];
 
   const fitCount = results.filter((r) => r.verdict === 'Fits').length;
+  const tooLargeCount = results.filter((r) => r.verdict === 'Too large').length;
+  const manualCount = results.filter((r) => r.verdict === 'Check airline').length;
   const allFit = results.length > 0 && fitCount === results.length;
-  const noneFit = results.length > 0 && fitCount === 0;
+  const noneFit = results.length > 0 && tooLargeCount === results.length;
   const canCheck = sel.length > 0;
 
   const toggleAirline = (name: string) => {
@@ -252,7 +310,9 @@ export function SizeCheckerClient() {
       ? results.length === 1
         ? 'Your bag is too large for this airline'
         : `Your bag is too large for all ${results.length} airlines`
-      : `Your bag fits ${fitCount} of ${results.length} airlines`;
+      : manualCount
+        ? `${fitCount} fit · ${tooLargeCount} too large · ${manualCount} need airline check`
+        : `Your bag fits ${fitCount} of ${results.length} airlines`;
   const summaryMark = allFit ? '✓' : noneFit ? '✗' : '!';
   const summaryColor = allFit ? '#15803d' : noneFit ? '#b91c1c' : '#b45309';
   const summaryBg = allFit ? '#e6f6ee' : noneFit ? '#fdecec' : '#fdf8ee';
