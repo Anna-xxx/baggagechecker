@@ -120,8 +120,8 @@ const PERSONAL_WEIGHT_ONLY_BY_CODE: Record<string, number> = {
   '6E': 3,
 };
 
-const PERSONAL_FIT_UNDER_SEAT_CODES = new Set(['DL', 'JL', 'QF', 'WN']);
-const PERSONAL_NOT_SEPARATE_CODES = new Set(['EK']);
+const PERSONAL_FIT_UNDER_SEAT_CODES = new Set(['JL', 'QF', 'WN']);
+const PERSONAL_NOT_SEPARATE_CODES = new Set<string>();
 
 const CARRY_ON_BY_CODE: Record<string, BagLimit> = {
   AC: { w: 40, h: 55, d: 23, kg: 0 },
