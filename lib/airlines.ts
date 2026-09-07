@@ -711,7 +711,7 @@ export const AIRLINES: Airline[] = [
     website: 'https://www.thaiairways.com',
     baggageUrl: 'https://www.thaiairways.com/es-es/content/baggage/carry-on-baggage/',
     carryOn: { w: 45, h: 56, d: 25, kg: 7, verified: true },
-    personal: { rule: 'dimensions', w: 25, h: 37.5, d: 12.5, kg: 1.5, verified: true },
+    personal: { rule: 'dimensions', w: 25, h: 37.5, d: 12.5, kg: 1.5, linearCm: 75, verified: true },
     checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Piece count depends on class, fare and sector', verified: true, rule: 'linear', note: 'For travel from 2 Mar 2026 under THAI’s new Piece Concept, every checked bag is limited to 158 cm. Economy/Premium Economy: 23 kg per piece; Royal Silk/Royal First/Premium Economy Plus: 32 kg per piece.' },
     classAllowances: [
       { name: 'Economy Saver / Standard', carryOn: '1 bag · 7 kg', checkedBags: 'International: 1 bag', weightPerBag: '23 kg', note: 'Saver has no checked bag on some destinations; new Piece Concept applies to covered travel from 2 Mar 2026.', verified: true },
@@ -769,7 +769,7 @@ export const AIRLINES: Airline[] = [
       { id: 'economy-premium', label: 'Economy / Premium · 10 kg', w: 36, h: 56, d: 23, kg: 10, verified: true },
       { id: 'upper', label: 'Upper Class · max 12 kg per bag / 16 kg total', w: 36, h: 56, d: 23, kg: 16, maxSingleKg: 12, weightRule: 'combinedWithPersonal', note: 'Upper Class allows two pieces, no more than 12 kg each and 16 kg combined.', verified: true },
     ],
-    personal: { rule: 'unknown', kg: 0, verified: false },
+    personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { w: 75, h: 90, d: 43, kg: 23, total: 208, eco: 23, biz: 32, bags: 'Economy Light 0; Classic/Delight 1; Premium 2; Upper Class 2', verified: true, rule: 'dimensions', note: 'Virgin Atlantic publishes a maximum of 90 × 75 × 43 cm per checked bag. Economy/Premium bags: 23 kg; Upper Class: 32 kg.' },
     classAllowances: [
       { name: 'Economy Light', carryOn: '1 bag · 10 kg', checkedBags: '0 bags', weightPerBag: '—', verified: true },
