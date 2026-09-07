@@ -23,9 +23,14 @@ export type CheckedBaggageLimit = BagLimit & {
   bags: string;
 };
 
+export type PersonalItemRule = 'dimensions' | 'linear' | 'fitUnderSeat' | 'notSeparate' | 'unknown';
+
 export type AirlineBaggage = {
   carryOn: BagLimit;
   personal: BagLimit;
+  personalRule: PersonalItemRule;
+  personalLinearCm?: number;
+  personalVerified: boolean;
   checked: CheckedBaggageLimit;
 };
 
@@ -73,36 +78,50 @@ const AIRLINE_BASE: Airline[] = [
 ];
 
 const DEFAULT_PERSONAL: BagLimit = { w: 30, h: 40, d: 20, kg: 0 };
-const DEFAULT_CHECKED: CheckedBaggageLimit = {
-  w: 55,
-  h: 80,
-  d: 30,
-  kg: 23,
-  total: 158,
-  eco: 23,
-  biz: 32,
-  bags: '1 in economy',
-};
 
 const PERSONAL_BY_CODE: Record<string, BagLimit> = {
   AC: { w: 33, h: 43, d: 16, kg: 0 },
   AF: { w: 30, h: 40, d: 15, kg: 0 },
-  AA: { w: 36, h: 46, d: 20, kg: 0 },
+  AI: { w: 30, h: 40, d: 20, kg: 3 },
+  AZ: { w: 30, h: 40, d: 15, kg: 0 },
+  NH: { w: 30, h: 40, d: 20, kg: 0 },
+  AA: { w: 35, h: 45, d: 20, kg: 0 },
+  OS: { w: 30, h: 40, d: 15, kg: 0 },
   BA: { w: 30, h: 40, d: 15, kg: 0 },
-  DL: { w: 36, h: 43, d: 20, kg: 0 },
+  SN: { w: 30, h: 40, d: 15, kg: 0 },
+  CX: { w: 30, h: 40, d: 15, kg: 0 },
+  CM: { w: 25, h: 43, d: 22, kg: 0 },
   U2: { w: 36, h: 45, d: 20, kg: 15 },
-  EK: { w: 30, h: 40, d: 15, kg: 0 },
-  F9: { w: 35, h: 45, d: 20, kg: 0 },
-  '6E': { w: 25, h: 35, d: 20, kg: 0 },
-  LH: { w: 30, h: 40, d: 10, kg: 0 },
-  QR: { w: 30, h: 40, d: 15, kg: 0 },
+  F9: { w: 35.56, h: 45.72, d: 20.32, kg: 15.9 },
+  HU: { w: 30, h: 30, d: 20, kg: 0 },
+  IB: { w: 30, h: 40, d: 15, kg: 0 },
+  B6: { w: 33, h: 43.2, d: 20.32, kg: 0 },
+  KL: { w: 30, h: 40, d: 15, kg: 0 },
+  LH: { w: 30, h: 40, d: 15, kg: 0 },
+  MH: { w: 25, h: 36, d: 25, kg: 0 },
   FR: { w: 30, h: 40, d: 20, kg: 0 },
-  WN: { w: 34, h: 42, d: 21, kg: 0 },
+  SK: { w: 30, h: 40, d: 15, kg: 0 },
+  SQ: { w: 30, h: 40, d: 10, kg: 0 },
   NK: { w: 35, h: 45, d: 20, kg: 0 },
-  TK: { w: 30, h: 40, d: 15, kg: 0 },
+  TP: { w: 30, h: 40, d: 15, kg: 2 },
+  TG: { w: 25, h: 37.5, d: 12.5, kg: 1.5 },
+  TK: { w: 30, h: 40, d: 15, kg: 4 },
+  VA: { w: 33, h: 45, d: 20, kg: 8 },
   VY: { w: 30, h: 40, d: 20, kg: 0 },
   W6: { w: 30, h: 40, d: 20, kg: 10 },
 };
+
+const PERSONAL_LINEAR_BY_CODE: Record<string, { total: number; kg: number }> = {
+  HY: { total: 92, kg: 5 },
+};
+
+const PERSONAL_WEIGHT_ONLY_BY_CODE: Record<string, number> = {
+  ET: 3,
+  '6E': 3,
+};
+
+const PERSONAL_FIT_UNDER_SEAT_CODES = new Set(['DL', 'JL', 'QF', 'WN']);
+const PERSONAL_NOT_SEPARATE_CODES = new Set(['EK']);
 
 const CARRY_ON_BY_CODE: Record<string, BagLimit> = {
   AC: { w: 40, h: 55, d: 23, kg: 0 },
@@ -135,7 +154,26 @@ export function getAirlineBaggage(airline: Airline): AirlineBaggage {
       d: airline.cabin[2],
       kg: airline.cabinKg,
     };
-  const personal = PERSONAL_BY_CODE[airline.code] ?? DEFAULT_PERSONAL;
+  const exactPersonal = PERSONAL_BY_CODE[airline.code];
+  const linearPersonal = PERSONAL_LINEAR_BY_CODE[airline.code];
+  const weightOnly = PERSONAL_WEIGHT_ONLY_BY_CODE[airline.code];
+
+  let personal = exactPersonal ?? { ...DEFAULT_PERSONAL, kg: weightOnly ?? 0 };
+  let personalRule: PersonalItemRule = 'unknown';
+  let personalLinearCm: number | undefined;
+
+  if (exactPersonal) {
+    personalRule = 'dimensions';
+  } else if (linearPersonal) {
+    personal = { ...DEFAULT_PERSONAL, kg: linearPersonal.kg };
+    personalRule = 'linear';
+    personalLinearCm = linearPersonal.total;
+  } else if (PERSONAL_FIT_UNDER_SEAT_CODES.has(airline.code)) {
+    personalRule = 'fitUnderSeat';
+  } else if (PERSONAL_NOT_SEPARATE_CODES.has(airline.code)) {
+    personalRule = 'notSeparate';
+  }
+
   const checkedOverride = CHECKED_BY_CODE[airline.code] ?? {};
   const checked = {
     ...DEFAULT_CHECKED,
@@ -143,7 +181,14 @@ export function getAirlineBaggage(airline: Airline): AirlineBaggage {
     kg: checkedOverride.eco ?? DEFAULT_CHECKED.eco,
   };
 
-  return { carryOn, personal, checked };
+  return {
+    carryOn,
+    personal,
+    personalRule,
+    personalLinearCm,
+    personalVerified: personalRule !== 'unknown',
+    checked,
+  };
 }
 
 /** Legacy generic checked-baggage figures. New UI code should use getAirlineBaggage().checked. */
