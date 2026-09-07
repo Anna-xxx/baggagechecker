@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { LogoMark } from './Logo';
 
 const DEFAULT_RESOURCE_LINKS = [
-  'Bag Sizer',
+  'Luggage Guide',
   'Luggage Size Checker',
   'How to Measure Bags',
   'Book Flights',

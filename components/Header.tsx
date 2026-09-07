@@ -28,8 +28,8 @@ const NAV_ITEMS = [
     icon: <path d="M2 13l20-7-7 20-3-8z" />,
   },
   {
-    href: '/luggage-sizes',
-    label: 'Luggage Sizes',
+    href: '/luggage-guide',
+    label: 'Luggage Guide',
     icon: (
       <>
         <circle cx="11" cy="11" r="6.5" />
@@ -66,13 +66,13 @@ export function Header() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 8,
+            gap: 11,
             fontWeight: 800,
-            fontSize: 15,
-            letterSpacing: '-.01em',
+            fontSize: 22,
+            letterSpacing: '-.02em',
           }}
         >
-          <LogoMark />
+          <LogoMark size={43} iconSize={26} radius={12} />
           BaggageChecker
         </div>
         <nav

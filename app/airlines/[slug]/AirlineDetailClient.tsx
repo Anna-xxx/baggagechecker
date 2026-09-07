@@ -7,26 +7,124 @@ import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
 import { TYPICAL_CHECKED, type Airline } from '@/lib/airlines';
 
-type Tab = 'cabin' | 'checked';
+const GENERIC_PERSONAL = { w: 33, h: 43, d: 16, kg: 0 };
+
+type Bag = { w: number; h: number; d: number; kg: number };
+
+function draw(b: Bag, metric: boolean) {
+  const K = 1.5;
+  return {
+    drawW: `${Math.round(b.w * K)}px`,
+    drawH: `${Math.round(b.h * K)}px`,
+    drawD: `${Math.max(20, Math.round(b.d * K))}px`,
+    faceLabel: `${metric ? b.w : Math.round(b.w / 2.54)} × ${metric ? b.h : Math.round(b.h / 2.54)}`,
+    depthValue: metric ? b.d : Math.round(b.d / 2.54),
+  };
+}
+
+function BagIllustration({ b, metric }: { b: Bag; metric: boolean }) {
+  const { drawW, drawH, drawD, faceLabel, depthValue } = draw(b, metric);
+  return (
+    <div style={{ background: '#f8fafc', borderRadius: 11, padding: '20px 16px 16px', marginBottom: 12, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 16, minHeight: 150 }}>
+      <div style={{ position: 'relative', width: drawW, height: drawH }}>
+        <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', width: '34%', height: 16, border: '3px solid #94a3b8', borderBottom: 'none', borderRadius: '8px 8px 0 0' }} />
+        <div style={{ position: 'absolute', inset: 0, background: '#cff5ec', border: '2px solid #5eddc4', borderRadius: 10 }} />
+        <div style={{ position: 'absolute', left: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(20,184,166,.25)' }} />
+        <div style={{ position: 'absolute', right: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(20,184,166,.25)' }} />
+        <div style={{ position: 'absolute', left: '18%', bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />
+        <div style={{ position: 'absolute', right: '18%', bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />
+        <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: '#0b5f56', whiteSpace: 'nowrap' }}>{faceLabel}</span>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+        <div style={{ position: 'relative', width: drawD, height: drawH }}>
+          <div style={{ position: 'absolute', left: '50%', top: -14, transform: 'translateX(-50%)', width: 4, height: 16, borderRadius: 2, background: '#94a3b8' }} />
+          <div style={{ position: 'absolute', inset: 0, background: '#b8efe1', border: '2px solid #5eddc4', borderRadius: 10 }} />
+          <div style={{ position: 'absolute', left: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />
+          <div style={{ position: 'absolute', right: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />
+          <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: '#0b5f56', whiteSpace: 'nowrap' }}>{depthValue}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function AirlineDetailClient({ airline }: { airline: Airline }) {
-  const [tab, setTab] = useState<Tab>('cabin');
   const [metric, setMetric] = useState(true);
   const [fav, setFav] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
 
-  const isCabin = tab === 'cabin';
-  const set = isCabin ? { w: airline.cabin[0], h: airline.cabin[1], d: airline.cabin[2], kg: airline.cabinKg } : TYPICAL_CHECKED;
+  const cabin: Bag = { w: airline.cabin[0], h: airline.cabin[1], d: airline.cabin[2], kg: airline.cabinKg };
+  const personal: Bag = GENERIC_PERSONAL;
+  const checked: Bag = TYPICAL_CHECKED;
 
   const len = (v: number) => (metric ? `${v} cm` : `${Math.round(v / 2.54)} in`);
-  const kg = (v: number) => (metric ? `${v} kg` : `${Math.round(v * 2.205)} lb`);
-  const total = set.w + set.h + set.d;
+  const wt = (v: number) => (metric ? `${v} kg` : `${Math.round(v * 2.205)} lb`);
+  const dims = (b: Bag) => `${metric ? b.w : Math.round(b.w / 2.54)} × ${metric ? b.h : Math.round(b.h / 2.54)} × ${len(b.d)}`;
 
-  const rows = [
-    { label: 'Max width', value: len(set.w) },
-    { label: 'Max height', value: len(set.h) },
-    { label: 'Max depth', value: len(set.d) },
-    { label: 'Total dimensions', value: len(total) },
+  const allowances = [
+    {
+      title: 'Carry-on Baggage',
+      badge: 'CO',
+      tint: '#e3f5f2',
+      iconColor: '#0f766e',
+      what: 'Goes in the overhead bin',
+      bag: cabin,
+      rows: [
+        { label: 'Max dimensions', value: dims(cabin) },
+        { label: 'Max width', value: len(cabin.w) },
+        { label: 'Max height', value: len(cabin.h) },
+        { label: 'Max depth', value: len(cabin.d) },
+        { label: 'Max weight', value: wt(cabin.kg) },
+      ],
+      note: 'One cabin bag per passenger. Measured with wheels and handles included.',
+    },
+    {
+      title: 'Personal Item',
+      badge: 'PI',
+      tint: '#e7effc',
+      iconColor: '#2563eb',
+      what: 'Goes under the seat in front of you',
+      bag: personal,
+      rows: [
+        { label: 'Max dimensions', value: dims(personal) },
+        { label: 'Max width', value: len(personal.w) },
+        { label: 'Max height', value: len(personal.h) },
+        { label: 'Max depth', value: len(personal.d) },
+        { label: 'Max weight', value: 'Not weighed' },
+      ],
+      note: 'A handbag, laptop bag or small backpack that fits under the seat in front of you.',
+    },
+    {
+      title: 'Checked Baggage',
+      badge: 'CB',
+      tint: '#fdf1dc',
+      iconColor: '#b98107',
+      what: 'Handed over at the check-in desk',
+      bag: checked,
+      rows: [
+        { label: 'Max dimensions', value: dims(checked) },
+        { label: 'Max width', value: len(checked.w) },
+        { label: 'Max height', value: len(checked.h) },
+        { label: 'Max depth', value: len(checked.d) },
+        { label: 'Max weight', value: wt(checked.kg) },
+      ],
+      note: 'Allowance depends on your fare. Extra bags can be added during booking.',
+    },
+  ];
+
+  const classes = [
+    { name: 'Economy', cabin: '1 bag + item', bags: '1 × 23 kg', weight: wt(23) },
+    { name: 'Premium Economy', cabin: '1 bag + item', bags: '2 × 23 kg', weight: wt(23) },
+    { name: 'Business', cabin: '2 bags + item', bags: '2 × 32 kg', weight: wt(32) },
+    { name: 'First', cabin: '2 bags + item', bags: '3 × 32 kg', weight: wt(32) },
+  ];
+
+  const fees = [
+    { label: 'Extra checked bag', value: '$75 – $120' },
+    { label: 'Overweight (23–32 kg)', value: '$100' },
+    { label: 'Overweight (32–45 kg)', value: '$200' },
+    { label: 'Oversize (over 158 cm)', value: '$150' },
+    { label: 'Gate-checked cabin bag', value: '$70' },
   ];
 
   const faqs = [
@@ -63,12 +161,27 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
 
         <h1 style={{ margin: '0 0 12px', fontSize: 'clamp(24px,3.4vw,32px)', fontWeight: 800, letterSpacing: '-.03em' }}>{airline.name} Baggage Size &amp; Weight Limits</h1>
         <p style={{ margin: '0 0 26px', maxWidth: 820, fontSize: 14, lineHeight: 1.75, color: '#57677c' }}>
-          This page lets you check your luggage against {airline.name} cabin and checked bag size rules. Enter your bag dimensions in the size checker to instantly see if it fits within {airline.name} baggage
-          allowances and avoid extra fees at the airport.
+          This page lists the {airline.name} cabin and checked baggage allowances, including maximum dimensions, weight limits and excess baggage fees. Use the size checker to confirm your own suitcase fits before
+          you get to the airport.
         </p>
 
+        <a
+          href="#baggage-types"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 22, border: '1px solid #e4eaf1', background: '#fff', borderRadius: 10, padding: '10px 15px', fontSize: 12.5, fontWeight: 700, color: '#0f1c2e', textDecoration: 'none' }}
+        >
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth={2} strokeLinecap="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 11v5M12 8h.01" />
+          </svg>
+          What is carry-on, personal item and checked baggage?
+          <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a9b4c2" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 5v14" />
+            <path d="M6 13l6 6 6-6" />
+          </svg>
+        </a>
+
         <section style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: '20px 22px', display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap', marginBottom: 18 }}>
-          <AirlineLogo code={airline.code} website={airline.website} width={64} height={64} radius={12} fontSize={13} />
+          <AirlineLogo code={airline.code} website={airline.website} width={60} height={60} radius={12} fontSize={13} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-.025em' }}>{airline.name}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 5, fontSize: 12.5, color: '#8494a8' }}>
@@ -125,97 +238,168 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
           </div>
         </section>
 
-        <section style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, overflow: 'hidden', marginBottom: 36 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,240px),1fr))', borderBottom: '1px solid #edf0f3' }}>
-            <button
-              onClick={() => setTab('cabin')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 9,
-                border: 'none',
-                borderBottom: `2px solid ${isCabin ? '#0d9488' : 'transparent'}`,
-                background: isCabin ? '#fff' : '#f8fafc',
-                color: isCabin ? '#0f1c2e' : '#8494a8',
-                padding: 16,
-                fontFamily: 'inherit',
-                fontSize: 13.5,
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
-            >
-              <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-                <rect x="5" y="7" width="14" height="14" rx="2.5" />
-                <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
-              </svg>
-              Carry-on Baggage
-            </button>
-            <button
-              onClick={() => setTab('checked')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 9,
-                border: 'none',
-                borderBottom: `2px solid ${!isCabin ? '#0d9488' : 'transparent'}`,
-                background: !isCabin ? '#fff' : '#f8fafc',
-                color: !isCabin ? '#0f1c2e' : '#8494a8',
-                padding: 16,
-                fontFamily: 'inherit',
-                fontSize: 13.5,
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
-            >
-              <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-                <rect x="4" y="6" width="16" height="15" rx="2.5" />
-                <path d="M9 6V3.6A.6.6 0 0 1 9.6 3h4.8a.6.6 0 0 1 .6.6V6" />
-                <path d="M9.6 11v6M14.4 11v6" />
-              </svg>
-              Checked Baggage
-            </button>
-          </div>
-
-          <div style={{ padding: 24, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 22 }}>
-            <div>
-              <h2 style={{ margin: '0 0 14px', fontSize: 15, fontWeight: 800, letterSpacing: '-.01em' }}>{isCabin ? 'Carry-on Dimensions' : 'Checked Baggage Dimensions'}</h2>
-              <div style={{ background: '#f8fafc', borderRadius: 11, padding: '6px 16px' }}>
-                {rows.map((r) => (
-                  <div key={r.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, padding: '13px 0', borderBottom: '1px solid #eef2f6' }}>
-                    <span style={{ fontSize: 13, color: '#57677c' }}>{r.label}</span>
-                    <span style={{ fontSize: 13, fontWeight: 800, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{r.value}</span>
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 18, marginBottom: 20 }}>
+          {allowances.map((a) => (
+            <div key={a.title} style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 22 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 11, marginBottom: 14 }}>
+                <span style={{ flex: 'none', display: 'flex', width: 34, height: 34, borderRadius: 10, background: a.tint, alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: a.iconColor }}>{a.badge}</span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ display: 'block', fontSize: 15, fontWeight: 800, letterSpacing: '-.015em' }}>{a.title}</span>
+                  <span style={{ display: 'block', marginTop: 3, fontSize: 12, lineHeight: 1.5, color: '#7a8798' }}>{a.what}</span>
+                </span>
+              </div>
+              <BagIllustration b={a.bag} metric={metric} />
+              <div style={{ background: '#f8fafc', borderRadius: 11, padding: '4px 16px', marginBottom: 14 }}>
+                {a.rows.map((r) => (
+                  <div key={r.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, padding: '12px 0', borderBottom: '1px solid #eef2f6' }}>
+                    <span style={{ fontSize: 12.5, color: '#57677c' }}>{r.label}</span>
+                    <span style={{ fontSize: 12.5, fontWeight: 800, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{r.value}</span>
                   </div>
                 ))}
               </div>
+              <p style={{ margin: 0, fontSize: 12, lineHeight: 1.65, color: '#7a8798' }}>{a.note}</p>
+            </div>
+          ))}
+        </section>
+
+        <section style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24, marginBottom: 20 }}>
+          <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Allowance by Cabin Class</h2>
+          <div style={{ overflowX: 'auto' }}>
+            <div style={{ minWidth: 520 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr 1fr 1fr', gap: 12, padding: '0 4px 12px', fontSize: 11.5, fontWeight: 800, letterSpacing: '.03em', textTransform: 'uppercase', color: '#8494a8', borderBottom: '1px solid #eef2f6' }}>
+                <span>Class</span>
+                <span>Carry-on</span>
+                <span>Checked bags</span>
+                <span>Weight per bag</span>
+              </div>
+              {classes.map((c) => (
+                <div key={c.name} style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr 1fr 1fr', gap: 12, alignItems: 'center', padding: '14px 4px', borderBottom: '1px solid #f5f8fb', fontSize: 12.5, color: '#475569', fontVariantNumeric: 'tabular-nums' }}>
+                  <span style={{ fontWeight: 700, color: '#0f1c2e' }}>{c.name}</span>
+                  <span>{c.cabin}</span>
+                  <span>{c.bags}</span>
+                  <span>{c.weight}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 18, marginBottom: 20 }}>
+          <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24 }}>
+            <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Excess &amp; Oversize Fees</h2>
+            <div style={{ background: '#f8fafc', borderRadius: 11, padding: '4px 16px' }}>
+              {fees.map((f) => (
+                <div key={f.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, padding: '12px 0', borderBottom: '1px solid #eef2f6' }}>
+                  <span style={{ fontSize: 12.5, color: '#57677c' }}>{f.label}</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 800, whiteSpace: 'nowrap' }}>{f.value}</span>
+                </div>
+              ))}
+            </div>
+            <p style={{ margin: '14px 0 0', fontSize: 12, lineHeight: 1.65, color: '#7a8798' }}>Fees vary by route and are usually cheaper when paid online before travel than at the airport.</p>
+          </div>
+          <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24 }}>
+            <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Good to Know</h2>
+            <div style={{ display: 'grid', gap: 10, fontSize: 12.5, color: '#57677c', lineHeight: 1.6 }}>
+              <span>Published dimensions include wheels, handles and external pockets.</span>
+              <span>Baggage rules can differ on codeshare and partner-operated flights.</span>
+              <span>Special items such as sports gear or instruments need advance booking.</span>
+              <span>Always confirm on the airline&apos;s website before you travel.</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 18, paddingTop: 16, borderTop: '1px solid #f0f2f5', fontSize: 11.5, color: '#8494a8' }}>
+              <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+              Baggage rules last updated June 2026
+            </div>
+          </div>
+        </section>
+
+        <section style={{ background: '#fdf8ee', border: '1px solid #f3ebdb', borderRadius: 14, padding: 26, textAlign: 'center', marginBottom: 36 }}>
+          <h2 style={{ margin: '0 0 10px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>Will your bag fit {airline.name}?</h2>
+          <p style={{ margin: '0 auto 20px', maxWidth: 520, fontSize: 13, lineHeight: 1.7, color: '#57677c' }}>Enter your suitcase dimensions in the size checker and see instantly whether it meets these limits.</p>
+          <Link
+            href="/size-checker"
+            className="cta-link"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 9, background: '#fbbf47', color: '#3a2a05', borderRadius: 10, padding: '13px 24px', fontSize: 13.5, fontWeight: 800, textDecoration: 'none' }}
+          >
+            Check my bag for {airline.name}
+            <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3a2a05" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14" />
+              <path d="M13 6l6 6-6 6" />
+            </svg>
+          </Link>
+        </section>
+
+        <section id="baggage-types" style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24, marginBottom: 36, scrollMarginTop: 80 }}>
+          <h2 style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>The three baggage types, explained</h2>
+          <p style={{ margin: '0 0 20px', maxWidth: 680, fontSize: 13, lineHeight: 1.7, color: '#57677c' }}>
+            Airlines split what you travel with into three allowances. Each has its own size and weight limit, and the one you exceed decides what you pay.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))', gap: 16 }}>
+            <div>
+              <div style={{ marginBottom: 14, borderRadius: 10, overflow: 'hidden', background: '#f8fafc', aspectRatio: '4/3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg aria-hidden="true" width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeOpacity={0.35} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="5" y="7" width="14" height="14" rx="2.5" />
+                  <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
+                </svg>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <span style={{ flex: 'none', display: 'flex', width: 32, height: 32, borderRadius: 9, background: '#e3f5f2', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="5" y="7" width="14" height="14" rx="2.5" />
+                    <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
+                  </svg>
+                </span>
+                <div>
+                  <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 5 }}>Carry-on</div>
+                  <p style={{ margin: 0, fontSize: 12, lineHeight: 1.65, color: '#7a8798' }}>The wheeled case you take into the cabin and store in the overhead bin. Sized at the gate, and weighed by many airlines.</p>
+                </div>
+              </div>
             </div>
             <div>
-              <h2 style={{ margin: '0 0 14px', fontSize: 15, fontWeight: 800, letterSpacing: '-.01em' }}>{isCabin ? 'Carry-on Weight' : 'Checked Baggage Weight'}</h2>
-              <div style={{ background: '#f8fafc', borderRadius: 11, padding: 22 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                  <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e0a11a" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 4v16M6 20h12" />
-                    <path d="M4 9h16l-3 5H7z" />
+              <div style={{ marginBottom: 14, borderRadius: 10, overflow: 'hidden', background: '#f8fafc', aspectRatio: '4/3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg aria-hidden="true" width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeOpacity={0.35} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 9a5 5 0 0 1 10 0v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" />
+                  <path d="M10 9V7a2 2 0 0 1 4 0v2" />
+                </svg>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <span style={{ flex: 'none', display: 'flex', width: 32, height: 32, borderRadius: 9, background: '#e7effc', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 9a5 5 0 0 1 10 0v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" />
+                    <path d="M10 9V7a2 2 0 0 1 4 0v2" />
                   </svg>
-                  <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-.025em', whiteSpace: 'nowrap' }}>{kg(set.kg)}</span>
+                </span>
+                <div>
+                  <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 5 }}>Personal item</div>
+                  <p style={{ margin: 0, fontSize: 12, lineHeight: 1.65, color: '#7a8798' }}>The small bag that goes under the seat in front of you — handbag, laptop bag or small backpack. Usually free and rarely weighed.</p>
                 </div>
-                {isCabin && <p style={{ margin: '14px 0 0', fontSize: 12.5, color: '#7a8798' }}>Standard carry-on allowance</p>}
+              </div>
+            </div>
+            <div>
+              <div style={{ marginBottom: 14, borderRadius: 10, overflow: 'hidden', background: '#f8fafc', aspectRatio: '4/3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg aria-hidden="true" width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#b98107" strokeOpacity={0.35} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="4" y="6" width="16" height="15" rx="2.5" />
+                  <path d="M9 6V3.6A.6.6 0 0 1 9.6 3h4.8a.6.6 0 0 1 .6.6V6" />
+                  <path d="M9.6 11v6M14.4 11v6" />
+                </svg>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <span style={{ flex: 'none', display: 'flex', width: 32, height: 32, borderRadius: 9, background: '#fdf1dc', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b98107" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="4" y="6" width="16" height="15" rx="2.5" />
+                    <path d="M9 6V3.6A.6.6 0 0 1 9.6 3h4.8a.6.6 0 0 1 .6.6V6" />
+                    <path d="M9.6 11v6M14.4 11v6" />
+                  </svg>
+                </span>
+                <div>
+                  <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 5 }}>Checked baggage</div>
+                  <p style={{ margin: 0, fontSize: 12, lineHeight: 1.65, color: '#7a8798' }}>The large suitcase you hand over at the desk and collect at your destination. Charged by bag, with strict weight limits.</p>
+                </div>
               </div>
             </div>
           </div>
-
-          {!isCabin && (
-            <div style={{ margin: '0 24px 24px', background: '#f8fafc', borderRadius: 11, padding: '20px 22px' }}>
-              <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 12 }}>Important Notes</div>
-              <div style={{ display: 'grid', gap: 9, fontSize: 12.5, color: '#57677c', lineHeight: 1.6 }}>
-                <span>Figures above are typical industry-standard allowances, not {airline.name}-specific — checked baggage rules vary by route and fare class.</span>
-                <span>Special items may require additional fees or handling.</span>
-                <span>Pre-booking checked baggage online is usually cheaper than at the airport.</span>
-                <span>Always check {airline.name}&apos;s website for the most up-to-date information.</span>
-              </div>
-            </div>
-          )}
         </section>
 
         <section style={{ maxWidth: 820, margin: '0 auto', padding: '0 0 56px' }}>

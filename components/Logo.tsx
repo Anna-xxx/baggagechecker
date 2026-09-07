@@ -1,11 +1,11 @@
-export function LogoMark({ size = 26, iconSize = 14 }: { size?: number; iconSize?: number }) {
+export function LogoMark({ size = 26, iconSize = 14, radius }: { size?: number; iconSize?: number; radius?: number }) {
   return (
     <span
       style={{
         display: 'flex',
         width: size,
         height: size,
-        borderRadius: size > 28 ? 10 : 8,
+        borderRadius: radius ?? (size > 28 ? 10 : 8),
         alignItems: 'center',
         justifyContent: 'center',
         flex: 'none',

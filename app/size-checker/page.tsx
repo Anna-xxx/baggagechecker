@@ -4,21 +4,21 @@ import { SizeCheckerClient } from './SizeCheckerClient';
 export const metadata: Metadata = {
   title: 'Luggage Size Checker – Check Your Bag Against Airline Limits',
   description:
-    'Free luggage size checker: enter width, height, depth and weight to see instantly whether your suitcase fits carry-on limits for Ryanair, easyJet, Wizz Air, British Airways and Lufthansa.',
-  keywords: ['luggage size checker', 'carry-on size checker', 'suitcase size online', 'cabin bag dimensions', 'hand luggage limits'],
+    'Free luggage size checker: enter your bag width, height, depth and weight, pick your airlines and see instantly whether it fits carry-on, personal item or checked baggage limits.',
+  keywords: ['luggage size checker', 'compare luggage sizes', 'airline baggage comparison', 'cabin bag size limits', 'suitcase dimensions checker'],
   robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
   alternates: { canonical: 'https://sizemybag.com/size-checker' },
   openGraph: {
     type: 'website',
     siteName: 'BaggageChecker',
     url: 'https://sizemybag.com/size-checker',
-    title: 'Luggage Size Checker – Check Your Bag Against Airline Limits',
-    description: 'Enter your suitcase dimensions and instantly compare them with the carry-on rules of major airlines. Free, no sign-up.',
+    title: 'Luggage Size Checker – Will Your Bag Fit?',
+    description: 'Check one suitcase against multiple airline baggage policies side by side.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Luggage Size Checker – See if Your Bag Fits',
-    description: 'Compare your cabin bag with airline size limits and avoid gate fees.',
+    title: 'Luggage Size Checker – Will Your Bag Fit?',
+    description: 'Check one suitcase against multiple airline baggage policies side by side.',
   },
 };
 
@@ -27,12 +27,12 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'WebApplication',
-      name: 'Luggage Size Checker',
+      name: 'Luggage Size Comparison Tool',
       url: 'https://sizemybag.com/size-checker',
       applicationCategory: 'TravelApplication',
       operatingSystem: 'Web',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-      description: 'Free online tool that compares your suitcase dimensions and weight with airline carry-on allowances.',
+      description: "Compare a suitcase's dimensions and weight against the carry-on, personal item or checked baggage allowances of multiple airlines.",
     },
     {
       '@type': 'BreadcrumbList',
