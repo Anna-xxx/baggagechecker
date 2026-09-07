@@ -59,20 +59,21 @@ export function Header() {
           padding: '12px 24px',
           display: 'flex',
           alignItems: 'center',
-          gap: 28,
+          flexWrap: 'wrap',
+          gap: '10px 28px',
         }}
       >
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 11,
+            gap: 6,
             fontWeight: 800,
-            fontSize: 22,
-            letterSpacing: '-.02em',
+            fontSize: 25,
+            letterSpacing: '-.025em',
           }}
         >
-          <LogoMark size={43} iconSize={26} radius={12} />
+          <LogoMark size={36} iconSize={34} />
           BaggageChecker
         </div>
         <nav
@@ -85,6 +86,10 @@ export function Header() {
             fontWeight: 600,
             color: '#4b5768',
             whiteSpace: 'nowrap',
+            flex: '1 1 auto',
+            minWidth: 0,
+            justifyContent: 'flex-end',
+            overflowX: 'auto',
             flexWrap: 'wrap',
           }}
         >

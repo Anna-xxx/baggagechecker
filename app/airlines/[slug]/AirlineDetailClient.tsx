@@ -5,44 +5,75 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { TYPICAL_CHECKED, type Airline } from '@/lib/airlines';
-
-const GENERIC_PERSONAL = { w: 33, h: 43, d: 16, kg: 0 };
+import { type Airline } from '@/lib/airlines';
 
 type Bag = { w: number; h: number; d: number; kg: number };
+type Personal = { w: number; h: number; d: number };
+type CheckedInfo = { total: number; eco: number; biz: number; bags: string };
 
-function draw(b: Bag, metric: boolean) {
+const AIRLINE_OVERRIDES: Record<string, { cabin: Bag; personal: Personal } & CheckedInfo> = {
+  AA: { cabin: { w: 36, h: 56, d: 23, kg: 0 }, personal: { w: 36, h: 46, d: 20 }, total: 158, eco: 23, biz: 32, bags: '1 in economy (fee applies on most domestic fares)' },
+  DL: { cabin: { w: 35, h: 56, d: 23, kg: 0 }, personal: { w: 36, h: 43, d: 20 }, total: 158, eco: 23, biz: 32, bags: '1 in economy on most international fares' },
+  BA: { cabin: { w: 45, h: 56, d: 25, kg: 23 }, personal: { w: 30, h: 40, d: 15 }, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
+  LH: { cabin: { w: 40, h: 55, d: 23, kg: 8 }, personal: { w: 30, h: 40, d: 10 }, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
+  AC: { cabin: { w: 40, h: 55, d: 23, kg: 0 }, personal: { w: 33, h: 43, d: 16 }, total: 158, eco: 23, biz: 32, bags: '1 in economy on most fares' },
+  AF: { cabin: { w: 35, h: 55, d: 25, kg: 12 }, personal: { w: 30, h: 40, d: 15 }, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
+  EK: { cabin: { w: 38, h: 55, d: 22, kg: 7 }, personal: { w: 30, h: 40, d: 15 }, total: 150, eco: 30, biz: 40, bags: 'weight concept: 30 kg in economy' },
+  QR: { cabin: { w: 37, h: 50, d: 25, kg: 7 }, personal: { w: 30, h: 40, d: 15 }, total: 158, eco: 25, biz: 32, bags: '1–2 bags depending on fare' },
+  TK: { cabin: { w: 40, h: 55, d: 23, kg: 8 }, personal: { w: 30, h: 40, d: 15 }, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
+  FR: { cabin: { w: 40, h: 55, d: 20, kg: 10 }, personal: { w: 25, h: 40, d: 20 }, total: 119, eco: 20, biz: 20, bags: 'none included — checked bags are paid extras' },
+  U2: { cabin: { w: 45, h: 56, d: 25, kg: 15 }, personal: { w: 36, h: 45, d: 20 }, total: 275, eco: 23, biz: 23, bags: 'none included — checked bags are paid extras' },
+};
+
+const GENERIC_PERSONAL: Personal = { w: 30, h: 40, d: 20 };
+const GENERIC_CHECKED: CheckedInfo = { total: 158, eco: 23, biz: 32, bags: '1 in economy' };
+
+type BagKind = 'carryon' | 'personal' | 'checked';
+
+const BAG_STYLE: Record<BagKind, { fill: string; sideFill: string; stroke: string; ink: string; radius: number; soft: boolean; hard: boolean; ribs: boolean; straps: boolean }> = {
+  carryon: { fill: '#cff5ec', sideFill: '#b8efe1', stroke: '#5eddc4', ink: '#0b5f56', radius: 10, soft: false, hard: true, ribs: true, straps: false },
+  personal: { fill: '#e7effc', sideFill: '#d5e3fb', stroke: '#93b4ef', ink: '#1b4694', radius: 16, soft: true, hard: false, ribs: false, straps: false },
+  checked: { fill: '#fdf1dc', sideFill: '#f8e3bd', stroke: '#e9b969', ink: '#7a5406', radius: 10, soft: false, hard: true, ribs: false, straps: true },
+};
+
+function draw(b: Bag, kind: BagKind, metric: boolean) {
   const K = 1.5;
   return {
-    drawW: `${Math.round(b.w * K)}px`,
-    drawH: `${Math.round(b.h * K)}px`,
-    drawD: `${Math.max(20, Math.round(b.d * K))}px`,
+    ...BAG_STYLE[kind],
+    drawW: Math.round(b.w * K),
+    drawH: Math.round(b.h * K),
+    drawD: Math.max(20, Math.round(b.d * K)),
     faceLabel: `${metric ? b.w : Math.round(b.w / 2.54)} × ${metric ? b.h : Math.round(b.h / 2.54)}`,
     depthValue: metric ? b.d : Math.round(b.d / 2.54),
   };
 }
 
-function BagIllustration({ b, metric }: { b: Bag; metric: boolean }) {
-  const { drawW, drawH, drawD, faceLabel, depthValue } = draw(b, metric);
+function BagIllustration({ b, kind, metric }: { b: Bag; kind: BagKind; metric: boolean }) {
+  const s = draw(b, kind, metric);
   return (
     <div style={{ background: '#f8fafc', borderRadius: 11, padding: '20px 16px 16px', marginBottom: 12, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 16, minHeight: 150 }}>
-      <div style={{ position: 'relative', width: drawW, height: drawH }}>
-        <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', width: '34%', height: 16, border: '3px solid #94a3b8', borderBottom: 'none', borderRadius: '8px 8px 0 0' }} />
-        <div style={{ position: 'absolute', inset: 0, background: '#cff5ec', border: '2px solid #5eddc4', borderRadius: 10 }} />
-        <div style={{ position: 'absolute', left: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(20,184,166,.25)' }} />
-        <div style={{ position: 'absolute', right: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(20,184,166,.25)' }} />
-        <div style={{ position: 'absolute', left: '18%', bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />
-        <div style={{ position: 'absolute', right: '18%', bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />
-        <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: '#0b5f56', whiteSpace: 'nowrap' }}>{faceLabel}</span>
+      <div style={{ position: 'relative', width: s.drawW, height: s.drawH }}>
+        {s.hard && <div style={{ position: 'absolute', left: '50%', top: -15, transform: 'translateX(-50%)', width: '36%', height: 18, border: '5px solid #94a3b8', borderBottom: 'none', borderRadius: '10px 10px 0 0' }} />}
+        {s.soft && <div style={{ position: 'absolute', left: '50%', top: -17, transform: 'translateX(-50%)', width: '56%', height: 20, border: '4px solid #94a3b8', borderBottom: 'none', borderRadius: '999px 999px 0 0' }} />}
+        <div style={{ position: 'absolute', inset: 0, background: s.fill, border: `2px solid ${s.stroke}`, borderRadius: s.radius }} />
+        {s.ribs && <div style={{ position: 'absolute', left: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />}
+        {s.ribs && <div style={{ position: 'absolute', right: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />}
+        {s.soft && <div style={{ position: 'absolute', left: '16%', right: '16%', bottom: '14%', height: '28%', border: '2px solid rgba(15,28,46,.14)', borderRadius: 8 }} />}
+        {s.straps && <div style={{ position: 'absolute', left: 0, right: 0, top: '22%', height: 7, background: 'rgba(15,28,46,.13)' }} />}
+        {s.straps && <div style={{ position: 'absolute', left: 0, right: 0, bottom: '22%', height: 7, background: 'rgba(15,28,46,.13)' }} />}
+        {s.straps && <div style={{ position: 'absolute', left: -1, bottom: -1, width: 18, height: 18, borderLeft: `4px solid ${s.stroke}`, borderBottom: `4px solid ${s.stroke}`, borderRadius: '0 0 0 10px' }} />}
+        {s.straps && <div style={{ position: 'absolute', right: -1, bottom: -1, width: 18, height: 18, borderRight: `4px solid ${s.stroke}`, borderBottom: `4px solid ${s.stroke}`, borderRadius: '0 0 10px 0' }} />}
+        {s.straps && <div style={{ position: 'absolute', left: 'calc(50% + 20px)', top: -13, width: 20, height: 13, border: `1.5px solid ${s.stroke}`, borderRadius: 3, background: '#fff' }} />}
+        {s.hard && <div style={{ position: 'absolute', left: '18%', bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
+        {s.hard && <div style={{ position: 'absolute', right: '18%', bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
+        <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: s.ink, whiteSpace: 'nowrap' }}>{s.faceLabel}</span>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-        <div style={{ position: 'relative', width: drawD, height: drawH }}>
-          <div style={{ position: 'absolute', left: '50%', top: -14, transform: 'translateX(-50%)', width: 4, height: 16, borderRadius: 2, background: '#94a3b8' }} />
-          <div style={{ position: 'absolute', inset: 0, background: '#b8efe1', border: '2px solid #5eddc4', borderRadius: 10 }} />
-          <div style={{ position: 'absolute', left: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />
-          <div style={{ position: 'absolute', right: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />
-          <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: '#0b5f56', whiteSpace: 'nowrap' }}>{depthValue}</span>
-        </div>
+      <div style={{ position: 'relative', width: s.drawD, height: s.drawH }}>
+        {s.hard && <div style={{ position: 'absolute', left: '50%', top: -15, transform: 'translateX(-50%)', width: 5, height: 18, borderRadius: 3, background: '#94a3b8' }} />}
+        <div style={{ position: 'absolute', inset: 0, background: s.sideFill, border: `2px solid ${s.stroke}`, borderRadius: s.radius }} />
+        {s.hard && <div style={{ position: 'absolute', left: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
+        {s.hard && <div style={{ position: 'absolute', right: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
+        <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: s.ink, whiteSpace: 'nowrap' }}>{s.depthValue}</span>
       </div>
     </div>
   );
@@ -53,40 +84,28 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const [fav, setFav] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
 
-  const cabin: Bag = { w: airline.cabin[0], h: airline.cabin[1], d: airline.cabin[2], kg: airline.cabinKg };
-  const personal: Bag = GENERIC_PERSONAL;
-  const checked: Bag = TYPICAL_CHECKED;
+  const override = AIRLINE_OVERRIDES[airline.code];
+  const cabin: Bag = override ? override.cabin : { w: airline.cabin[0], h: airline.cabin[1], d: airline.cabin[2], kg: airline.cabinKg };
+  const personal: Personal = override ? override.personal : GENERIC_PERSONAL;
+  const info: CheckedInfo = override ? override : GENERIC_CHECKED;
 
   const len = (v: number) => (metric ? `${v} cm` : `${Math.round(v / 2.54)} in`);
   const wt = (v: number) => (metric ? `${v} kg` : `${Math.round(v * 2.205)} lb`);
   const dims = (b: Bag) => `${metric ? b.w : Math.round(b.w / 2.54)} × ${metric ? b.h : Math.round(b.h / 2.54)} × ${len(b.d)}`;
 
+  const sourceLabel = `Baggage allowance for ${airline.name} · figures reviewed September 2026`;
+
   const allowances = [
-    {
-      title: 'Carry-on Baggage',
-      badge: 'CO',
-      tint: '#e3f5f2',
-      iconColor: '#0f766e',
-      what: 'Goes in the overhead bin',
-      bag: cabin,
-      rows: [
-        { label: 'Max dimensions', value: dims(cabin) },
-        { label: 'Max width', value: len(cabin.w) },
-        { label: 'Max height', value: len(cabin.h) },
-        { label: 'Max depth', value: len(cabin.d) },
-        { label: 'Max weight', value: wt(cabin.kg) },
-      ],
-      note: 'One cabin bag per passenger. Measured with wheels and handles included.',
-    },
     {
       title: 'Personal Item',
       badge: 'PI',
       tint: '#e7effc',
       iconColor: '#2563eb',
       what: 'Goes under the seat in front of you',
-      bag: personal,
+      bag: { ...personal, kg: 0 },
+      kind: 'personal' as BagKind,
       rows: [
-        { label: 'Max dimensions', value: dims(personal) },
+        { label: 'Max dimensions', value: dims({ ...personal, kg: 0 }) },
         { label: 'Max width', value: len(personal.w) },
         { label: 'Max height', value: len(personal.h) },
         { label: 'Max depth', value: len(personal.d) },
@@ -95,35 +114,53 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
       note: 'A handbag, laptop bag or small backpack that fits under the seat in front of you.',
     },
     {
+      title: 'Carry-on Baggage',
+      badge: 'CO',
+      tint: '#e3f5f2',
+      iconColor: '#0f766e',
+      what: 'Goes in the overhead bin',
+      bag: cabin,
+      kind: 'carryon' as BagKind,
+      rows: [
+        { label: 'Max dimensions', value: dims(cabin) },
+        { label: 'Max width', value: len(cabin.w) },
+        { label: 'Max height', value: len(cabin.h) },
+        { label: 'Max depth', value: len(cabin.d) },
+        { label: 'Max weight', value: cabin.kg ? wt(cabin.kg) : 'No published limit' },
+      ],
+      note: 'One cabin bag per passenger. Measured with wheels and handles included.',
+    },
+    {
       title: 'Checked Baggage',
       badge: 'CB',
       tint: '#fdf1dc',
       iconColor: '#b98107',
       what: 'Handed over at the check-in desk',
-      bag: checked,
+      bag: { w: 45, h: 67, d: 27, kg: info.eco },
+      kind: 'checked' as BagKind,
       rows: [
-        { label: 'Max dimensions', value: dims(checked) },
-        { label: 'Max width', value: len(checked.w) },
-        { label: 'Max height', value: len(checked.h) },
-        { label: 'Max depth', value: len(checked.d) },
-        { label: 'Max weight', value: wt(checked.kg) },
+        { label: 'Max total dimensions', value: `${len(info.total)} (L + W + H)` },
+        { label: 'Max weight (economy)', value: wt(info.eco) },
+        { label: 'Max weight (business)', value: wt(info.biz) },
+        { label: 'Oversize threshold', value: `over ${len(info.total)}` },
+        { label: 'Bags included', value: info.bags },
       ],
       note: 'Allowance depends on your fare. Extra bags can be added during booking.',
     },
   ];
 
   const classes = [
-    { name: 'Economy', cabin: '1 bag + item', bags: '1 × 23 kg', weight: wt(23) },
-    { name: 'Premium Economy', cabin: '1 bag + item', bags: '2 × 23 kg', weight: wt(23) },
-    { name: 'Business', cabin: '2 bags + item', bags: '2 × 32 kg', weight: wt(32) },
-    { name: 'First', cabin: '2 bags + item', bags: '3 × 32 kg', weight: wt(32) },
+    { name: 'Economy', cabin: '1 bag + item', bags: `1 × ${info.eco} kg`, weight: wt(info.eco) },
+    { name: 'Premium Economy', cabin: '1 bag + item', bags: `2 × ${info.eco} kg`, weight: wt(info.eco) },
+    { name: 'Business', cabin: '2 bags + item', bags: `2 × ${info.biz} kg`, weight: wt(info.biz) },
+    { name: 'First', cabin: '2 bags + item', bags: `3 × ${info.biz} kg`, weight: wt(info.biz) },
   ];
 
   const fees = [
     { label: 'Extra checked bag', value: '$75 – $120' },
     { label: 'Overweight (23–32 kg)', value: '$100' },
     { label: 'Overweight (32–45 kg)', value: '$200' },
-    { label: 'Oversize (over 158 cm)', value: '$150' },
+    { label: 'Oversize (over ' + len(info.total) + ')', value: '$150' },
     { label: 'Gate-checked cabin bag', value: '$70' },
   ];
 
@@ -238,6 +275,14 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
           </div>
         </section>
 
+        <p style={{ margin: '0 0 18px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 11.5, lineHeight: 1.6, color: '#8494a8' }}>
+          <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a9b4c2" strokeWidth={2} strokeLinecap="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 11v5M12 8h.01" />
+          </svg>
+          {sourceLabel}
+        </p>
+
         <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 18, marginBottom: 20 }}>
           {allowances.map((a) => (
             <div key={a.title} style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 22 }}>
@@ -248,7 +293,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
                   <span style={{ display: 'block', marginTop: 3, fontSize: 12, lineHeight: 1.5, color: '#7a8798' }}>{a.what}</span>
                 </span>
               </div>
-              <BagIllustration b={a.bag} metric={metric} />
+              <BagIllustration b={a.bag} kind={a.kind} metric={metric} />
               <div style={{ background: '#f8fafc', borderRadius: 11, padding: '4px 16px', marginBottom: 14 }}>
                 {a.rows.map((r) => (
                   <div key={r.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, padding: '12px 0', borderBottom: '1px solid #eef2f6' }}>
@@ -283,6 +328,14 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
             </div>
           </div>
         </section>
+
+        <p style={{ margin: '0 0 18px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 11.5, lineHeight: 1.6, color: '#8494a8' }}>
+          <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a9b4c2" strokeWidth={2} strokeLinecap="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 11v5M12 8h.01" />
+          </svg>
+          {sourceLabel}
+        </p>
 
         <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 18, marginBottom: 20 }}>
           <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24 }}>

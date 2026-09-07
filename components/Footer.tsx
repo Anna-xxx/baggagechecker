@@ -2,18 +2,25 @@ import { Fragment } from 'react';
 import Link from 'next/link';
 import { LogoMark } from './Logo';
 
-const DEFAULT_RESOURCE_LINKS = [
-  'Luggage Guide',
-  'Luggage Size Checker',
-  'How to Measure Bags',
-  'Book Flights',
-  'Book Hotels',
-  'All Airlines',
+export type FooterLink = { label: string; href: string };
+export type FooterColumn = { title: string; links: FooterLink[] };
+
+const DEFAULT_RESOURCE_LINKS: FooterLink[] = [
+  { label: 'Luggage Guide', href: '/luggage-guide' },
+  { label: 'Luggage Size Checker', href: '/size-checker' },
+  { label: 'Book Flights', href: '/' },
+  { label: 'Book Hotels', href: '/' },
+  { label: 'All Airlines', href: '/airlines' },
 ];
 
-const DEFAULT_SITE_LINKS = ['About', 'Privacy Policy', 'Terms of Service', 'Contact'];
+const DEFAULT_SITE_LINKS: FooterLink[] = [
+  { label: 'About', href: '/' },
+  { label: 'Privacy Policy', href: '/' },
+  { label: 'Terms of Service', href: '/' },
+  { label: 'Contact', href: '/' },
+];
 
-export type FooterColumn = { title: string; links: string[] };
+const DEFAULT_DISCLAIMER = 'Baggage rules reviewed September 2026. Airlines can change allowances at any time — confirm on the carrier’s own site before you fly.';
 
 export function Footer({
   maxWidth = 1340,
@@ -26,6 +33,7 @@ export function Footer({
   resourceLinks = DEFAULT_RESOURCE_LINKS,
   siteLinks = DEFAULT_SITE_LINKS,
   columns,
+  disclaimer = DEFAULT_DISCLAIMER,
 }: {
   maxWidth?: number;
   gap?: number;
@@ -34,9 +42,10 @@ export function Footer({
   showWordmark?: boolean;
   copyrightSize?: number;
   copyrightLines?: string[];
-  resourceLinks?: string[];
-  siteLinks?: string[];
+  resourceLinks?: FooterLink[];
+  siteLinks?: FooterLink[];
   columns?: FooterColumn[];
+  disclaimer?: string;
 }) {
   return (
     <footer style={{ background: '#fff', borderTop: '1px solid #edf0f3', padding: '44px 24px 32px' }}>
@@ -49,6 +58,8 @@ export function Footer({
           gap,
         }}
       >
+        {disclaimer && <p style={{ margin: '0 0 14px', fontSize: 11.5, lineHeight: 1.6, color: '#8494a8' }}>{disclaimer}</p>}
+
         <div>
           {showWordmark ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: 14, marginBottom: 10 }}>
@@ -73,10 +84,10 @@ export function Footer({
           ? columns.map((col) => (
               <div key={col.title}>
                 <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 12 }}>{col.title}</div>
-                {col.links.map((label) => (
-                  <div key={label} style={{ marginBottom: 8 }}>
-                    <Link href="/" style={{ fontSize: 12, color: '#7a8798' }}>
-                      {label}
+                {col.links.map((link) => (
+                  <div key={link.label} style={{ marginBottom: 8 }}>
+                    <Link href={link.href} style={{ fontSize: 12, color: '#7a8798' }}>
+                      {link.label}
                     </Link>
                   </div>
                 ))}
@@ -86,20 +97,20 @@ export function Footer({
             <>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 12 }}>Helpful Resources</div>
-                {resourceLinks.map((label) => (
-                  <div key={label} style={{ marginBottom: 10 }}>
-                    <Link href="/" style={{ fontSize: 12, color: '#7a8798' }}>
-                      {label}
+                {resourceLinks.map((link) => (
+                  <div key={link.label} style={{ marginBottom: 10 }}>
+                    <Link href={link.href} style={{ fontSize: 12, color: '#7a8798' }}>
+                      {link.label}
                     </Link>
                   </div>
                 ))}
               </div>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 12 }}>Links</div>
-                {siteLinks.map((label) => (
-                  <div key={label} style={{ marginBottom: 10 }}>
-                    <Link href="/" style={{ fontSize: 12, color: '#7a8798' }}>
-                      {label}
+                {siteLinks.map((link) => (
+                  <div key={link.label} style={{ marginBottom: 10 }}>
+                    <Link href={link.href} style={{ fontSize: 12, color: '#7a8798' }}>
+                      {link.label}
                     </Link>
                   </div>
                 ))}

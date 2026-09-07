@@ -77,19 +77,6 @@ type DimKey = 'W' | 'H' | 'D' | 'KG' | 'KGC';
 
 const TYPE_DEFS: { key: BagType; title: string; hint: string; iconColor: string; tint: string; icon: React.ReactNode }[] = [
   {
-    key: 'carryon',
-    title: 'Carry-on',
-    hint: 'Cabin bag for the overhead bin',
-    iconColor: '#0f766e',
-    tint: '#e3f5f2',
-    icon: (
-      <>
-        <rect x="5" y="7" width="14" height="14" rx="2.5" />
-        <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
-      </>
-    ),
-  },
-  {
     key: 'personal',
     title: 'Personal item',
     hint: 'Small bag under the seat',
@@ -99,6 +86,19 @@ const TYPE_DEFS: { key: BagType; title: string; hint: string; iconColor: string;
       <>
         <path d="M7 9a5 5 0 0 1 10 0v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" />
         <path d="M10 9V7a2 2 0 0 1 4 0v2" />
+      </>
+    ),
+  },
+  {
+    key: 'carryon',
+    title: 'Carry-on',
+    hint: 'Cabin bag for the overhead bin',
+    iconColor: '#0f766e',
+    tint: '#e3f5f2',
+    icon: (
+      <>
+        <rect x="5" y="7" width="14" height="14" rx="2.5" />
+        <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
       </>
     ),
   },

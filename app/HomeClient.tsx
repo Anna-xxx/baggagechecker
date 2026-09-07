@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
+import { airlineSlug } from '@/lib/airlines';
 
 function PhotoPlaceholder({ label, aspectRatio, radius = 0 }: { label: string; aspectRatio: string; radius?: number }) {
   return (
@@ -25,18 +26,28 @@ function PhotoPlaceholder({ label, aspectRatio, radius = 0 }: { label: string; a
   );
 }
 
-type HomeAirline = { code: string; name: string; website: string; cabin: string; cabinKg: string; checked: string };
+type HomeAirline = { code: string; name: string; website: string; cabin: string; cabinKg: string };
 
 const AIRLINES: HomeAirline[] = [
-  { code: 'AF', name: 'Air France', website: 'https://www.airfrance.com', cabin: '55×35×25 cm', cabinKg: '12 kg', checked: '158 cm / 23 kg' },
-  { code: 'AZ', name: 'ITA Airways', website: 'https://www.ita-airways.com', cabin: '55×35×25 cm', cabinKg: '8 kg', checked: '158 cm / 23 kg' },
-  { code: 'KL', name: 'KLM Royal Dutch', website: 'https://www.klm.com', cabin: '55×35×25 cm', cabinKg: '12 kg', checked: '158 cm / 23 kg' },
-  { code: 'AA', name: 'American Airlines', website: 'https://www.aa.com', cabin: '56×36×23 cm', cabinKg: 'No limit', checked: '158 cm / 23 kg' },
-  { code: 'LH', name: 'Lufthansa', website: 'https://www.lufthansa.com', cabin: '55×40×23 cm', cabinKg: '8 kg', checked: '158 cm / 23 kg' },
-  { code: 'BA', name: 'British Airways', website: 'https://www.britishairways.com', cabin: '56×45×25 cm', cabinKg: '23 kg', checked: '208 cm / 23 kg' },
-  { code: 'FR', name: 'Ryanair', website: 'https://www.ryanair.com', cabin: '55×40×20 cm', cabinKg: '10 kg', checked: '119 cm / 20 kg' },
-  { code: 'IB', name: 'Iberia', website: 'https://www.iberia.com', cabin: '56×40×25 cm', cabinKg: '10 kg', checked: '158 cm / 23 kg' },
+  { code: 'AF', name: 'Air France', website: 'https://www.airfrance.com', cabin: '55×35×25 cm', cabinKg: '12 kg' },
+  { code: 'AZ', name: 'ITA Airways', website: 'https://www.ita-airways.com', cabin: '55×35×25 cm', cabinKg: '8 kg' },
+  { code: 'KL', name: 'KLM Royal Dutch', website: 'https://www.klm.com', cabin: '55×35×25 cm', cabinKg: '12 kg' },
+  { code: 'AA', name: 'American Airlines', website: 'https://www.aa.com', cabin: '56×36×23 cm', cabinKg: 'No limit' },
+  { code: 'LH', name: 'Lufthansa', website: 'https://www.lufthansa.com', cabin: '55×40×23 cm', cabinKg: '8 kg' },
+  { code: 'BA', name: 'British Airways', website: 'https://www.britishairways.com', cabin: '56×45×25 cm', cabinKg: '23 kg' },
+  { code: 'FR', name: 'Ryanair', website: 'https://www.ryanair.com', cabin: '55×40×20 cm', cabinKg: '10 kg' },
+  { code: 'IB', name: 'Iberia', website: 'https://www.iberia.com', cabin: '56×40×25 cm', cabinKg: '10 kg' },
 ];
+
+function fitsAirline(a: HomeAirline, w: number, h: number, d: number, kg: number) {
+  const parts = a.cabin.replace(' cm', '').split('×').map(Number);
+  const lim = [...parts].sort((x, y) => y - x);
+  const mine = [w, h, d].sort((x, y) => y - x);
+  const kgLimit = parseFloat(a.cabinKg);
+  const sizeOk = mine.every((v, i) => v <= lim[i]);
+  const kgOk = Number.isNaN(kgLimit) || kg <= kgLimit;
+  return sizeOk && kgOk;
+}
 
 const STEPS = [
   'Place your luggage upright on a flat surface.',
@@ -60,9 +71,34 @@ const FAQS = [
 ];
 
 const FOOTER_COLUMNS = [
-  { title: 'Popular Resources', links: ['Carry-On Sizes', 'Checked Baggage Limits', 'Airline Comparison', 'Baggage Fee Guide', 'Travel Tips'] },
-  { title: 'Tools', links: ['Size Checker', 'Airline Directory', 'Transfer Booking', 'Flight Search'] },
-  { title: 'Company', links: ['About', 'Contact', 'Privacy Policy', 'Terms of Use'] },
+  {
+    title: 'Popular Resources',
+    links: [
+      { label: 'Carry-On Sizes', href: '/luggage-guide' },
+      { label: 'Checked Baggage Limits', href: '/luggage-guide' },
+      { label: 'Airline Comparison', href: '/airlines' },
+      { label: 'Baggage Fee Guide', href: '/luggage-guide' },
+      { label: 'Travel Tips', href: '/luggage-guide' },
+    ],
+  },
+  {
+    title: 'Tools',
+    links: [
+      { label: 'Size Checker', href: '/size-checker' },
+      { label: 'Airline Directory', href: '/airlines' },
+      { label: 'Transfer Booking', href: '/' },
+      { label: 'Flight Search', href: '/' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About', href: '/' },
+      { label: 'Contact', href: '/' },
+      { label: 'Privacy Policy', href: '/' },
+      { label: 'Terms of Use', href: '/' },
+    ],
+  },
 ];
 
 export function HomeClient() {
@@ -85,8 +121,19 @@ export function HomeClient() {
 
   const airlines = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return q ? AIRLINES.filter((a) => a.name.toLowerCase().includes(q)) : AIRLINES;
-  }, [query]);
+    const list = q ? AIRLINES.filter((a) => a.name.toLowerCase().includes(q)) : AIRLINES;
+    return list.map((a) => {
+      const fits = fitsAirline(a, width, height, depth, weightKg);
+      return {
+        ...a,
+        fitLabel: fits ? 'Fits your bag' : 'Too large',
+        fitColor: fits ? '#15803d' : '#b3403f',
+        fitBg: fits ? '#e6f6ee' : '#fdecec',
+      };
+    });
+  }, [query, width, height, depth, weightKg]);
+
+  const fitSummary = `${airlines.filter((a) => a.fitLabel === 'Fits your bag').length} of ${airlines.length} popular airlines fit your bag`;
 
   const fits = height <= 56 && width <= 45 && depth <= 25;
   const boxW = Math.round(26 + width * 1.05);
@@ -106,7 +153,7 @@ export function HomeClient() {
             </span>
             <h1 style={{ margin: '18px 0 14px', fontSize: 52, lineHeight: 1.05, fontWeight: 800, letterSpacing: '-.03em', maxWidth: '11ch' }}>Luggage Size Checker</h1>
             <p style={{ margin: '0 0 24px', fontSize: 16, lineHeight: 1.6, color: '#57677c', maxWidth: '52ch' }}>
-              Check if your luggage dimensions meet size and weight requirements for popular airlines. <a href="#sizes" style={{ fontWeight: 700 }}>Avoid excess baggage fees!</a>
+              Check if your luggage dimensions meet size and weight requirements for popular airlines. <Link href="/size-checker" style={{ fontWeight: 700 }}>Avoid excess baggage fees!</Link>
             </p>
             <form style={{ display: 'flex', gap: 10, maxWidth: 520 }} onSubmit={(e) => e.preventDefault()}>
               <input placeholder="Search airline or luggage requirement" style={{ flex: 1, minWidth: 0, padding: '13px 16px', border: '1px solid #ecdfc4', background: '#fff', borderRadius: 10, fontSize: 14, fontFamily: 'inherit', color: '#0f1c2e', outline: 'none' }} />
@@ -194,7 +241,7 @@ export function HomeClient() {
           <div id="airlines" style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 22 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
               <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800, letterSpacing: '-.01em' }}>Popular Airlines</h3>
-              <span style={{ fontSize: 11, color: '#8494a8' }}>Showing airlines that your luggage fits — {airlines.length} of 42 airlines</span>
+              <span style={{ fontSize: 11, color: '#8494a8' }}>{fitSummary}</span>
             </div>
             <div style={{ display: 'flex', gap: 8, margin: '14px 0 6px' }}>
               <input
@@ -219,10 +266,16 @@ export function HomeClient() {
                 <div key={a.code} style={{ display: 'flex', gap: 12, padding: '14px 0', borderTop: '1px solid #f0f2f5' }}>
                   <AirlineLogo code={a.code} website={a.website} width={40} height={40} radius={8} fontSize={10} />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6 }}>{a.name}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 6 }}>
+                      <span style={{ fontSize: 13, fontWeight: 700 }}>{a.name}</span>
+                      <span style={{ fontSize: 10, fontWeight: 800, color: a.fitColor, background: a.fitBg, borderRadius: 999, padding: '3px 9px', whiteSpace: 'nowrap' }}>{a.fitLabel}</span>
+                      <Link href={`/airlines/${airlineSlug(a.name)}`} style={{ marginLeft: 'auto', fontSize: 10.5, fontWeight: 700, whiteSpace: 'nowrap' }}>
+                        Details →
+                      </Link>
+                    </div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 18px', fontSize: 10.5, color: '#7a8798', lineHeight: 1.5 }}>
                       <span style={{ minWidth: 0 }}>
-                        Carry-on
+                        Carry-on (H×W×D)
                         <br />
                         <b style={{ display: 'block', color: '#0f1c2e', fontWeight: 600, whiteSpace: 'nowrap' }}>{a.cabin}</b>
                       </span>
@@ -230,11 +283,6 @@ export function HomeClient() {
                         Max weight
                         <br />
                         <b style={{ display: 'block', color: '#0f1c2e', fontWeight: 600 }}>{a.cabinKg}</b>
-                      </span>
-                      <span style={{ minWidth: 0 }}>
-                        Checked
-                        <br />
-                        <b style={{ display: 'block', color: '#0f1c2e', fontWeight: 600, whiteSpace: 'nowrap' }}>{a.checked}</b>
                       </span>
                     </div>
                   </div>
@@ -293,9 +341,9 @@ export function HomeClient() {
       <section style={{ background: '#f7f8f9', padding: '36px 24px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 26, textAlign: 'center' }}>
           <p style={{ margin: '0 0 16px', fontSize: 15, fontWeight: 700 }}>If your flight is delayed or cancelled, you could get €250–€600 compensation — check eligibility here.</p>
-          <a href="#home" style={{ display: 'inline-block', padding: '11px 24px', background: '#fbbf47', color: '#3a2a05', borderRadius: 9, fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>
+          <Link href="/size-checker" style={{ display: 'inline-block', padding: '11px 24px', background: '#fbbf47', color: '#3a2a05', borderRadius: 9, fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>
             Check eligibility
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -317,216 +365,24 @@ export function HomeClient() {
       </section>
 
       <section style={{ background: '#fff', padding: '8px 24px 56px' }}>
-        <div style={{ maxWidth: 1140, margin: '0 auto' }}>
-          <h2 style={{ margin: '0 0 26px', textAlign: 'center', fontSize: 24, fontWeight: 800, letterSpacing: '-.02em' }}>Understanding Luggage Size Requirements</h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 38, alignItems: 'flex-start' }}>
-            <div style={{ flex: '1 1 460px', minWidth: 0 }}>
-              <div style={{ marginBottom: 28 }}>
-                <PhotoPlaceholder label="passenger checking boarding pass" aspectRatio="16/9" radius={14} />
-              </div>
-
-              <h3 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 800 }}>Why Luggage Size Matters When Traveling</h3>
-              <p style={{ margin: '0 0 18px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>
-                Airline baggage rules are one of the most frequent sources of stress at the airport. Gate agents measure bags, and an oversized carry-on can turn into a fee that costs more than the ticket. Knowing your dimensions before you leave home removes that risk entirely.
-              </p>
-              <p style={{ margin: '0 0 22px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>
-                To avoid these troubles, travellers can measure their luggage using a <a href="#checker">luggage size checker</a> before heading to the airport.
-              </p>
-
-              <h3 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 800 }}>Common Airline Requirements for Luggage Sizes</h3>
-              <p style={{ margin: '0 0 20px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>While there are no universal luggage size rules, most airlines follow standard dimension ranges for carry-on and checked baggage. Here is a general guide.</p>
-
-              <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 800 }}>Carry-On Luggage Size Restrictions</h4>
-              <p style={{ margin: '0 0 8px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>Most major airlines allow one cabin bag per passenger, typically:</p>
-              <ul style={{ margin: '0 0 16px', paddingLeft: 20, fontSize: 13, lineHeight: 1.9, color: '#3d4759' }}>
-                <li>22 × 14 × 9 inches (56 × 36 × 23 centimetres), including wheels and handles</li>
-              </ul>
-              <p style={{ margin: '0 0 8px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>However, budget airlines in Europe such as Ryanair, Wizz Air and easyJet apply stricter limits, so check your airline before flying. You can find this information on their websites, for example:</p>
-              <ul style={{ margin: '0 0 22px', paddingLeft: 20, fontSize: 13, lineHeight: 1.9, color: '#3d4759' }}>
-                <li>American Airlines baggage policy</li>
-                <li>Ryanair cabin bags guide</li>
-                <li>Emirates baggage allowance</li>
-              </ul>
-
-              <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 800 }}>Checked Baggage Size &amp; Weight Limits</h4>
-              <p style={{ margin: '0 0 8px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>For checked luggage, airlines typically allow:</p>
-              <ul style={{ margin: '0 0 12px', paddingLeft: 20, fontSize: 13, lineHeight: 1.9, color: '#3d4759' }}>
-                <li>62 linear inches (158 cm) for length + width + height</li>
-                <li>Weight limits of 23 kg for economy class and up to 32 kg for business and first class</li>
-              </ul>
-              <p style={{ margin: '0 0 22px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>Some airlines charge overweight baggage fees, which can range from $50 to $200 per bag depending on route.</p>
-
-              <h3 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 800 }}>How to Measure Your Luggage Correctly</h3>
-              <p style={{ margin: '0 0 20px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>Using a luggage size checker is only useful if you measure your bag correctly and consistently. Here is how to make sure your numbers are right.</p>
-
-              <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 800 }}>Include Wheels and Handles</h4>
-              <p style={{ margin: '0 0 18px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>Many travellers make the mistake of measuring only the main compartment of their suitcase. Always measure from the floor to the top of the extended handle, wheels included.</p>
-
-              <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 800 }}>Measure the Widest Points</h4>
-              <p style={{ margin: '0 0 18px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>Instead of measuring the middle of the bag, place a ruler at the widest point of your suitcase, including external pockets.</p>
-
-              <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 800 }}>Use a Digital Luggage Scale</h4>
-              <p style={{ margin: '0 0 18px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>To avoid overweight baggage fees, use a portable luggage scale to weigh your suitcase before arriving at the airport.</p>
-
-              <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 800 }}>Consider Soft-Sided vs. Hard-Sided Bags</h4>
-              <p style={{ margin: '0 0 22px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>Soft-sided luggage compresses slightly, which can help it pass a sizer, while hard-shell suitcases cannot flex. If you fly budget carriers often, a soft-sided bag is the safer choice.</p>
-
-              <h3 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 800 }}>Luggage Size Checker: A Must-Have Travel Tool</h3>
-              <p style={{ margin: '0 0 12px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>
-                Instead of guessing whether your suitcase will fit airline requirements, use an online luggage size checker like <a href="#home">BaggageChecker</a> to compare dimensions instantly. The tool lets you:
-              </p>
-              <ul style={{ margin: '0 0 16px', paddingLeft: 20, fontSize: 13, lineHeight: 1.9, color: '#3d4759' }}>
-                <li>Enter your luggage dimensions in centimetres or inches</li>
-                <li>Check baggage rules for dozens of major airlines</li>
-                <li>See restrictions for cabin and checked luggage side by side</li>
-              </ul>
-              <p style={{ margin: '0 0 22px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>Being able to compare limits in one place saves time and helps you avoid surprises at the check-in desk.</p>
-
-              <h3 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 800 }}>Avoid Extra Fees &amp; Travel Stress</h3>
-              <p style={{ margin: '0 0 12px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>A little planning with luggage policies turns a potentially expensive last-minute headache into a non-event. Before you fly:</p>
-              <ul style={{ margin: '0 0 16px', paddingLeft: 20, fontSize: 13, lineHeight: 1.9, color: '#3d4759' }}>
-                <li>Measure and weigh every bag the night before</li>
-                <li>Check your airline&apos;s own size and weight rules</li>
-                <li>Weigh your suitcase with a portable luggage scale</li>
-                <li>Pack heavier items in your checked bag where allowed</li>
-              </ul>
-              <p style={{ margin: '0 0 22px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>By planning ahead, you can save money, avoid queues and travel with confidence knowing your luggage meets all airline requirements.</p>
-
-              <h3 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 800 }}>Final Thoughts</h3>
-              <p style={{ margin: '0 0 22px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>
-                Packing for a trip does not have to be a guessing game. With a luggage size checker you can confirm whether your bag meets the standards set by the airline you are flying with, whether you are taking a hand carry-on for a weekend or checking two large suitcases for a long trip.
-              </p>
-              <p style={{ margin: '0 0 26px', fontSize: 13, lineHeight: 1.75, color: '#3d4759' }}>
-                For a fast and accurate luggage size check, use <a href="#checker">BaggageChecker</a> and compare baggage policies today.
-              </p>
-
-              <div style={{ textAlign: 'center' }}>
-                <a href="#checker" style={{ display: 'inline-block', padding: '12px 28px', background: '#fbbf47', color: '#3a2a05', borderRadius: 9, fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>
-                  Check Your Luggage Size Now
-                </a>
-              </div>
-            </div>
-
-            <aside style={{ flex: '1 1 250px', maxWidth: 330, position: 'sticky', top: 80, display: 'grid', gap: 14 }}>
-              <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.05em', textTransform: 'uppercase', color: '#8494a8', marginBottom: 18 }}>What to measure</div>
-                <div style={{ padding: '4px 0 2px' }}>
-                  <svg viewBox="0 0 260 210" width="100%" role="img" aria-label="Diagram showing where to measure width, height and depth of a suitcase">
-                    <defs>
-                      <marker id="dimArrow" viewBox="0 0 10 10" refX={9} refY={5} markerWidth={6} markerHeight={6} orient="auto-start-reverse">
-                        <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8" />
-                      </marker>
-                    </defs>
-                    <rect x={66} y={48} width={112} height={118} rx={14} fill="#cff5ec" stroke="#5eddc4" strokeWidth={2} />
-                    <rect x={66} y={80} width={112} height={10} fill="#fbbf47" />
-                    <path d="M104 48v-14a6 6 0 0 1 6-6h24a6 6 0 0 1 6 6v14" fill="none" stroke="#94a3b8" strokeWidth={4} strokeLinecap="round" />
-                    <rect x={104} y={134} width={36} height={9} rx={4} fill="#475569" opacity={0.28} />
-                    <circle cx={86} cy={172} r={6} fill="#475569" />
-                    <circle cx={158} cy={172} r={6} fill="#475569" />
-                    <line x1={66} y1={196} x2={178} y2={196} stroke="#94a3b8" strokeWidth={1.6} markerStart="url(#dimArrow)" markerEnd="url(#dimArrow)" />
-                    <text x={122} y={190} textAnchor="middle" fontFamily="Public Sans, sans-serif" fontSize={12} fontWeight={700} fill="#57677c">
-                      Width
-                    </text>
-                    <line x1={44} y1={34} x2={44} y2={178} stroke="#94a3b8" strokeWidth={1.6} markerStart="url(#dimArrow)" markerEnd="url(#dimArrow)" />
-                    <text x={36} y={106} textAnchor="middle" fontFamily="Public Sans, sans-serif" fontSize={12} fontWeight={700} fill="#57677c" transform="rotate(-90 36 106)">
-                      Height
-                    </text>
-                    <rect x={204} y={48} width={40} height={118} rx={12} fill="#b8efe1" stroke="#5eddc4" strokeWidth={2} />
-                    <circle cx={214} cy={172} r={6} fill="#475569" />
-                    <circle cx={234} cy={172} r={6} fill="#475569" />
-                    <line x1={204} y1={196} x2={244} y2={196} stroke="#94a3b8" strokeWidth={1.6} markerStart="url(#dimArrow)" markerEnd="url(#dimArrow)" />
-                    <text x={224} y={190} textAnchor="middle" fontFamily="Public Sans, sans-serif" fontSize={12} fontWeight={700} fill="#57677c">
-                      Depth
-                    </text>
-                    <text x={122} y={12} textAnchor="middle" fontFamily="Public Sans, sans-serif" fontSize={11} fill="#8494a8">
-                      front
-                    </text>
-                    <text x={224} y={12} textAnchor="middle" fontFamily="Public Sans, sans-serif" fontSize={11} fill="#8494a8">
-                      side
-                    </text>
-                  </svg>
-                </div>
-                <div style={{ display: 'grid', gap: 7, paddingTop: 16, marginTop: 14, borderTop: '1px solid #f1f4f7' }}>
-                  <span style={{ fontSize: 11.5, color: '#57677c' }}>
-                    <b>Width</b> — at the widest point of the shell
-                  </span>
-                  <span style={{ fontSize: 11.5, color: '#57677c' }}>
-                    <b>Height</b> — floor to top of extended handle
-                  </span>
-                  <span style={{ fontSize: 11.5, color: '#57677c' }}>
-                    <b>Depth</b> — front to back, wheels included
-                  </span>
-                  <span style={{ fontSize: 11.5, color: '#57677c' }}>
-                    <b>Weight</b> — weigh the bag fully packed
-                  </span>
-                </div>
-                <p style={{ margin: '14px 0 0', fontSize: 12, lineHeight: 1.7, color: '#7a8798' }}>Airlines quote limits in this order: width × height × depth. Match your numbers to theirs before you pack.</p>
-              </div>
-
-              <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.05em', textTransform: 'uppercase', color: '#8494a8', marginBottom: 16 }}>Typical limits</div>
-                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 16, padding: '10px 0 14px', borderBottom: '1px solid #f1f4f7' }}>
-                  <div style={{ position: 'relative', width: 26, height: 26, flex: 'none' }}>
-                    <div style={{ position: 'absolute', inset: 0, borderRadius: 5, background: '#eef1f4', border: '2px solid #cbd5e1' }} />
-                    <div style={{ position: 'absolute', left: '50%', top: -7, transform: 'translateX(-50%)', width: 12, height: 8, border: '2px solid #b6c1cf', borderBottom: 'none', borderRadius: '5px 5px 0 0' }} />
-                  </div>
-                  <div style={{ position: 'relative', width: 40, height: 52, flex: 'none' }}>
-                    <div style={{ position: 'absolute', inset: 0, borderRadius: 7, background: '#cff5ec', border: '2px solid #5eddc4' }} />
-                    <div style={{ position: 'absolute', left: 0, right: 0, top: '38%', height: 4, background: 'rgba(20,184,166,.3)' }} />
-                    <div style={{ position: 'absolute', left: '50%', top: -10, transform: 'translateX(-50%)', width: 15, height: 11, border: '2px solid #94a3b8', borderBottom: 'none', borderRadius: '6px 6px 0 0' }} />
-                    <div style={{ position: 'absolute', left: 5, bottom: -6, width: 8, height: 8, borderRadius: '50%', background: '#475569' }} />
-                    <div style={{ position: 'absolute', right: 5, bottom: -6, width: 8, height: 8, borderRadius: '50%', background: '#475569' }} />
-                  </div>
-                  <div style={{ position: 'relative', width: 58, height: 78, flex: 'none' }}>
-                    <div style={{ position: 'absolute', inset: 0, borderRadius: 9, background: '#fdf1d8', border: '2px solid #f3c976' }} />
-                    <div style={{ position: 'absolute', left: 0, right: 0, top: '34%', height: 5, background: 'rgba(224,140,11,.25)' }} />
-                    <div style={{ position: 'absolute', left: '50%', top: -11, transform: 'translateX(-50%)', width: 20, height: 12, border: '2px solid #94a3b8', borderBottom: 'none', borderRadius: '6px 6px 0 0' }} />
-                    <div style={{ position: 'absolute', left: 7, bottom: -6, width: 9, height: 9, borderRadius: '50%', background: '#475569' }} />
-                    <div style={{ position: 'absolute', right: 7, bottom: -6, width: 9, height: 9, borderRadius: '50%', background: '#475569' }} />
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gap: 11, paddingTop: 16 }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                    <span style={{ flex: 'none', width: 9, height: 9, borderRadius: 3, background: '#eef1f4', border: '1.5px solid #cbd5e1' }} />
-                    <span style={{ fontSize: 12.5, fontWeight: 700, flex: 'none' }}>Personal item</span>
-                    <span style={{ fontSize: 11.5, color: '#7a8798', marginLeft: 'auto', textAlign: 'right' }}>40 × 30 × 15 cm</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                    <span style={{ flex: 'none', width: 9, height: 9, borderRadius: 3, background: '#cff5ec', border: '1.5px solid #5eddc4' }} />
-                    <span style={{ fontSize: 12.5, fontWeight: 700, flex: 'none' }}>Cabin bag</span>
-                    <span style={{ fontSize: 11.5, color: '#7a8798', marginLeft: 'auto', textAlign: 'right' }}>56 × 36 × 23 cm · 8–10 kg</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                    <span style={{ flex: 'none', width: 9, height: 9, borderRadius: 3, background: '#fdf1d8', border: '1.5px solid #f3c976' }} />
-                    <span style={{ fontSize: 12.5, fontWeight: 700, flex: 'none' }}>Checked bag</span>
-                    <span style={{ fontSize: 11.5, color: '#7a8798', marginLeft: 'auto', textAlign: 'right' }}>158 cm total · 23 kg</span>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 20 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.05em', textTransform: 'uppercase', color: '#8494a8', marginBottom: 14 }}>Gate sizer</div>
-                <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 16px' }}>
-                  <div style={{ position: 'relative', width: 148, height: 118 }}>
-                    <div style={{ position: 'absolute', left: 0, top: 0, bottom: 10, width: 9, borderRadius: 4, background: 'linear-gradient(180deg,#dbe2ea,#c3ccd7)' }} />
-                    <div style={{ position: 'absolute', right: 0, top: 0, bottom: 10, width: 9, borderRadius: 4, background: 'linear-gradient(180deg,#dbe2ea,#c3ccd7)' }} />
-                    <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 9, borderRadius: 4, background: 'linear-gradient(90deg,#dbe2ea,#c3ccd7)' }} />
-                    <div style={{ position: 'absolute', left: -6, right: -6, bottom: 0, height: 10, borderRadius: 5, background: '#94a3b8' }} />
-                    <div style={{ position: 'absolute', left: '50%', bottom: 10, transform: 'translateX(-50%)', width: 66, height: 78 }}>
-                      <div style={{ position: 'absolute', inset: 0, borderRadius: 8, background: '#cff5ec', border: '2px solid #5eddc4' }} />
-                      <div style={{ position: 'absolute', left: 0, right: 0, top: '36%', height: 5, background: 'rgba(20,184,166,.28)' }} />
-                      <div style={{ position: 'absolute', left: '50%', top: -11, transform: 'translateX(-50%)', width: 22, height: 12, border: '2px solid #94a3b8', borderBottom: 'none', borderRadius: '6px 6px 0 0' }} />
-                    </div>
-                    <div style={{ position: 'absolute', left: 11, bottom: 26, width: 22, borderTop: '2px dashed #a9b4c2' }} />
-                    <div style={{ position: 'absolute', right: 11, bottom: 26, width: 22, borderTop: '2px dashed #a9b4c2' }} />
-                    <span style={{ position: 'absolute', right: -2, top: 16, display: 'inline-flex', alignItems: 'center', gap: 4, background: '#e6f8f0', border: '1px solid #b6e6cf', color: '#15803d', borderRadius: 999, padding: '3px 8px', fontSize: 10, fontWeight: 800 }}>
-                      fits
-                    </span>
-                  </div>
-                </div>
-                <p style={{ margin: '8px 0 0', fontSize: 12, lineHeight: 1.7, color: '#7a8798' }}>If the bag drops into the frame without pressure, it passes. Soft-sided shells give you a couple of centimetres of margin.</p>
-              </div>
-            </aside>
+        <div style={{ maxWidth: 820, margin: '0 auto' }}>
+          <h2 style={{ margin: '0 0 18px', textAlign: 'center', fontSize: 24, fontWeight: 800, letterSpacing: '-.02em' }}>Understanding Luggage Size Requirements</h2>
+          <p style={{ margin: '0 0 16px', fontSize: 13.5, lineHeight: 1.75, color: '#3d4759' }}>
+            Airline baggage rules are one of the most frequent sources of stress at the airport. Gate agents measure bags, and an oversized carry-on can turn into a fee that costs more than the ticket. Knowing your dimensions before you leave home removes that risk entirely.
+          </p>
+          <p style={{ margin: '0 0 16px', fontSize: 13.5, lineHeight: 1.75, color: '#3d4759' }}>
+            There are no universal luggage size rules, but most airlines cluster around the same numbers: 56 × 36 × 23 cm for a cabin bag, 158 cm total for a checked bag, 23 kg in economy and up to 32 kg in business. Budget carriers in Europe apply stricter limits, so the airline you are flying always has the final word.
+          </p>
+          <p style={{ margin: '0 0 26px', fontSize: 13.5, lineHeight: 1.75, color: '#3d4759' }}>
+            The luggage guide covers standard suitcase classes, how bags are measured at the airport, soft-sided versus hard-shell shells and what excess and oversize fees usually cost.
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <Link href="/luggage-guide" style={{ display: 'inline-block', padding: '12px 26px', background: '#fbbf47', color: '#3a2a05', borderRadius: 9, fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>
+              Read the luggage guide
+            </Link>
+            <Link href="/size-checker" style={{ display: 'inline-block', padding: '12px 26px', background: '#fff', border: '1px solid #e4eaf1', color: '#0f1c2e', borderRadius: 9, fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>
+              Check your bag size
+            </Link>
           </div>
         </div>
       </section>
@@ -596,7 +452,7 @@ export function HomeClient() {
       </section>
 
       <div style={{ background: '#f7f8f9', padding: '0 24px 40px', textAlign: 'center', fontSize: 12, color: '#7a8798' }}>
-        Personal luggage advice? <a href="#home">Talk to our travel team</a>
+        Personal luggage advice? <Link href="/airlines">Talk to our travel team</Link>
       </div>
 
       <Footer maxWidth={1200} gap={32} logoSize={24} logoIconSize={13} showWordmark copyrightSize={11} columns={FOOTER_COLUMNS} />

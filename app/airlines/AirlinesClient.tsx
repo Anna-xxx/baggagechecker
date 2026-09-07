@@ -11,11 +11,33 @@ function volume(a: Airline) {
   return a.cabin[0] * a.cabin[1] * a.cabin[2];
 }
 
+const LOW_COST_CODES = new Set(['U2', 'F9', '6E', 'FR', 'WN', 'NK', 'VY']);
+const PERSONAL_ITEM_TYPICAL: Record<string, string> = {
+  FR: '40 × 25 × 20 cm',
+  U2: '45 × 36 × 20 cm',
+  VY: '40 × 30 × 20 cm',
+  F9: '45 × 35 × 20 cm',
+  NK: '45 × 35 × 20 cm',
+  '6E': '35 × 25 × 20 cm',
+  WN: '42 × 34 × 21 cm',
+  BA: '40 × 30 × 15 cm',
+};
+
+function airlineType(code: string): 'Low-cost' | 'Full-service' {
+  return LOW_COST_CODES.has(code) ? 'Low-cost' : 'Full-service';
+}
+
+function personalItemSize(code: string): string {
+  return PERSONAL_ITEM_TYPICAL[code] || '40 × 30 × 20 cm';
+}
+
 type Sort = 'name' | 'strict' | 'generous';
+type TypeFilter = 'All types' | 'Full-service' | 'Low-cost';
 
 export function AirlinesClient() {
   const [query, setQuery] = useState('');
   const [country, setCountry] = useState('All countries');
+  const [type, setType] = useState<TypeFilter>('All types');
   const [sort, setSort] = useState<Sort>('name');
   const [fav, setFav] = useState<string[]>([]);
 
@@ -26,13 +48,14 @@ export function AirlinesClient() {
     let filtered = AIRLINES.filter(
       (a) =>
         (!q || a.name.toLowerCase().includes(q) || a.code.toLowerCase().includes(q) || a.country.toLowerCase().includes(q)) &&
-        (country === 'All countries' || a.country === country)
+        (country === 'All countries' || a.country === country) &&
+        (type === 'All types' || airlineType(a.code) === type)
     );
     if (sort === 'strict') filtered = [...filtered].sort((a, b) => volume(a) - volume(b) || a.cabinKg - b.cabinKg);
     else if (sort === 'generous') filtered = [...filtered].sort((a, b) => volume(b) - volume(a) || b.cabinKg - a.cabinKg);
     else filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
     return filtered;
-  }, [query, country, sort]);
+  }, [query, country, type, sort]);
 
   const resultsLabel = `${country === 'All countries' && !query ? 'All airlines' : 'Matching airlines'} (${rows.length})`;
 
@@ -53,7 +76,7 @@ export function AirlinesClient() {
           </div>
           <h1 style={{ margin: '0 0 14px', textAlign: 'center', fontSize: 'clamp(26px,3.6vw,34px)', fontWeight: 800, letterSpacing: '-.03em' }}>Airline Baggage Policies &amp; Size Limits</h1>
           <p style={{ margin: '0 auto 28px', maxWidth: 600, textAlign: 'center', fontSize: 14, lineHeight: 1.7, color: '#57677c' }}>
-            Complete directory of airline carry-on and checked baggage policies. Find size limits, weight restrictions and baggage fees for airlines worldwide. Check your luggage dimensions against any airline&apos;s requirements.
+            {AIRLINES.length} airlines with carry-on and checked baggage limits. Find size limits, weight restrictions and baggage fees for airlines worldwide. Check your luggage dimensions against any airline&apos;s requirements.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,240px),1fr))', gap: 16, marginBottom: 22 }}>
@@ -102,12 +125,20 @@ export function AirlinesClient() {
                 </option>
               ))}
             </select>
+            <select value={type} onChange={(e) => setType(e.target.value as TypeFilter)} style={{ border: '1px solid #edf0f3', borderRadius: 9, padding: '11px 13px', fontSize: 13, fontWeight: 600, color: '#0f1c2e', background: '#fff' }}>
+              <option value="All types">All types</option>
+              <option value="Full-service">Full-service</option>
+              <option value="Low-cost">Low-cost</option>
+            </select>
             <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} style={{ border: '1px solid #edf0f3', borderRadius: 9, padding: '11px 13px', fontSize: 13, fontWeight: 600, color: '#0f1c2e', background: '#fff' }}>
               <option value="name">Sort by: Name</option>
               <option value="strict">Sort by: Strictest first</option>
               <option value="generous">Sort by: Most generous</option>
             </select>
           </div>
+          <p style={{ margin: '12px 0 0', textAlign: 'center', fontSize: 11.5, lineHeight: 1.6, color: '#8494a8' }}>
+            Personal-item sizes are the typical under-seat allowance for each carrier. Baggage rules reviewed September 2026 — always confirm on the airline&apos;s own site before flying.
+          </p>
         </div>
       </section>
 
@@ -117,6 +148,9 @@ export function AirlinesClient() {
           {rows.map((a) => {
             const on = fav.includes(a.code);
             const kgColor = a.cabinKg >= 12 ? '#15803d' : a.cabinKg <= 7 ? '#b45309' : '#0f1c2e';
+            const kind = airlineType(a.code);
+            const typeColor = kind === 'Low-cost' ? '#b45309' : '#0f766e';
+            const typeBg = kind === 'Low-cost' ? '#fdf1dc' : '#e3f5f2';
             return (
               <div key={a.code} className="card-hover" style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -127,6 +161,8 @@ export function AirlinesClient() {
                       <span style={{ fontWeight: 700, color: '#57677c' }}>{a.code}</span>
                       <span>·</span>
                       <span>{a.country}</span>
+                      <span>·</span>
+                      <span style={{ fontWeight: 800, color: typeColor, background: typeBg, borderRadius: 999, padding: '2px 7px', fontSize: 10 }}>{kind}</span>
                     </div>
                   </div>
                   <button onClick={() => toggleFav(a.code)} style={{ flex: 'none', border: 'none', background: 'none', padding: 2, cursor: 'pointer', lineHeight: 0 }}>
@@ -149,12 +185,19 @@ export function AirlinesClient() {
                   </div>
                 </div>
 
+                <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px', display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                  <span style={{ fontSize: 10.5, color: '#8494a8' }}>
+                    Personal item <span style={{ color: '#a9b4c2' }}>(typical)</span>
+                  </span>
+                  <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{personalItemSize(a.code)}</span>
+                </div>
+
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, color: '#a9b4c2' }}>
                   <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
                     <circle cx="12" cy="12" r="9" />
                     <path d="M12 7v5l3 2" />
                   </svg>
-                  Updated 2 months ago
+                  Updated September 2026
                 </div>
 
                 <Link href={`/airlines/${airlineSlug(a.name)}`} className="cta-link" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fbbf47', color: '#3a2a05', borderRadius: 9, padding: 11, fontSize: 13, fontWeight: 700, textDecoration: 'none', marginTop: 'auto' }}>
@@ -204,7 +247,7 @@ export function AirlinesClient() {
         </div>
       </section>
 
-      <Footer maxWidth={1200} logoSize={28} logoIconSize={15} copyrightSize={12} />
+      <Footer maxWidth={1200} logoSize={28} logoIconSize={15} copyrightSize={12} disclaimer="" />
     </div>
   );
 }
