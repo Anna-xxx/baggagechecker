@@ -21,7 +21,7 @@ const AIRLINE_OVERRIDES: Record<string, { cabin: Bag; personal: Personal } & Che
   EK: { cabin: { w: 38, h: 55, d: 22, kg: 7 }, personal: { w: 30, h: 40, d: 15 }, total: 150, eco: 30, biz: 40, bags: 'weight concept: 30 kg in economy' },
   QR: { cabin: { w: 37, h: 50, d: 25, kg: 7 }, personal: { w: 30, h: 40, d: 15 }, total: 158, eco: 25, biz: 32, bags: '1–2 bags depending on fare' },
   TK: { cabin: { w: 40, h: 55, d: 23, kg: 8 }, personal: { w: 30, h: 40, d: 15 }, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
-  FR: { cabin: { w: 40, h: 55, d: 20, kg: 10 }, personal: { w: 25, h: 40, d: 20 }, total: 119, eco: 20, biz: 20, bags: 'none included — checked bags are paid extras' },
+  FR: { cabin: { w: 40, h: 55, d: 20, kg: 10 }, personal: { w: 30, h: 40, d: 20 }, total: 119, eco: 20, biz: 20, bags: 'none included — checked bags are paid extras' },
   U2: { cabin: { w: 45, h: 56, d: 25, kg: 15 }, personal: { w: 36, h: 45, d: 20 }, total: 275, eco: 23, biz: 23, bags: 'none included — checked bags are paid extras' },
 };
 
@@ -93,7 +93,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const wt = (v: number) => (metric ? `${v} kg` : `${Math.round(v * 2.205)} lb`);
   const dims = (b: Bag) => `${metric ? b.w : Math.round(b.w / 2.54)} × ${metric ? b.h : Math.round(b.h / 2.54)} × ${len(b.d)}`;
 
-  const sourceLabel = `Baggage allowance for ${airline.name} · figures reviewed September 2026`;
+  const sourceLabel = `Baggage allowance for ${airline.name} · check fare, route and operating-carrier conditions before travel`;
 
   const allowances = [
     {
