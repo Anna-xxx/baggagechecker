@@ -108,7 +108,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const carryOnRows = cabin.linearOnly
     ? [
         { label: 'Maximum total dimensions', value: `${cabin.linearCm} cm (L + W + H)` },
-        { label: 'Max weight', value: cabin.kg ? wt(cabin.kg) : 'No published limit' },
+        { label: cabin.weightRule === 'combinedWithPersonal' ? 'Max combined cabin weight' : 'Max weight', value: cabin.kg ? `${wt(cabin.kg)}${cabin.weightRule === 'combinedWithPersonal' ? ' incl. personal item' : ''}` : 'No published limit' },
       ]
     : [
         { label: 'Max dimensions', value: dims(cabin) },
@@ -142,7 +142,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
       bag: cabin,
       kind: 'carryon' as BagKind,
       rows: carryOnRows,
-      note: 'One cabin bag per passenger. Measured with wheels and handles included.',
+      note: cabin.note ?? 'One cabin bag per passenger. Measured with wheels and handles included.',
     },
     {
       title: 'Checked Baggage',
