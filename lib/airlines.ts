@@ -19,6 +19,9 @@ export type CheckedBaggageLimit = Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'
   biz: number;
   bags: string;
   verified: boolean;
+  rule?: 'linear' | 'dimensions';
+  manualCheck?: boolean;
+  note?: string;
 };
 
 export type CabinClassAllowance = {
