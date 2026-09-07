@@ -64,6 +64,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 35, h: 55, d: 25, kg: 12, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business', verified: true },
+    classAllowances: [
+      { name: 'Economy', carryOn: '0–1 hand bag + 1 small bag', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', note: 'Cabin items: 12 kg combined.', verified: true },
+      { name: 'Premium', carryOn: '2 hand bags + 1 small bag', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', note: 'Cabin items: 12 kg combined.', verified: true },
+      { name: 'Business', carryOn: '2 hand bags + 1 small bag', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', note: 'Cabin items: 18 kg combined.', verified: true },
+      { name: 'La Première', carryOn: '2 hand bags + 1 small bag', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', note: 'Cabin items: 18 kg combined.', verified: true },
+    ],
   },
   {
     name: 'Air India',
