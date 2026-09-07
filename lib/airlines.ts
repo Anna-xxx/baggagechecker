@@ -27,7 +27,7 @@ export type Airline = {
   country: string;
   website: string;
   baggageUrl: string;
-  carryOn: Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'>> & { verified: boolean; linearCm?: number; linearOnly?: boolean };
+  carryOn: Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'>> & { verified: boolean; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string };
   personal: PersonalItemLimit;
   checked: CheckedBaggageLimit;
 };
@@ -211,7 +211,7 @@ export const AIRLINES: Airline[] = [
     country: 'China',
     website: 'https://www.hainanairlines.com',
     baggageUrl: 'https://www.hainanairlines.com/HUPortal/dyn/portal/DisplayPage?COUNTRY_SITE=MX&LANGUAGE=US&PAGE=CABA&SITE=CBHZCBHZ',
-    carryOn: { w: 40, h: 55, d: 20, kg: 5, verified: true },
+    carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true, manualCheck: true, note: 'Domestic: max 55 × 40 × 20 cm and 7 kg. International/regional: max 115 cm total (L + W + H) and 10 kg per piece; US departures also use max 115 cm total and 10 kg.' },
     personal: { rule: 'dimensions', w: 30, h: 30, d: 20, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
   },
@@ -391,7 +391,7 @@ export const AIRLINES: Airline[] = [
     country: 'Uzbekistan',
     website: 'https://www.uzairways.com',
     baggageUrl: 'https://www.uzairways.com/en/press-center/news/uzbekistan-airways-hand-baggage-regulations',
-    carryOn: { w: 35, h: 55, d: 25, kg: 8, verified: true },
+    carryOn: { w: 35, h: 55, d: 25, kg: 8, verified: true, linearCm: 115 },
     personal: { rule: 'linear', kg: 5, linearCm: 92, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
   },
