@@ -546,7 +546,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://support.southwest.com/helpcenter/article/carryon-baggage-policy',
     carryOn: { w: 40.64, h: 60.96, d: 25.4, kg: 0, verified: true },
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 22.68, total: 157.48, eco: 22.68, biz: 22.68, bags: 'Basic/Choice/Choice Preferred paid; Choice Extra includes 2', verified: true, rule: 'linear', note: 'Southwest standard checked bag limit is 62 linear inches (157.48 cm) and 50 lb (22.68 kg). Since April 9, 2026, Basic, Choice and Choice Preferred normally pay for checked bags; Choice Extra includes two.' },
     classAllowances: [
       { name: 'Basic', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid', weightPerBag: '23 kg standard', verified: true },
       { name: 'Choice', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid', weightPerBag: '23 kg standard', verified: true },
@@ -562,7 +562,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.spirit.com',
     carryOn: { w: 46, h: 56, d: 25, kg: 0, verified: true },
     personal: { rule: 'dimensions', w: 35, h: 45, d: 20, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 22.6, total: 158, eco: 22.6, biz: 22.6, bags: 'Value/Premium Economy paid; Spirit First includes 1', verified: true, rule: 'linear', note: 'Spirit standard checked bag: 158 cm total and 50 lb / 22.6 kg. Spirit First includes one checked bag; other travel options can add checked baggage separately.' },
     classAllowances: [
       { name: 'Value', carryOn: 'Personal item included; carry-on paid', checkedBags: 'Paid', weightPerBag: 'Up to 50 lb / 22.7 kg', verified: true },
       { name: 'Premium Economy', carryOn: '1 carry-on + personal item', checkedBags: 'Paid', weightPerBag: 'Up to 50 lb / 22.7 kg', verified: true },
@@ -577,7 +577,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.flytap.com/en-es/information/baggage/hand-baggage',
     carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 2, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare and route dependent', verified: true, rule: 'linear', note: 'TAP checked baggage is limited to 158 cm total. Economy bags are up to 23 kg and Business bags up to 32 kg. Included piece count depends on fare and route.' },
     classAllowances: [
       { name: 'Economy Discount', carryOn: '1 bag · 10 kg + personal item', checkedBags: '0 bags', weightPerBag: '—', note: 'Route-specific exceptions apply.', verified: true },
       { name: 'Economy Basic / Classic / Plus', carryOn: '1 bag · 10 kg + personal item', checkedBags: 'Usually 1 bag', weightPerBag: '23 kg', note: 'Included baggage varies by route and fare.', verified: true },
@@ -592,7 +592,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.thaiairways.com/es-es/content/baggage/carry-on-baggage/',
     carryOn: { w: 45, h: 56, d: 25, kg: 7, verified: true },
     personal: { rule: 'dimensions', w: 25, h: 37.5, d: 12.5, kg: 1.5, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Piece count depends on class, fare and sector', verified: true, rule: 'linear', note: 'For travel from 2 Mar 2026 under THAI’s new Piece Concept, every checked bag is limited to 158 cm. Economy/Premium Economy: 23 kg per piece; Royal Silk/Royal First/Premium Economy Plus: 32 kg per piece.' },
     classAllowances: [
       { name: 'Economy Saver / Standard', carryOn: '1 bag · 7 kg', checkedBags: 'International: 1 bag', weightPerBag: '23 kg', note: 'Saver has no checked bag on some destinations; new Piece Concept applies to covered travel from 2 Mar 2026.', verified: true },
       { name: 'Economy Flexi / Full Flex', carryOn: '1 bag · 7 kg', checkedBags: 'International: 2 bags', weightPerBag: '23 kg', verified: true },
@@ -609,7 +609,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.turkishairlines.com/en-int/any-questions/carry-on-baggage/',
     carryOn: { w: 40, h: 55, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 4, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business', verified: true },
+    checked: { kg: 0, total: 158, eco: 0, biz: 0, bags: 'Piece or kg concept depending on route', verified: true, rule: 'linear', manualCheck: true, note: 'Turkish Airlines uses both piece and kilogram concepts. Every free checked bag must stay within 158 cm. On piece-concept routes Economy uses up to 23 kg per bag and Business up to 32 kg; domestic and other weight-concept allowances vary by fare and route.' },
     classAllowances: [
       { name: 'Economy EcoFly', carryOn: '1 bag · 8 kg', checkedBags: 'Domestic: 15 kg · International: route dependent', weightPerBag: '23 kg max on piece-concept routes', verified: true },
       { name: 'Economy ExtraFly', carryOn: '1 bag · 8 kg', checkedBags: 'Domestic: 20 kg · International: route dependent', weightPerBag: '23 kg max on piece-concept routes', verified: true },
@@ -625,7 +625,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.uzairways.com/en/press-center/news/uzbekistan-airways-hand-baggage-regulations',
     carryOn: { w: 35, h: 55, d: 25, kg: 8, verified: true, linearCm: 115 },
     personal: { rule: 'linear', kg: 5, linearCm: 92, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 0, total: 158, eco: 0, biz: 0, bags: 'Destination and fare dependent', verified: true, rule: 'linear', manualCheck: true, note: 'Uzbekistan Airways standard checked-bag maximum is 158 cm and no accepted piece may exceed 32 kg. Actual free allowance varies by destination and fare: Economy may use 23 kg pieces, while Business fares can use 32 kg pieces.' },
     classAllowances: [
       { name: 'Economy Lite', carryOn: '1 bag · 8 kg', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'Economy Smart', carryOn: '1 bag · 8 kg', checkedBags: 'Included', weightPerBag: 'Usually 23 kg', note: 'Allowance varies by destination.', verified: true },
@@ -642,7 +642,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.virginatlantic.com/gb/en/travel-information/baggage-allowance.html',
     carryOn: { w: 36, h: 56, d: 23, kg: 10, verified: true },
     personal: { rule: 'unknown', kg: 0, verified: false },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { w: 75, h: 90, d: 43, kg: 23, total: 208, eco: 23, biz: 32, bags: 'Economy Light 0; Classic/Delight 1; Premium 2; Upper Class 2', verified: true, rule: 'dimensions', note: 'Virgin Atlantic publishes a maximum of 90 × 75 × 43 cm per checked bag. Economy/Premium bags: 23 kg; Upper Class: 32 kg.' },
     classAllowances: [
       { name: 'Economy Light', carryOn: '1 bag · 10 kg', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'Economy Classic / Delight', carryOn: '1 bag · 10 kg', checkedBags: '1 bag', weightPerBag: '23 kg', note: 'Selected routes can include 2 checked bags.', verified: true },
@@ -658,7 +658,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.virginaustralia.com/au/en/travel-info/baggage/carry-on-baggage/',
     carryOn: { w: 36, h: 56, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 33, h: 45, d: 20, kg: 8, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 140, eco: 23, biz: 32, bags: 'Lite 0; Choice/Flex 1; Business 2 for standard members', verified: true, rule: 'linear', note: 'Virgin Australia checked bags are limited to 140 cm total. Economy Choice/Flex standard allowance is 1 × 23 kg; Business is 2 × 32 kg. Status and partner-operated services can differ.' },
     classAllowances: [
       { name: 'Economy Lite', carryOn: '1 bag · 8 kg + personal item', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'Economy Choice / Flex', carryOn: '1 bag · 8 kg + personal item', checkedBags: '1 bag', weightPerBag: '23 kg', verified: true },
@@ -674,7 +674,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.vueling.com/en/prepare-your-trip/luggage/cabin-luggage',
     carryOn: { w: 40, h: 55, d: 20, kg: 10, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 0, total: 158, eco: 0, biz: 0, bags: 'Purchased 15 / 20 / 25 / 30 kg options', verified: true, rule: 'linear', manualCheck: true, note: 'Vueling checked bags are limited to 158 cm total. You can book 15, 20, 25 or 30 kg allowances; no single bag may exceed 32 kg. The checker cannot assume which weight option was purchased.' },
     classAllowances: [
       { name: 'Fly Light', carryOn: '1 underseat bag · 40 × 30 × 20 cm', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'Fly', carryOn: 'Underseat bag + choice of 10 kg overhead bag', checkedBags: 'Or choose 1 × 25 kg checked bag', weightPerBag: '25 kg if checked option selected', verified: true },
@@ -689,7 +689,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://ssr-weu2.wizzair.com/en-gb/help-centre/booking-information-and-services/baggage/baggage-allowance/cabin-baggage',
     carryOn: { w: 40, h: 55, d: 23, kg: 10, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 10, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { w: 119, h: 149, d: 171, kg: 0, total: 439, eco: 0, biz: 0, bags: 'Purchased 10 / 20 / 26 / 32 kg options; up to 6 checked bags', verified: true, rule: 'dimensions', manualCheck: true, note: 'Wizz Air checked baggage may measure up to 149 × 119 × 171 cm. Available weight options are 10, 20, 26 or 32 kg. Basic fare includes no checked baggage; WIZZ Go and WIZZ Plus include checked baggage.' },
     classAllowances: [
       { name: 'Basic', carryOn: '1 underseat bag · 40 × 30 × 20 cm · 10 kg', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'WIZZ Priority', carryOn: 'Underseat bag + 1 trolley · 55 × 40 × 23 cm · 10 kg', checkedBags: 'Optional', weightPerBag: '10 / 20 / 26 / 32 kg options', verified: true },
