@@ -532,10 +532,10 @@ export const AIRLINES: Airline[] = [
     personal: { rule: 'dimensions', w: 30, h: 40, d: 10, kg: 0, verified: true },
     checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Piece concept to/from US/Canada; weight concept elsewhere', verified: true, rule: 'linear', manualCheck: true, note: 'Singapore Airlines uses a piece concept to/from the US and Canada: Economy/Premium Economy 2 × 23 kg, Business/First/Suites 2 × 32 kg, each up to 158 cm. Other routes use total-weight allowances that depend on cabin and fare; no single piece may exceed 32 kg.' },
     classAllowances: [
-      { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: '25–30 kg total or 2 bags to/from USA', weightPerBag: '23 kg on USA piece routes', note: 'Weight allowance depends on fare type.', verified: true },
-      { name: 'Premium Economy', carryOn: '1 bag · 7 kg', checkedBags: '35 kg total or 2 bags to/from USA', weightPerBag: '23 kg on USA piece routes', verified: true },
-      { name: 'Business', carryOn: '2 bags · 7 kg each', checkedBags: '40 kg total or 2 bags to/from USA', weightPerBag: '32 kg on USA piece routes', verified: true },
-      { name: 'First / Suites', carryOn: '2 bags · 7 kg each', checkedBags: '50 kg total or 2 bags to/from USA', weightPerBag: '32 kg on USA piece routes', verified: true },
+      { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: '25–30 kg total or 2 bags to/from US/Canada', weightPerBag: '23 kg on US/Canada piece routes', note: 'Weight concept: Lite/Value 25 kg; Standard/Flexi 30 kg.', verified: true },
+      { name: 'Premium Economy', carryOn: '1 bag · 7 kg', checkedBags: '35 kg total or 2 bags to/from US/Canada', weightPerBag: '23 kg on US/Canada piece routes', verified: true },
+      { name: 'Business', carryOn: '2 bags · 7 kg each', checkedBags: '40 kg total or 2 bags to/from US/Canada', weightPerBag: '32 kg on US/Canada piece routes', verified: true },
+      { name: 'First / Suites', carryOn: '2 bags · 7 kg each', checkedBags: '50 kg total or 2 bags to/from US/Canada', weightPerBag: '32 kg on US/Canada piece routes', verified: true },
     ],
   },
   {
@@ -579,9 +579,12 @@ export const AIRLINES: Airline[] = [
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 2, verified: true },
     checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare and route dependent', verified: true, rule: 'linear', note: 'TAP checked baggage is limited to 158 cm total. Economy bags are up to 23 kg and Business bags up to 32 kg. Included piece count depends on fare and route.' },
     classAllowances: [
-      { name: 'Economy Discount', carryOn: '1 bag · 10 kg + personal item', checkedBags: '0 bags', weightPerBag: '—', note: 'Route-specific exceptions apply.', verified: true },
-      { name: 'Economy Basic / Classic / Plus', carryOn: '1 bag · 10 kg + personal item', checkedBags: 'Usually 1 bag', weightPerBag: '23 kg', note: 'Included baggage varies by route and fare.', verified: true },
-      { name: 'Business Executive / Top Executive', carryOn: 'North America: 1 bag · 10 kg; Europe/Africa/South America/domestic: 2 bags · 10 kg each + personal item', checkedBags: 'Usually 2 bags', weightPerBag: '32 kg', note: 'Exact hold-baggage entitlement depends on route and fare.', verified: true },
+      { name: 'Economy Discount', carryOn: '1 bag · 10 kg + personal item', checkedBags: '0 bags on most routes', weightPerBag: '—', note: 'Luanda/Maputo exceptions can include 1 × 23 kg.', verified: true },
+      { name: 'Economy Basic', carryOn: '1 bag · 10 kg + personal item', checkedBags: 'Intercontinental: 1 bag; other routes may have none', weightPerBag: '23 kg', note: 'Luanda/Maputo exceptions can include 2 bags.', verified: true },
+      { name: 'Economy Classic', carryOn: '1 bag · 10 kg + personal item', checkedBags: '1 bag', weightPerBag: '23 kg', verified: true },
+      { name: 'Economy Plus', carryOn: '1 bag · 10 kg + personal item', checkedBags: '1 bag; 2 on mainland Portugal–islands and some Africa routes', weightPerBag: '23 kg', verified: true },
+      { name: 'Economy Prime / Top Prime', carryOn: '1 bag · 10 kg + personal item', checkedBags: 'Intercontinental: 2 bags', weightPerBag: '23 kg', note: 'Prime products are not offered on every route.', verified: true },
+      { name: 'Business Executive / Top Executive', carryOn: 'North America: 1 bag · 10 kg; Europe/Africa/South America/domestic: 2 bags · 10 kg each + personal item', checkedBags: '2 bags', weightPerBag: '32 kg', verified: true },
     ],
   },
   {
