@@ -152,6 +152,13 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 40, h: 55, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy Basic', carryOn: 'Personal item only', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', verified: true },
+      { name: 'Economy', carryOn: '1 bag · 8 kg + personal item', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', verified: true },
+      { name: 'Premium Economy', carryOn: '1 bag · 8 kg + personal item', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', verified: true },
+      { name: 'Business', carryOn: '2 bags · 8 kg each + personal item', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', verified: true },
+      { name: 'First', carryOn: '2 bags · 8 kg each + personal item', checkedBags: 'Varies by fare/route', weightPerBag: 'Varies', verified: true },
+    ],
   },
   {
     name: 'Cathay Pacific',
