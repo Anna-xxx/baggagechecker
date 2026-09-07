@@ -124,7 +124,11 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const checkedRows = info.manualCheck
     ? [
         { label: 'Allowance', value: 'Route / fare dependent' },
-        ...(info.total ? [{ label: 'Published size limit', value: `${len(info.total)} (L + W + H)` }] : []),
+        ...(info.rule === 'dimensions' && info.w && info.h && info.d
+          ? [{ label: 'Max dimensions', value: `${info.h} × ${info.w} × ${info.d} cm` }]
+          : info.total
+            ? [{ label: 'Published size limit', value: `${len(info.total)} (L + W + H)` }]
+            : []),
       ]
     : info.rule === 'dimensions'
       ? [
