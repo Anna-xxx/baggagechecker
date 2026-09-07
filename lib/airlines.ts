@@ -21,6 +21,15 @@ export type CheckedBaggageLimit = Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'
   verified: boolean;
 };
 
+export type CabinClassAllowance = {
+  name: string;
+  carryOn: string;
+  checkedBags: string;
+  weightPerBag: string;
+  note?: string;
+  verified: boolean;
+};
+
 export type Airline = {
   name: string;
   code: string;
@@ -30,6 +39,7 @@ export type Airline = {
   carryOn: Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'>> & { verified: boolean; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string };
   personal: PersonalItemLimit;
   checked: CheckedBaggageLimit;
+  classAllowances?: CabinClassAllowance[];
 };
 
 export type AirlineBaggage = Pick<Airline, 'carryOn' | 'personal' | 'checked'>;
