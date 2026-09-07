@@ -133,14 +133,12 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
     : info.rule === 'dimensions'
       ? [
           { label: 'Max dimensions', value: `${info.h} × ${info.w} × ${info.d} cm` },
-          { label: 'Max weight (economy)', value: wt(info.eco) },
-          { label: 'Max weight (business)', value: wt(info.biz) },
+          { label: 'Standard bag weight', value: wt(info.kg) },
           { label: 'Bags included', value: info.bags },
         ]
       : [
           { label: 'Max total dimensions', value: `${len(info.total)} (L + W + H)` },
-          { label: 'Max weight (economy)', value: wt(info.eco) },
-          { label: 'Max weight (business)', value: wt(info.biz) },
+          { label: 'Standard bag weight', value: wt(info.kg) },
           { label: 'Oversize threshold', value: `over ${len(info.total)}` },
           { label: 'Bags included', value: info.bags },
         ];
