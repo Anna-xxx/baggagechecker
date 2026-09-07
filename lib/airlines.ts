@@ -385,7 +385,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.jal.co.jp/jp/en/inter/baggage/inflight/',
     carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115, weightRule: 'combinedWithPersonal', note: 'The 10 kg limit is combined across the carry-on bag and personal item.' },
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 203, eco: 23, biz: 32, bags: '2 in Economy/Premium Economy; 3 in Business/First', verified: true },
+    checked: { kg: 23, total: 203, eco: 23, biz: 32, bags: 'Economy/Premium Economy 2; Business/First 3', verified: true, rule: 'linear', note: 'JAL international checked bags may measure up to 203 cm total. Economy/Premium Economy: 2 × 23 kg. Business/First: 3 × 32 kg.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 bag + personal item · 10 kg combined', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
       { name: 'Premium Economy', carryOn: '1 bag + personal item · 10 kg combined', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
@@ -401,7 +401,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.jetblue.com/help/carry-on-bags',
     carryOn: { w: 35.56, h: 55.88, d: 22.86, kg: 0, verified: true },
     personal: { rule: 'dimensions', w: 33, h: 43.2, d: 20.32, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare/market dependent; Mint includes 2 bags', verified: true },
+    checked: { kg: 22.68, total: 158, eco: 22.68, biz: 32, bags: 'Fare-dependent; Mint/Mint Flex include 2 bags', verified: true, rule: 'linear', note: 'Standard JetBlue checked bag: 62 in / 158 cm total and 50 lb / 22.68 kg. Mint and Mint Flex include 2 bags up to 70 lb / 32 kg each.' },
     classAllowances: [
       { name: 'Main Base / Main / Main Flex', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid on most routes', weightPerBag: '23 kg', note: 'Checked-bag price and inclusions vary by market; verify the booked fare.', verified: true },
       { name: 'EvenMore Base / EvenMore / EvenMore Flex', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid on most routes', weightPerBag: '23 kg', note: 'Some international markets may include a bag; use the booked fare allowance.', verified: true },
@@ -416,7 +416,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.klm.com/information/baggage/hand-baggage-allowance',
     carryOn: { w: 35, h: 55, d: 25, kg: 12, verified: true, weightRule: 'combinedWithPersonal', note: '12 kg combined across cabin bag and personal item.' },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Economy 0–1; Premium Comfort 0–2; Business 1–2 by fare', verified: true, rule: 'linear', note: 'Each checked bag is limited to 158 cm total. Economy/Premium Comfort bags: 23 kg; Business bags: 32 kg. Basic/Light fare inclusions differ.' },
     classAllowances: [
       { name: 'Economy Basic', carryOn: 'Small underseat bag only', checkedBags: '0 bags', weightPerBag: '—', note: 'Availability of Basic depends on market.', verified: true },
       { name: 'Economy Light / Standard / Flex', carryOn: '1 bag + small bag · 12 kg combined', checkedBags: '0–1 bag', weightPerBag: '23 kg', note: 'Light normally has no checked bag; Standard/Flex normally include 1.', verified: true },
@@ -432,7 +432,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.lufthansa.com/us/en/carry-on-baggage',
     carryOn: { w: 40, h: 55, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business', verified: true },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare-dependent', verified: true, rule: 'linear', note: 'Maximum size per piece is 158 cm. Economy: up to 23 kg; Business: up to 32 kg. Included piece count depends on fare, route and cabin.' },
     classAllowances: [
       { name: 'Economy Light', carryOn: '1 bag · 8 kg + personal item', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'Economy', carryOn: '1 bag · 8 kg + personal item', checkedBags: '1 bag', weightPerBag: '23 kg', verified: true },
@@ -451,7 +451,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.malaysiaairlines.com/uk/en/travel-info/baggage/cabin-baggage.html',
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
     personal: { rule: 'dimensions', w: 25, h: 36, d: 25, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 0, total: 158, eco: 0, biz: 0, bags: 'Weight or piece concept depending on ticket', verified: true, rule: 'linear', manualCheck: true, note: 'Malaysia Airlines uses both Weight Concept and Piece Concept. Every standard piece must stay under 158 cm and no piece may exceed 32 kg. Weight Concept varies by fare (for example Economy Value 20 kg, Basic 25 kg, Flex 35 kg; Business 40–55 kg). Piece Concept international fares can use 2 × 23 kg Economy or 2 × 32 kg Business.' },
     classAllowances: [
       { name: 'Economy Value', carryOn: '1 bag · 7 kg', checkedBags: '20 kg total', weightPerBag: 'Weight concept', note: 'Selected routes are excluded and may use different allowances.', verified: true },
       { name: 'Economy Basic', carryOn: '1 bag · 7 kg', checkedBags: '25 kg total', weightPerBag: 'Weight concept', verified: true },
@@ -469,7 +469,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.qantas.com/en-au/baggage/carry-on',
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true, linearCm: 115, manualCheck: true, note: 'International Economy: 1 piece up to 7 kg. Premium Economy, Business and First: 2 pieces up to 7 kg each. Domestic and Dash 8 rules differ.' },
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Route, cabin and status dependent', verified: true, rule: 'linear', manualCheck: true, note: 'Qantas size rules differ by route: Australian domestic bags are limited to 140 cm total, international bags to 158 cm. Economy is typically 1 × 23 kg domestic, 1 × 32 kg to the Americas, or 30 kg total on other international routes. Premium cabins and frequent-flyer status have different allowances.' },
     classAllowances: [
       { name: 'Economy', carryOn: 'International: 1 overhead bag · 7 kg + personal item', checkedBags: 'Domestic: 1 bag · Americas: 1 bag · Elsewhere: weight concept', weightPerBag: '23 kg domestic · 32 kg Americas · 30 kg total elsewhere', note: 'Domestic mainline carry-on can be up to 14 kg total; Dash 8 services are stricter.', verified: true },
       { name: 'Premium Economy', carryOn: 'International: 2 bags · 7 kg each', checkedBags: 'Domestic: 2 bags · Americas: 2 bags · Elsewhere: weight concept', weightPerBag: '23 kg domestic · 32 kg Americas · 40 kg total elsewhere', verified: true },
@@ -485,7 +485,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.qatarairways.com/en/baggage/allowance.onboardpopup.html',
     carryOn: { w: 37, h: 50, d: 25, kg: 7, verified: true },
     personal: { rule: 'unknown', kg: 0, verified: false },
-    checked: { w: 55, h: 80, d: 30, kg: 25, total: 158, eco: 25, biz: 32, bags: '1–2 bags depending on fare', verified: true },
+    checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Piece concept for Africa/Americas; weight concept elsewhere', verified: true, rule: 'linear', manualCheck: true, note: 'Qatar Airways uses 158 cm per bag on flights to/from Africa or the Americas and up to 300 cm on most other routes. Africa/Americas use a piece allowance; other routes use total weight. No single checked bag may exceed 32 kg.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: '20–35 kg total or 1–2 bags', weightPerBag: '23 kg on Americas/Africa piece routes', note: 'Lite / Classic / Convenience / Comfort and route determine the exact allowance; Brazil cabin allowance is 10 kg.', verified: true },
       { name: 'Business', carryOn: '2 bags · 15 kg combined', checkedBags: '40 kg total or 2 bags', weightPerBag: '32 kg on Americas/Africa piece routes', verified: true },
@@ -500,7 +500,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://help.ryanair.com/hc/en-us/categories/12489112419089-Bag-Rules',
     carryOn: { w: 40, h: 55, d: 20, kg: 10, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 20, total: 119, eco: 20, biz: 20, bags: 'none included — checked bags are paid extras', verified: true },
+    checked: { w: 120, h: 80, d: 120, kg: 0, total: 320, eco: 0, biz: 0, bags: 'Paid 10 / 20 / 23 kg check-in bag options', verified: true, rule: 'dimensions', manualCheck: true, note: 'Ryanair checked bags may measure up to 80 × 120 × 120 cm. The purchased allowance can be 10, 20 or 23 kg, so the checker cannot assume one universal weight. No individual item over 32 kg is accepted.' },
     classAllowances: [
       { name: 'All fares', carryOn: '1 small bag · 40 × 30 × 20 cm', checkedBags: 'Optional', weightPerBag: '10 / 20 / 23 kg options', verified: true },
       { name: 'Priority & 2 Cabin Bags', carryOn: 'Small bag + 1 × 10 kg overhead bag', checkedBags: 'Optional', weightPerBag: '10 / 20 / 23 kg options', verified: true },
@@ -514,7 +514,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.flysas.com/no-en/travel-info/baggage/carry-on',
     carryOn: { w: 40, h: 55, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Ticket type and destination dependent', verified: true, rule: 'linear', note: 'SAS checked baggage is limited to 158 cm total. Maximum weight is 23 kg or 32 kg depending on ticket type and destination.' },
     classAllowances: [
       { name: 'Economy Light', carryOn: 'Underseat bag only within Europe', checkedBags: '0 bags', weightPerBag: '—', note: 'Outside Europe, 1 × 8 kg carry-on is included.', verified: true },
       { name: 'Economy Standard / Flex', carryOn: '1 bag · 8 kg + underseat bag', checkedBags: '1 bag', weightPerBag: '23 kg', verified: true },
@@ -530,7 +530,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.singaporeair.com/es_ES/es/travel-info/baggage/cabin-baggage/',
     carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true, linearCm: 115, linearOnly: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 10, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Piece concept to/from US/Canada; weight concept elsewhere', verified: true, rule: 'linear', manualCheck: true, note: 'Singapore Airlines uses a piece concept to/from the US and Canada: Economy/Premium Economy 2 × 23 kg, Business/First/Suites 2 × 32 kg, each up to 158 cm. Other routes use total-weight allowances that depend on cabin and fare; no single piece may exceed 32 kg.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: '25–30 kg total or 2 bags to/from USA', weightPerBag: '23 kg on USA piece routes', note: 'Weight allowance depends on fare type.', verified: true },
       { name: 'Premium Economy', carryOn: '1 bag · 7 kg', checkedBags: '35 kg total or 2 bags to/from USA', weightPerBag: '23 kg on USA piece routes', verified: true },
