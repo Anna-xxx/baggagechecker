@@ -36,6 +36,22 @@ export type CabinClassAllowance = {
   verified: boolean;
 };
 
+export type CarryOnVariant = {
+  id: string;
+  label: string;
+  w?: number;
+  h?: number;
+  d?: number;
+  kg: number;
+  linearCm?: number;
+  linearOnly?: boolean;
+  allowed?: boolean;
+  manualCheck?: boolean;
+  note?: string;
+  weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none';
+  verified: boolean;
+};
+
 export type Airline = {
   name: string;
   code: string;
@@ -43,6 +59,7 @@ export type Airline = {
   website: string;
   baggageUrl: string;
   carryOn: Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'>> & { verified: boolean; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none' };
+  carryOnVariants?: CarryOnVariant[];
   personal: PersonalItemLimit;
   checked: CheckedBaggageLimit;
   classAllowances?: CabinClassAllowance[];
