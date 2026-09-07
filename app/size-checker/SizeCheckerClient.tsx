@@ -8,7 +8,7 @@ import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
 import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, type PersonalItemRule } from '@/lib/airlines';
 
-type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItemRule; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; verified?: boolean };
+type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItemRule; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none'; verified?: boolean };
 type BagType = 'carryon' | 'personal' | 'checked';
 type Airline = { name: string; code: string; limits: Record<BagType, Limits> };
 
@@ -27,6 +27,7 @@ const AIRLINES: Airline[] = ALL_AIRLINES.map((a) => {
         linearOnly: baggage.carryOn.linearOnly,
         manualCheck: baggage.carryOn.manualCheck,
         note: baggage.carryOn.note,
+        weightRule: baggage.carryOn.weightRule,
       },
       personal: {
         H: baggage.personal.h ?? 0,
@@ -189,6 +190,7 @@ export function SizeCheckerClient() {
       const maxTotal = L.linearCm;
       const totalOk = total <= maxTotal;
       const weightOk = !L.KG || KG <= L.KG;
+      const combinedWeight = L.weightRule === 'combinedWithPersonal';
       const dimensionChecks = L.linearOnly
         ? []
         : [
@@ -221,12 +223,17 @@ export function SizeCheckerClient() {
         },
         {
           key: 'KG' as DimKey,
-          label: 'Weight',
-          detail: L.KG ? `${toDisp(KG, 'KG')} ${wU} / ${toDisp(L.KG, 'KG')} ${wU}` : `${toDisp(KG, 'KG')} ${wU} / no published limit`,
-          mark: weightOk ? '✓' : '✗',
-          color: weightOk ? '#15803d' : '#b91c1c',
+          label: combinedWeight ? 'Combined cabin weight' : 'Weight',
+          detail: L.KG
+            ? combinedWeight
+              ? `${toDisp(KG, 'KG')} ${wU} bag / ${toDisp(L.KG, 'KG')} ${wU} combined`
+              : `${toDisp(KG, 'KG')} ${wU} / ${toDisp(L.KG, 'KG')} ${wU}`
+            : `${toDisp(KG, 'KG')} ${wU} / no published limit`,
+          mark: weightOk ? (combinedWeight ? '!' : '✓') : '✗',
+          color: weightOk ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
           over: !weightOk,
-          excess: weightOk ? '' : `${toDisp(KG - L.KG, 'KG')} ${wU} over`,
+          manual: combinedWeight && weightOk,
+          excess: weightOk ? (combinedWeight ? 'Add personal-item weight' : '') : `${toDisp(KG - L.KG, 'KG')} ${wU} over`,
         },
       ];
     }
@@ -271,14 +278,16 @@ export function SizeCheckerClient() {
       const ok = mine <= max;
       const unit = axis === 'KG' ? wU : lenU;
       const d = (v: number) => `${toDisp(v, axis)} ${unit}`;
+      const combinedWeight = type === 'carryon' && axis === 'KG' && L.weightRule === 'combinedWithPersonal';
       return {
         key: f.key,
-        label: f.label,
-        detail: `${d(mine)} / ${max >= 99 ? 'not weighed' : d(max)}`,
-        mark: ok ? '✓' : '✗',
-        color: ok ? '#15803d' : '#b91c1c',
+        label: combinedWeight ? 'Combined cabin weight' : f.label,
+        detail: combinedWeight ? `${d(mine)} bag / ${d(max)} combined` : `${d(mine)} / ${max >= 99 ? 'not weighed' : d(max)}`,
+        mark: ok ? (combinedWeight ? '!' : '✓') : '✗',
+        color: ok ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
         over: !ok,
-        excess: ok ? '' : `${d(mine - max)} over`,
+        manual: combinedWeight && ok,
+        excess: ok ? (combinedWeight ? 'Add personal-item weight' : '') : `${d(mine - max)} over`,
       };
     });
   };
@@ -321,34 +330,38 @@ export function SizeCheckerClient() {
 
         const checks = checksFor(a);
         const failed = checks.filter((c) => c.over);
+        const manualChecks = checks.filter((c) => 'manual' in c && c.manual);
+        const needsWeightCheck = failed.length === 0 && manualChecks.length > 0;
         const limit =
           type === 'carryon' && L.linearCm
             ? L.linearOnly
-              ? `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
-              : `${L.W} × ${L.H} × ${L.D} cm · ≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
+              ? `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg${L.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : ''}`
+              : `${L.W} × ${L.H} × ${L.D} cm · ≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg${L.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : ''}`
             : type === 'personal' && L.rule === 'linear'
               ? `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
-              : `${L.W} × ${L.H} × ${L.D} cm${L.KG ? ` · ${L.KG} kg` : ''}`;
+              : `${L.W} × ${L.H} × ${L.D} cm${L.KG ? ` · ${L.KG} kg${L.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : ''}`;
 
         return {
           airline: a,
           checks,
           limit,
-          verdict: failed.length === 0 ? 'Fits' : 'Too large',
-          color: failed.length === 0 ? '#15803d' : '#b91c1c',
-          bg: failed.length === 0 ? '#dcfce7' : '#fee2e2',
-          showAdvice: failed.length > 0,
+          verdict: failed.length > 0 ? 'Too large' : needsWeightCheck ? 'Check weight' : 'Fits',
+          color: failed.length > 0 ? '#b91c1c' : needsWeightCheck ? '#b45309' : '#15803d',
+          bg: failed.length > 0 ? '#fee2e2' : needsWeightCheck ? '#fdf8ee' : '#dcfce7',
+          showAdvice: failed.length > 0 || needsWeightCheck,
           advice:
             failed.length > 0
               ? `Over the limit on ${failed.map((c) => c.label.toLowerCase()).join(' and ')}. You would need to check this bag into the hold, or repack into a smaller case.`
-              : '',
+              : needsWeightCheck
+                ? `${a.name} publishes ${L.KG} kg as a combined cabin-baggage limit. Add the weight of your personal item before treating this as a pass.`
+                : '',
         };
       })
     : [];
 
   const fitCount = results.filter((r) => r.verdict === 'Fits').length;
   const tooLargeCount = results.filter((r) => r.verdict === 'Too large').length;
-  const manualCount = results.filter((r) => r.verdict === 'Check airline').length;
+  const manualCount = results.filter((r) => r.verdict === 'Check airline' || r.verdict === 'Check weight').length;
   const allFit = results.length > 0 && fitCount === results.length;
   const noneFit = results.length > 0 && tooLargeCount === results.length;
   const canCheck = sel.length > 0;
@@ -392,7 +405,7 @@ export function SizeCheckerClient() {
         ? 'Your bag is too large for this airline'
         : `Your bag is too large for all ${results.length} airlines`
       : manualCount
-        ? `${fitCount} fit · ${tooLargeCount} too large · ${manualCount} need airline check`
+        ? `${fitCount} fit · ${tooLargeCount} too large · ${manualCount} need a rule/weight check`
         : `Your bag fits ${fitCount} of ${results.length} airlines`;
   const summaryMark = allFit ? '✓' : noneFit ? '✗' : '!';
   const summaryColor = allFit ? '#15803d' : noneFit ? '#b91c1c' : '#b45309';
