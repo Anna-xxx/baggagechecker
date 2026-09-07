@@ -13,7 +13,10 @@ export type PersonalItemLimit = BagLimit & {
   linearCm?: number;
 };
 
-export type CheckedBaggageLimit = Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'>> & {
+export type CheckedBaggageLimit = Pick<BagLimit, 'kg'> & {
+  w?: number;
+  h?: number;
+  d?: number;
   total: number;
   eco: number;
   biz: number;
