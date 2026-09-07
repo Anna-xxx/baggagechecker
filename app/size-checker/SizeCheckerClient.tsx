@@ -492,9 +492,11 @@ export function SizeCheckerClient() {
 
   const results = checked
     ? chosen.map((a) => {
-        const L = type === 'checked' ? checkedVariantLimits(a) : a.limits[type];
+        const L = type === 'checked' ? checkedVariantLimits(a) : type === 'carryon' ? carryOnVariantLimits(a) : a.limits[type];
         const requiredVariants = type === 'checked' ? CHECKED_VARIANTS[a.code] : undefined;
         const selectedVariant = type === 'checked' ? selectedCheckedVariant(a.code) : undefined;
+        const requiredCarryOnVariants = type === 'carryon' ? a.carryOnVariants : undefined;
+        const selectedCarryOn = type === 'carryon' ? selectedCarryOnVariant(a) : undefined;
 
         if (type === 'checked' && requiredVariants?.length && !selectedVariant) {
           return {
@@ -506,6 +508,32 @@ export function SizeCheckerClient() {
             bg: '#fdf8ee',
             showAdvice: true,
             advice: `Choose the route or checked-baggage allowance for ${a.name} above before checking this bag.`,
+          };
+        }
+
+        if (type === 'carryon' && requiredCarryOnVariants?.length && !selectedCarryOn) {
+          return {
+            airline: a,
+            checks: [],
+            limit: 'Choose fare / route / class',
+            verdict: 'Check airline',
+            color: '#b45309',
+            bg: '#fdf8ee',
+            showAdvice: true,
+            advice: `Choose the fare, route or cabin class for ${a.name} above before checking this bag.`,
+          };
+        }
+
+        if (type === 'carryon' && selectedCarryOn && L.allowed === false) {
+          return {
+            airline: a,
+            checks: [],
+            limit: selectedCarryOn.label,
+            verdict: 'Not included',
+            color: '#b45309',
+            bg: '#fdf8ee',
+            showAdvice: true,
+            advice: L.note ?? `A standard overhead carry-on bag is not included with this ${a.name} option. Use the Personal item checker for the included underseat bag or add a carry-on if the airline offers that option.`,
           };
         }
 
@@ -591,6 +619,7 @@ export function SizeCheckerClient() {
 
   const fitCount = results.filter((r) => r.verdict === 'Fits').length;
   const tooLargeCount = results.filter((r) => r.verdict === 'Too large').length;
+  const notIncludedCount = results.filter((r) => r.verdict === 'Not included').length;
   const manualCount = results.filter((r) => r.verdict === 'Check airline' || r.verdict === 'Check weight').length;
   const allFit = results.length > 0 && fitCount === results.length;
   const noneFit = results.length > 0 && tooLargeCount === results.length;
@@ -658,8 +687,8 @@ export function SizeCheckerClient() {
       ? results.length === 1
         ? 'Your bag is too large for this airline'
         : `Your bag is too large for all ${results.length} airlines`
-      : manualCount
-        ? `${fitCount} fit · ${tooLargeCount} too large · ${manualCount} need a rule/weight check`
+      : manualCount || notIncludedCount
+        ? [fitCount ? `${fitCount} fit` : '', tooLargeCount ? `${tooLargeCount} too large` : '', notIncludedCount ? `${notIncludedCount} not included` : '', manualCount ? `${manualCount} need a rule/weight check` : ''].filter(Boolean).join(' · ')
         : `Your bag fits ${fitCount} of ${results.length} airlines`;
   const summaryMark = allFit ? '✓' : noneFit ? '✗' : '!';
   const summaryColor = allFit ? '#15803d' : noneFit ? '#b91c1c' : '#b45309';
