@@ -291,6 +291,31 @@ export function SizeCheckerClient() {
     return CHECKED_VARIANTS[code]?.find((v) => v.id === id);
   };
 
+  const selectedCarryOnVariant = (a: Airline) => {
+    const id = carryOnVariantByCode[a.code];
+    return a.carryOnVariants?.find((v) => v.id === id);
+  };
+
+  const carryOnVariantLimits = (a: Airline): Limits => {
+    const base = a.limits.carryon;
+    const v = selectedCarryOnVariant(a);
+    if (!v) return base;
+    return {
+      ...base,
+      H: v.h ?? 0,
+      W: v.w ?? 0,
+      D: v.d ?? 0,
+      KG: v.kg,
+      allowed: v.allowed ?? true,
+      linearCm: v.linearCm,
+      linearOnly: v.linearOnly,
+      manualCheck: v.manualCheck ?? false,
+      note: v.note,
+      weightRule: v.weightRule,
+      verified: v.verified,
+    };
+  };
+
   const checkedVariantLimits = (a: Airline): Limits => {
     const base = a.limits.checked;
     const v = selectedCheckedVariant(a.code);
@@ -570,7 +595,8 @@ export function SizeCheckerClient() {
   const allFit = results.length > 0 && fitCount === results.length;
   const noneFit = results.length > 0 && tooLargeCount === results.length;
   const checkedOptionsReady = type !== 'checked' || chosen.every((a) => !CHECKED_VARIANTS[a.code]?.length || Boolean(selectedCheckedVariant(a.code)));
-  const canCheck = sel.length > 0 && checkedOptionsReady;
+  const carryOnOptionsReady = type !== 'carryon' || chosen.every((a) => !a.carryOnVariants?.length || Boolean(selectedCarryOnVariant(a)));
+  const canCheck = sel.length > 0 && checkedOptionsReady && carryOnOptionsReady;
 
   const toggleAirline = (name: string) => {
     const on = sel.includes(name);
