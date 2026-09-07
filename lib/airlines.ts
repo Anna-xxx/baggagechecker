@@ -234,7 +234,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.copaair.com/en-us/travel-information/baggage-information/carry-on/',
     carryOn: { w: 36, h: 56, d: 26, kg: 10, verified: true },
     personal: { rule: 'dimensions', w: 25, h: 43, d: 22, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Economy Basic 0; Classic 1; Full 2; Business 2', verified: true, rule: 'linear', note: 'Standard checked bag is 158 cm total. Economy bags are 23 kg; Business bags are 32 kg. Seasonal destination restrictions can reduce the number accepted.' },
     classAllowances: [
       { name: 'Economy Basic', carryOn: '1 bag · 10 kg + personal item', checkedBags: '0 bags included', weightPerBag: '23 kg if purchased', verified: true },
       { name: 'Economy Classic', carryOn: '1 bag · 10 kg + personal item', checkedBags: '1 bag', weightPerBag: '23 kg', verified: true },
@@ -250,7 +250,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.delta.com/us/en/baggage/carry-on-baggage',
     carryOn: { w: 35, h: 56, d: 23, kg: 0, verified: true },
     personal: { rule: 'unknown', kg: 0, verified: false },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy on most international fares', verified: true },
+    checked: { kg: 23, total: 157, eco: 23, biz: 32, bags: 'Fare and route dependent', verified: true, rule: 'linear', note: 'Delta standard checked bags are limited to 62 linear inches (about 157 cm). Main/Comfort standard bags are 23 kg; eligible First/Delta One bags may be 32 kg.' },
     classAllowances: [
       { name: 'Delta Main / Delta Comfort', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Varies by route/fare', weightPerBag: '23 kg standard', note: 'Domestic standard checked bags are normally paid unless another benefit applies.', verified: true },
       { name: 'Delta Premium Select', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Varies by route/fare', weightPerBag: '23 kg', note: 'Basic premium fares introduced in 2026 can have reduced checked-bag benefits.', verified: true },
@@ -265,7 +265,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.easyjet.com/en/help/baggage/cabin-bags',
     carryOn: { w: 45, h: 56, d: 25, kg: 15, verified: true },
     personal: { rule: 'dimensions', w: 36, h: 45, d: 20, kg: 15, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 275, eco: 23, biz: 23, bags: 'none included — checked bags are paid extras', verified: true },
+    checked: { kg: 23, total: 275, eco: 23, biz: 23, bags: 'Paid hold baggage; up to 3 bags per passenger', verified: true, rule: 'linear', note: 'easyJet standard hold bag is 23 kg. 15 kg and heavier options are available; no single bag may exceed 32 kg. Maximum total size is under 275 cm.' },
     classAllowances: [
       { name: 'Standard', carryOn: '1 small bag · 45 × 36 × 20 cm · 15 kg', checkedBags: '0 bags included', weightPerBag: 'Purchased separately', verified: true },
       { name: 'Large cabin bag eligible / added', carryOn: 'Small bag + 1 large bag · 56 × 45 × 25 cm · 15 kg', checkedBags: 'Depends on booking', weightPerBag: 'Purchased allowance', note: 'Large cabin bag is included only with eligible fares/seats/memberships or when purchased.', verified: true },
@@ -279,7 +279,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.emirates.com/english/before-you-fly/baggage/cabin-baggage-rules/',
     carryOn: { w: 38, h: 55, d: 22, kg: 7, verified: true },
     personal: { rule: 'unknown', kg: 0, verified: false },
-    checked: { w: 55, h: 80, d: 30, kg: 30, total: 150, eco: 30, biz: 40, bags: 'weight concept: 30 kg in economy', verified: true },
+    checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Weight or piece concept depending on route', verified: true, rule: 'linear', manualCheck: true, note: 'Emirates uses two different checked-baggage systems. Weight-concept routes allow each piece up to 203 cm and use total class weight; piece-concept routes use 150 cm per piece with different piece/weight allowances. Check the booked route.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: '20–35 kg total', weightPerBag: '32 kg max each', note: 'Checked allowance depends on Special / Saver / Flex / Flex Plus and route.', verified: true },
       { name: 'Premium Economy', carryOn: '1 bag · 10 kg', checkedBags: '35 kg total', weightPerBag: '32 kg max each', verified: true },
@@ -295,7 +295,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.ethiopianairlines.com/information/baggage-information/carry-on-baggage',
     carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true },
     personal: { rule: 'unknown', kg: 3, verified: false },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Usually 2 pieces; route/fare exceptions apply', verified: true, rule: 'linear', note: 'Standard international piece limit is 158 cm. Economy: 23 kg per piece. Cloud Nine: up to 32 kg per piece, with some routes/fare products using different piece counts.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 bag · 7 kg + personal item', checkedBags: 'Usually 2 bags internationally', weightPerBag: '23 kg', note: 'Exact allowance varies by route/fare.', verified: true },
       { name: 'Business', carryOn: '2 bags · 7 kg each + personal item', checkedBags: '2 × 32 kg or 3 × 23 kg', weightPerBag: 'Route dependent', note: 'Use the ticket allowance for the operating route.', verified: true },
@@ -309,7 +309,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.flyfrontier.com/travel/travel-info/bag-options/',
     carryOn: { w: 40.64, h: 60.96, d: 25.4, kg: 15.9, verified: true },
     personal: { rule: 'dimensions', w: 35.56, h: 45.72, d: 20.32, kg: 15.9, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 18.1, total: 157, eco: 18.1, biz: 22.7, bags: 'Paid unless included with a bundle/status', verified: true, rule: 'linear', note: 'Frontier standard checked bag: 62 linear inches and 40 lb (18.1 kg). Certain bundles allow 50 lb (22.7 kg). Bags over 100 lb are not accepted.' },
     classAllowances: [
       { name: 'Basic', carryOn: 'Personal item included; carry-on optional', checkedBags: 'Optional', weightPerBag: '40 lb / 18.1 kg standard', verified: true },
       { name: 'Economy / Premium bundle', carryOn: '1 carry-on · up to 35 lb / 15.9 kg', checkedBags: 'Check bundle', weightPerBag: '40 lb / 18.1 kg standard', verified: true },
@@ -324,7 +324,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.garuda-indonesia.com/id/id/new-baggage-policy',
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true, linearCm: 115, manualCheck: true, note: 'Standard jets: max 56 × 36 × 23 cm, 115 cm total and 7 kg. On CRJ/ATR Economy flights, a stricter 41 × 34 × 17 cm and 92 cm total limit applies.' },
     personal: { rule: 'unknown', kg: 0, verified: false },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Ticket-specific under the new Piece Concept', verified: true, rule: 'linear', manualCheck: true, note: 'For tickets purchased or issued from 1 Sep 2026, Garuda uses a new Piece Concept. The ticket shows the included number of bags and weight per bag, so the checker should not assume one universal allowance.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: 'See ticket', weightPerBag: 'Ticket-specific', note: 'For tickets issued/purchased from 1 Sep 2026, Garuda uses a new Piece Concept and prints the included piece count/weight on the ticket.', verified: true },
       { name: 'Business', carryOn: '1 bag · 7 kg', checkedBags: 'See ticket', weightPerBag: 'Ticket-specific', note: 'New Piece Concept applies to Garuda-operated flights for tickets issued/purchased from 1 Sep 2026.', verified: true },
@@ -339,7 +339,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.hainanairlines.com/HUPortal/dyn/portal/DisplayPage?COUNTRY_SITE=MX&LANGUAGE=US&PAGE=CABA&SITE=CBHZCBHZ',
     carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true, manualCheck: true, note: 'Domestic: max 55 × 40 × 20 cm and 7 kg. International/regional: max 115 cm total (L + W + H) and 10 kg per piece; US departures also use max 115 cm total and 10 kg.' },
     personal: { rule: 'dimensions', w: 30, h: 30, d: 20, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Route and branded-fare dependent', verified: true, rule: 'linear', manualCheck: true, note: 'Hainan updated checked baggage rules from 2 Sep 2026. Many international branded fares use 158 cm and 23 kg Economy pieces, while route/fare allowances vary; single pieces may not exceed 32 kg and 203 cm.' },
     classAllowances: [
       { name: 'Economy', carryOn: 'Domestic: 1 × 7 kg · International: 1 × 10 kg', checkedBags: 'Varies by route/fare', weightPerBag: 'Usually 23 kg on piece routes', note: 'International cabin size is governed by 115 cm total dimensions.', verified: true },
       { name: 'Business', carryOn: 'Domestic: 2 × 7 kg · International: 2 × 10 kg', checkedBags: 'Usually 2 bags on major international routes', weightPerBag: '32 kg on piece routes', note: 'Exact checked allowance varies by route and branded fare.', verified: true },
@@ -354,7 +354,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.iberia.com/es/luggage/hand-luggage/?BV_UseBVCookie=no',
     carryOn: { w: 40, h: 56, d: 25, kg: 10, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare-dependent', verified: true, rule: 'linear', note: 'Standard checked baggage is 158 cm total and 23 kg. Overweight can be purchased up to 32 kg; Business allowances may use 32 kg per piece.' },
     classAllowances: [
       { name: 'Economy Basic', carryOn: '1 bag · 10 kg + personal item', checkedBags: '0 bags included', weightPerBag: '23 kg if purchased', verified: true },
       { name: 'Economy Optima / Comfort / Flexible', carryOn: '1 bag · 10 kg + personal item', checkedBags: 'Usually 1 bag', weightPerBag: '23 kg', note: 'Exact inclusions depend on route/fare.', verified: true },
@@ -370,7 +370,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.goindigo.in/baggage/cabin-baggage.html',
     carryOn: { w: 35, h: 55, d: 25, kg: 7, verified: true, linearCm: 115 },
     personal: { rule: 'unknown', kg: 3, verified: false },
-    checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    checked: { kg: 0, total: 158, eco: 0, biz: 0, bags: 'Weight allowance depends heavily on route', verified: true, rule: 'linear', manualCheck: true, note: 'IndiGo standard checked size is 158 cm total, but free weight varies by route: e.g. 15 kg domestic, 20–30 kg on many international routes, and codeshares may use piece limits. ATR aircraft also have a separate dimensional rule.' },
     classAllowances: [
       { name: 'Economy Saver / Flexi', carryOn: '1 bag · 7 kg', checkedBags: 'Route dependent', weightPerBag: 'Check booking', note: 'Domestic and international allowances differ; selected long-haul services include up to 30 kg checked baggage.', verified: true },
       { name: 'Super 6E', carryOn: '1 bag · 7 kg', checkedBags: 'Route dependent', weightPerBag: 'Check booking', note: 'Selected long-haul services include up to 35 kg checked baggage.', verified: true },
