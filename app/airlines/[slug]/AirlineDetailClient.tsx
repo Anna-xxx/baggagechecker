@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { airlineBaggageUrl, type Airline } from '@/lib/airlines';
+import { airlineBaggageUrl, getAirlineBaggage, type Airline } from '@/lib/airlines';
 
 type Bag = { w: number; h: number; d: number; kg: number };
 type Personal = { w: number; h: number; d: number };
@@ -84,10 +84,10 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const [fav, setFav] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
 
-  const override = AIRLINE_OVERRIDES[airline.code];
-  const cabin: Bag = override ? override.cabin : { w: airline.cabin[0], h: airline.cabin[1], d: airline.cabin[2], kg: airline.cabinKg };
-  const personal: Personal = override ? override.personal : GENERIC_PERSONAL;
-  const info: CheckedInfo = override ? override : GENERIC_CHECKED;
+  const baggage = getAirlineBaggage(airline);
+  const cabin: Bag = baggage.carryOn;
+  const personal = baggage.personal;
+  const info = baggage.checked;
 
   const len = (v: number) => (metric ? `${v} cm` : `${Math.round(v / 2.54)} in`);
   const wt = (v: number) => (metric ? `${v} kg` : `${Math.round(v * 2.205)} lb`);
