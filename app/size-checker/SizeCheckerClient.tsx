@@ -182,10 +182,12 @@ export function SizeCheckerClient() {
 
   const chosen = AIRLINES.filter((a) => sel.includes(a.name));
 
+  const hasActiveLinearLimit = (L: Limits) => Boolean(L.linearCm && (L.linearOnly || L.W + L.H + L.D > L.linearCm));
+
   const checksFor = (a: Airline) => {
     const L = a.limits[type];
 
-    if (type === 'carryon' && L.linearCm) {
+    if (type === 'carryon' && hasActiveLinearLimit(L)) {
       const total = W + H + D;
       const maxTotal = L.linearCm;
       const totalOk = total <= maxTotal;
@@ -329,7 +331,7 @@ export function SizeCheckerClient() {
         const manualChecks = checks.filter((c) => 'manual' in c && c.manual);
         const needsWeightCheck = failed.length === 0 && manualChecks.length > 0;
         const limit =
-          type === 'carryon' && L.linearCm
+          type === 'carryon' && hasActiveLinearLimit(L)
             ? L.linearOnly
               ? `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg${L.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : ''}`
               : `${L.W} × ${L.H} × ${L.D} cm · ≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg${L.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : ''}`
@@ -375,7 +377,7 @@ export function SizeCheckerClient() {
   };
 
   const formatLimit = (L: Limits) => {
-    if (type === 'carryon' && L.linearCm) {
+    if (type === 'carryon' && hasActiveLinearLimit(L)) {
       return L.linearOnly ? `≤ ${L.linearCm} cm total` : `${L.W} × ${L.H} × ${L.D} cm · ≤ ${L.linearCm} cm total`;
     }
     if (type === 'personal') {
