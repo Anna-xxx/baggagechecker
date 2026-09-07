@@ -273,7 +273,7 @@ export const AIRLINES: Airline[] = [
     country: 'Ethiopia',
     website: 'https://www.ethiopianairlines.com',
     baggageUrl: 'https://www.ethiopianairlines.com/information/baggage-information/carry-on-baggage',
-    carryOn: { w: 40, h: 55, d: 23, kg: 7, verified: true },
+    carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true },
     personal: { rule: 'unknown', kg: 3, verified: false },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
     classAllowances: [
@@ -302,7 +302,7 @@ export const AIRLINES: Airline[] = [
     country: 'Indonesia',
     website: 'https://www.garuda-indonesia.com',
     baggageUrl: 'https://www.garuda-indonesia.com/id/id/new-baggage-policy',
-    carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
+    carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true, linearCm: 115, manualCheck: true, note: 'Standard jets: max 56 × 36 × 23 cm, 115 cm total and 7 kg. On CRJ/ATR Economy flights, a stricter 41 × 34 × 17 cm and 92 cm total limit applies.' },
     personal: { rule: 'unknown', kg: 0, verified: false },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
     classAllowances: [
@@ -348,7 +348,7 @@ export const AIRLINES: Airline[] = [
     country: 'India',
     website: 'https://www.goindigo.in',
     baggageUrl: 'https://www.goindigo.in/baggage/cabin-baggage.html',
-    carryOn: { w: 35, h: 55, d: 25, kg: 7, verified: true },
+    carryOn: { w: 35, h: 55, d: 25, kg: 7, verified: true, linearCm: 115 },
     personal: { rule: 'unknown', kg: 3, verified: false },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
     classAllowances: [
