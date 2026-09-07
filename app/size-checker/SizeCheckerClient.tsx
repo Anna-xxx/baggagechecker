@@ -12,6 +12,100 @@ type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItem
 type BagType = 'carryon' | 'personal' | 'checked';
 type Airline = { name: string; code: string; limits: Record<BagType, Limits> };
 
+type CheckedVariant = {
+  id: string;
+  label: string;
+  rule: 'linear' | 'dimensions';
+  kg: number;
+  total?: number;
+  w?: number;
+  h?: number;
+  d?: number;
+  manualCheck?: boolean;
+  note?: string;
+};
+
+const CHECKED_VARIANTS: Record<string, CheckedVariant[]> = {
+  AI: [
+    { id: 'dom-econ-value', label: 'Domestic · Economy Value · 15 kg', rule: 'linear', total: 158, kg: 15 },
+    { id: 'dom-econ-classic', label: 'Domestic · Economy Classic · 20 kg', rule: 'linear', total: 158, kg: 20 },
+    { id: 'dom-econ-flex', label: 'Domestic · Economy Flex · 25 kg', rule: 'linear', total: 158, kg: 25 },
+    { id: 'dom-business', label: 'Domestic · Business · max 32 kg per bag', rule: 'linear', total: 158, kg: 32 },
+    { id: 'intl-economy-piece', label: 'International piece route · Economy · 23 kg', rule: 'linear', total: 158, kg: 23 },
+    { id: 'intl-business-piece', label: 'International piece route · Business/First · 32 kg', rule: 'linear', total: 158, kg: 32 },
+  ],
+  EK: [
+    { id: 'piece-economy', label: 'Americas/Africa · Economy · 23 kg', rule: 'linear', total: 150, kg: 23 },
+    { id: 'piece-business', label: 'Americas/Africa · Business/First · 32 kg', rule: 'linear', total: 150, kg: 32 },
+    { id: 'weight-special', label: 'Other routes · Economy Special · 20 kg', rule: 'linear', total: 203, kg: 20 },
+    { id: 'weight-saver', label: 'Other routes · Economy Saver · 25 kg', rule: 'linear', total: 203, kg: 25 },
+    { id: 'weight-flex', label: 'Other routes · Economy Flex · 30 kg', rule: 'linear', total: 203, kg: 30 },
+    { id: 'weight-flexplus', label: 'Other routes · Economy Flex Plus · max 32 kg per bag', rule: 'linear', total: 203, kg: 32 },
+    { id: 'weight-premium', label: 'Other routes · Premium/Business/First · max 32 kg per bag', rule: 'linear', total: 203, kg: 32 },
+  ],
+  '6E': [
+    { id: 'domestic', label: 'Domestic · 15 kg allowance', rule: 'linear', total: 158, kg: 15 },
+    { id: 'intl-20', label: 'International · 20 kg allowance', rule: 'linear', total: 158, kg: 20 },
+    { id: 'intl-25', label: 'International · 25 kg allowance', rule: 'linear', total: 158, kg: 25 },
+    { id: 'intl-30', label: 'International · 30 kg allowance', rule: 'linear', total: 158, kg: 30 },
+    { id: 'longhaul-32', label: 'Long-haul / premium · max 32 kg per bag', rule: 'linear', total: 158, kg: 32 },
+  ],
+  MH: [
+    { id: 'weight-value', label: 'Weight concept · Economy Value · 20 kg', rule: 'linear', total: 158, kg: 20 },
+    { id: 'weight-basic', label: 'Weight concept · Economy Basic · 25 kg', rule: 'linear', total: 158, kg: 25 },
+    { id: 'weight-flex', label: 'Weight concept · Economy Flex · max 32 kg per bag', rule: 'linear', total: 158, kg: 32 },
+    { id: 'weight-business', label: 'Weight concept · Business · max 32 kg per bag', rule: 'linear', total: 158, kg: 32 },
+    { id: 'piece-economy', label: 'Piece concept · Economy · 23 kg', rule: 'linear', total: 158, kg: 23 },
+    { id: 'piece-business', label: 'Piece concept · Business · 32 kg', rule: 'linear', total: 158, kg: 32 },
+  ],
+  QF: [
+    { id: 'dom-economy', label: 'Domestic Australia · Economy · 23 kg', rule: 'linear', total: 140, kg: 23 },
+    { id: 'dom-business', label: 'Domestic Australia · Business · 32 kg', rule: 'linear', total: 140, kg: 32 },
+    { id: 'americas-economy', label: 'International · Americas · Economy · 32 kg', rule: 'linear', total: 158, kg: 32 },
+    { id: 'intl-other-economy', label: 'International · Other routes · Economy · 30 kg', rule: 'linear', total: 158, kg: 30 },
+    { id: 'intl-premium', label: 'International · Premium cabin · max 32 kg per bag', rule: 'linear', total: 158, kg: 32 },
+  ],
+  QR: [
+    { id: 'piece-economy', label: 'Africa/Americas · Economy · 23 kg', rule: 'linear', total: 158, kg: 23 },
+    { id: 'piece-business', label: 'Africa/Americas · Business/First · 32 kg', rule: 'linear', total: 158, kg: 32 },
+    { id: 'other-economy', label: 'Other routes · Economy · choose ticket allowance', rule: 'linear', total: 300, kg: 0, manualCheck: true, note: 'Qatar Economy weight allowance varies by fare. Use the allowance shown on the ticket; no single checked bag may exceed 32 kg.' },
+    { id: 'other-premium', label: 'Other routes · Business/First · max 32 kg per bag', rule: 'linear', total: 300, kg: 32 },
+  ],
+  FR: [
+    { id: '10kg', label: '10 kg checked bag', rule: 'dimensions', w: 120, h: 80, d: 120, kg: 10 },
+    { id: '20kg', label: '20 kg checked bag', rule: 'dimensions', w: 120, h: 80, d: 120, kg: 20 },
+    { id: '23kg', label: '23 kg checked bag', rule: 'dimensions', w: 120, h: 80, d: 120, kg: 23 },
+  ],
+  SQ: [
+    { id: 'us-economy', label: 'US/Canada · Economy/Premium Economy · 23 kg', rule: 'linear', total: 158, kg: 23 },
+    { id: 'us-business', label: 'US/Canada · Business/First/Suites · 32 kg', rule: 'linear', total: 158, kg: 32 },
+    { id: 'other-econ-lite', label: 'Other routes · Economy Lite/Value · 25 kg', rule: 'linear', total: 158, kg: 25 },
+    { id: 'other-econ-standard', label: 'Other routes · Economy Standard/Flexi · 30 kg', rule: 'linear', total: 158, kg: 30 },
+    { id: 'other-premium', label: 'Other routes · Premium cabins · max 32 kg per bag', rule: 'linear', total: 158, kg: 32 },
+  ],
+  TK: [
+    { id: 'dom-ecofly', label: 'Domestic · EcoFly · 15 kg', rule: 'linear', total: 158, kg: 15 },
+    { id: 'dom-extrafly', label: 'Domestic · ExtraFly · 20 kg', rule: 'linear', total: 158, kg: 20 },
+    { id: 'dom-primefly', label: 'Domestic · PrimeFly · 25 kg', rule: 'linear', total: 158, kg: 25 },
+    { id: 'dom-business', label: 'Domestic · Business · 30 kg', rule: 'linear', total: 158, kg: 30 },
+    { id: 'intl-piece-economy', label: 'International piece concept · Economy · 23 kg', rule: 'linear', total: 158, kg: 23 },
+    { id: 'intl-piece-business', label: 'International piece concept · Business · 32 kg', rule: 'linear', total: 158, kg: 32 },
+    { id: 'intl-weight', label: 'International weight concept · check ticket', rule: 'linear', total: 158, kg: 0, manualCheck: true, note: 'The total checked allowance depends on route and fare. Use the baggage allowance shown on your ticket.' },
+  ],
+  VY: [
+    { id: '15kg', label: '15 kg checked bag', rule: 'linear', total: 158, kg: 15 },
+    { id: '20kg', label: '20 kg checked bag', rule: 'linear', total: 158, kg: 20 },
+    { id: '25kg', label: '25 kg checked bag', rule: 'linear', total: 158, kg: 25 },
+    { id: '30kg', label: '30 kg checked bag', rule: 'linear', total: 158, kg: 30 },
+  ],
+  W6: [
+    { id: '10kg', label: '10 kg checked bag', rule: 'dimensions', w: 119, h: 149, d: 171, kg: 10 },
+    { id: '20kg', label: '20 kg checked bag', rule: 'dimensions', w: 119, h: 149, d: 171, kg: 20 },
+    { id: '26kg', label: '26 kg checked bag', rule: 'dimensions', w: 119, h: 149, d: 171, kg: 26 },
+    { id: '32kg', label: '32 kg checked bag', rule: 'dimensions', w: 119, h: 149, d: 171, kg: 32 },
+  ],
+};
+
 const AIRLINES: Airline[] = ALL_AIRLINES.map((a) => {
   const baggage = getAirlineBaggage(a);
   return {
