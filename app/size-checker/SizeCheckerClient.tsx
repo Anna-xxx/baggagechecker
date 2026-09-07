@@ -463,7 +463,22 @@ export function SizeCheckerClient() {
 
   const results = checked
     ? chosen.map((a) => {
-        const L = a.limits[type];
+        const L = type === 'checked' ? checkedVariantLimits(a) : a.limits[type];
+        const requiredVariants = type === 'checked' ? CHECKED_VARIANTS[a.code] : undefined;
+        const selectedVariant = type === 'checked' ? selectedCheckedVariant(a.code) : undefined;
+
+        if (type === 'checked' && requiredVariants?.length && !selectedVariant) {
+          return {
+            airline: a,
+            checks: [],
+            limit: 'Choose route / allowance',
+            verdict: 'Check airline',
+            color: '#b45309',
+            bg: '#fdf8ee',
+            showAdvice: true,
+            advice: `Choose the route or checked-baggage allowance for ${a.name} above before checking this bag.`,
+          };
+        }
 
         if (type === 'personal' && L.rule && L.rule !== 'dimensions' && L.rule !== 'linear') {
           const ruleText =
