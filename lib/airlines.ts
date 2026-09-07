@@ -561,7 +561,7 @@ export const AIRLINES: Airline[] = [
     classAllowances: [
       { name: 'Economy Discount', carryOn: '1 bag · 10 kg + personal item', checkedBags: '0 bags', weightPerBag: '—', note: 'Route-specific exceptions apply.', verified: true },
       { name: 'Economy Basic / Classic / Plus', carryOn: '1 bag · 10 kg + personal item', checkedBags: 'Usually 1 bag', weightPerBag: '23 kg', note: 'Included baggage varies by route and fare.', verified: true },
-      { name: 'Business Executive / Top Executive', carryOn: '2 bags · 10 kg each + personal item', checkedBags: 'Usually 2 bags', weightPerBag: '32 kg', note: 'Check route-specific fare conditions.', verified: true },
+      { name: 'Business Executive / Top Executive', carryOn: 'North America: 1 bag · 10 kg; Europe/Africa/South America/domestic: 2 bags · 10 kg each + personal item', checkedBags: 'Usually 2 bags', weightPerBag: '32 kg', note: 'Exact hold-baggage entitlement depends on route and fare.', verified: true },
     ],
   },
   {
@@ -574,8 +574,8 @@ export const AIRLINES: Airline[] = [
     personal: { rule: 'dimensions', w: 25, h: 37.5, d: 12.5, kg: 1.5, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
     classAllowances: [
-      { name: 'Economy Saver / Standard', carryOn: '1 bag · 7 kg', checkedBags: 'Usually 1 bag internationally', weightPerBag: '23 kg', note: 'Piece Concept applies on covered routes from 2 Mar 2026; some destinations differ.', verified: true },
-      { name: 'Economy Flexi / Full Flex', carryOn: '1 bag · 7 kg', checkedBags: 'Usually 2 bags internationally', weightPerBag: '23 kg', verified: true },
+      { name: 'Economy Saver / Standard', carryOn: '1 bag · 7 kg', checkedBags: 'International: 1 bag', weightPerBag: '23 kg', note: 'Saver has no checked bag on some destinations; new Piece Concept applies to covered travel from 2 Mar 2026.', verified: true },
+      { name: 'Economy Flexi / Full Flex', carryOn: '1 bag · 7 kg', checkedBags: 'International: 2 bags', weightPerBag: '23 kg', verified: true },
       { name: 'Premium Economy', carryOn: '1 bag · 7 kg', checkedBags: '2 bags internationally', weightPerBag: '23 kg', verified: true },
       { name: 'Royal Silk (Business)', carryOn: '2 bags · 7 kg each', checkedBags: '2 bags internationally', weightPerBag: '32 kg', verified: true },
       { name: 'Royal First', carryOn: '2 bags · 7 kg each', checkedBags: '3 bags internationally', weightPerBag: '32 kg', note: 'Reward fare may include 2 bags.', verified: true },
@@ -610,8 +610,8 @@ export const AIRLINES: Airline[] = [
       { name: 'Economy Lite', carryOn: '1 bag · 8 kg', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'Economy Smart', carryOn: '1 bag · 8 kg', checkedBags: 'Included', weightPerBag: 'Usually 23 kg', note: 'Allowance varies by destination.', verified: true },
       { name: 'Economy Comfort', carryOn: '1 bag · 8 kg', checkedBags: 'Included', weightPerBag: '23–32 kg depending route', note: 'On selected routes Comfort includes 2 × 23 kg; on many others 1 × 32 kg.', verified: true },
-      { name: 'Business Pro', carryOn: '1 bag · 10 kg', checkedBags: 'Included', weightPerBag: 'Usually 32 kg', note: 'Often 1 × 32 kg; destination rules apply.', verified: true },
-      { name: 'Business Elite', carryOn: '2 bags · 10 kg each', checkedBags: 'Included', weightPerBag: 'Usually 2 × 32 kg', note: 'Destination rules apply.', verified: true },
+      { name: 'Business Pro', carryOn: 'Cabin baggage up to 10 kg + personal item up to 5 kg', checkedBags: 'Included', weightPerBag: 'Usually 32 kg', note: 'Often 1 × 32 kg; destination rules apply.', verified: true },
+      { name: 'Business Elite', carryOn: 'Cabin baggage up to 10 kg + personal item up to 5 kg', checkedBags: 'Included', weightPerBag: 'Usually 2 × 32 kg', note: 'If cabin baggage uses multiple bags, they are treated together under the current 115 cm rule; destination checked-baggage rules apply.', verified: true },
     ],
   },
   {
