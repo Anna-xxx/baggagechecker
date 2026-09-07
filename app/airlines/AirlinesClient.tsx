@@ -19,8 +19,13 @@ function airlineType(code: string): 'Low-cost' | 'Full-service' {
 }
 
 function personalItemSize(a: Airline): string {
-  const b = getAirlineBaggage(a).personal;
-  return `${b.h} × ${b.w} × ${b.d} cm`;
+  const baggage = getAirlineBaggage(a);
+  const b = baggage.personal;
+  if (baggage.personalRule === 'dimensions') return `${b.h} × ${b.w} × ${b.d} cm`;
+  if (baggage.personalRule === 'linear') return `≤ ${baggage.personalLinearCm} cm total`;
+  if (baggage.personalRule === 'fitUnderSeat') return 'Must fit under seat';
+  if (baggage.personalRule === 'notSeparate') return 'No separate item';
+  return 'No fixed size published';
 }
 
 type Sort = 'name' | 'strict' | 'generous';
@@ -180,7 +185,7 @@ export function AirlinesClient() {
 
                 <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px', display: 'flex', alignItems: 'baseline', gap: 10 }}>
                   <span style={{ fontSize: 10.5, color: '#8494a8' }}>
-                    Personal item <span style={{ color: '#a9b4c2' }}>(typical)</span>
+                    Personal item
                   </span>
                   <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{personalItemSize(a)}</span>
                 </div>
