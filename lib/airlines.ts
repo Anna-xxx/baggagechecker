@@ -3,13 +3,33 @@ export type Airline = {
   code: string;
   country: string;
   website: string;
-  /** Carry-on max dimensions in cm: [width, height, depth] */
+  /** Carry-on max dimensions in cm: [height, width, depth] */
   cabin: [number, number, number];
-  /** Carry-on max weight in kg */
+  /** Carry-on max weight in kg. Use 0 when the airline publishes no numeric limit. */
   cabinKg: number;
 };
 
-export const AIRLINES: Airline[] = [
+export type BagLimit = {
+  w: number;
+  h: number;
+  d: number;
+  kg: number;
+};
+
+export type CheckedBaggageLimit = BagLimit & {
+  total: number;
+  eco: number;
+  biz: number;
+  bags: string;
+};
+
+export type AirlineBaggage = {
+  carryOn: BagLimit;
+  personal: BagLimit;
+  checked: CheckedBaggageLimit;
+};
+
+const AIRLINE_BASE: Airline[] = [
   { name: 'Air Canada', code: 'AC', country: 'Canada', website: 'https://www.aircanada.com', cabin: [55, 40, 23], cabinKg: 10 },
   { name: 'Air France', code: 'AF', country: 'France', website: 'https://www.airfrance.com', cabin: [55, 35, 25], cabinKg: 12 },
   { name: 'Air India', code: 'AI', country: 'India', website: 'https://www.airindia.com', cabin: [55, 40, 20], cabinKg: 7 },
@@ -52,7 +72,81 @@ export const AIRLINES: Airline[] = [
   { name: 'Wizz Air', code: 'W6', country: 'Hungary', website: 'https://wizzair.com', cabin: [55, 40, 23], cabinKg: 10 },
 ];
 
-/** Generic checked-baggage figures (industry-typical; not airline-specific — real allowances vary by fare and route). */
+const DEFAULT_PERSONAL: BagLimit = { w: 30, h: 40, d: 20, kg: 0 };
+const DEFAULT_CHECKED: CheckedBaggageLimit = {
+  w: 55,
+  h: 80,
+  d: 30,
+  kg: 23,
+  total: 158,
+  eco: 23,
+  biz: 32,
+  bags: '1 in economy',
+};
+
+const PERSONAL_BY_CODE: Record<string, BagLimit> = {
+  AC: { w: 33, h: 43, d: 16, kg: 0 },
+  AF: { w: 30, h: 40, d: 15, kg: 0 },
+  AA: { w: 36, h: 46, d: 20, kg: 0 },
+  BA: { w: 30, h: 40, d: 15, kg: 0 },
+  DL: { w: 36, h: 43, d: 20, kg: 0 },
+  U2: { w: 36, h: 45, d: 20, kg: 15 },
+  EK: { w: 30, h: 40, d: 15, kg: 0 },
+  F9: { w: 35, h: 45, d: 20, kg: 0 },
+  '6E': { w: 25, h: 35, d: 20, kg: 0 },
+  LH: { w: 30, h: 40, d: 10, kg: 0 },
+  QR: { w: 30, h: 40, d: 15, kg: 0 },
+  FR: { w: 30, h: 40, d: 20, kg: 0 },
+  WN: { w: 34, h: 42, d: 21, kg: 0 },
+  NK: { w: 35, h: 45, d: 20, kg: 0 },
+  TK: { w: 30, h: 40, d: 15, kg: 0 },
+  VY: { w: 30, h: 40, d: 20, kg: 0 },
+  W6: { w: 30, h: 40, d: 20, kg: 10 },
+};
+
+const CARRY_ON_BY_CODE: Record<string, BagLimit> = {
+  AC: { w: 40, h: 55, d: 23, kg: 0 },
+  AA: { w: 36, h: 56, d: 23, kg: 0 },
+  DL: { w: 35, h: 56, d: 23, kg: 0 },
+  U2: { w: 45, h: 56, d: 25, kg: 15 },
+};
+
+const CHECKED_BY_CODE: Record<string, Partial<CheckedBaggageLimit>> = {
+  AC: { total: 158, eco: 23, biz: 32, bags: '1 in economy on most fares' },
+  AF: { total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
+  AA: { total: 158, eco: 23, biz: 32, bags: '1 in economy (fee applies on most domestic fares)' },
+  BA: { total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
+  DL: { total: 158, eco: 23, biz: 32, bags: '1 in economy on most international fares' },
+  U2: { total: 275, eco: 23, biz: 23, bags: 'none included — checked bags are paid extras' },
+  EK: { total: 150, eco: 30, biz: 40, bags: 'weight concept: 30 kg in economy' },
+  LH: { total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
+  QR: { total: 158, eco: 25, biz: 32, bags: '1–2 bags depending on fare' },
+  FR: { total: 119, eco: 20, biz: 20, bags: 'none included — checked bags are paid extras' },
+  TK: { total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
+};
+
+export const AIRLINES: Airline[] = AIRLINE_BASE;
+
+export function getAirlineBaggage(airline: Airline): AirlineBaggage {
+  const carryOn =
+    CARRY_ON_BY_CODE[airline.code] ?? {
+      w: airline.cabin[1],
+      h: airline.cabin[0],
+      d: airline.cabin[2],
+      kg: airline.cabinKg,
+    };
+  const personal = PERSONAL_BY_CODE[airline.code] ?? DEFAULT_PERSONAL;
+  const checkedOverride = CHECKED_BY_CODE[airline.code] ?? {};
+  const checked = {
+    ...DEFAULT_CHECKED,
+    ...checkedOverride,
+    kg: checkedOverride.eco ?? DEFAULT_CHECKED.eco,
+  };
+
+  return { carryOn, personal, checked };
+}
+
+/** Legacy generic checked-baggage figures. New UI code should use getAirlineBaggage().checked. */
 export const TYPICAL_CHECKED = { w: 55, h: 40, d: 20, kg: 23 };
 
 export function airlineSlug(name: string): string {
