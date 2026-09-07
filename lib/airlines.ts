@@ -282,7 +282,7 @@ export const AIRLINES: Airline[] = [
     country: 'Panama',
     website: 'https://www.copaair.com',
     baggageUrl: 'https://www.copaair.com/en-us/travel-information/baggage-information/carry-on/',
-    carryOn: { w: 36, h: 56, d: 26, kg: 10, verified: true },
+    carryOn: { w: 36, h: 56, d: 26, kg: 10, verified: true, linearCm: 118 },
     personal: { rule: 'dimensions', w: 25, h: 43, d: 22, kg: 0, verified: true },
     checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Economy Basic 0; Classic 1; Full 2; Business 2', verified: true, rule: 'linear', note: 'Standard checked bag is 158 cm total. Economy bags are 23 kg; Business bags are 32 kg. Seasonal destination restrictions can reduce the number accepted.' },
     classAllowances: [
@@ -298,7 +298,7 @@ export const AIRLINES: Airline[] = [
     country: 'United States',
     website: 'https://www.delta.com',
     baggageUrl: 'https://www.delta.com/us/en/baggage/carry-on-baggage',
-    carryOn: { w: 35, h: 56, d: 23, kg: 0, verified: true },
+    carryOn: { w: 35, h: 56, d: 23, kg: 0, verified: true, linearCm: 114 },
     personal: { rule: 'unknown', kg: 0, verified: false },
     checked: { kg: 23, total: 157, eco: 23, biz: 32, bags: 'Fare and route dependent', verified: true, rule: 'linear', note: 'Delta standard checked bags are limited to 62 linear inches (about 157 cm). Main/Comfort standard bags are 23 kg; eligible First/Delta One bags may be 32 kg.' },
     classAllowances: [
@@ -540,13 +540,13 @@ export const AIRLINES: Airline[] = [
     country: 'Malaysia',
     website: 'https://www.malaysiaairlines.com',
     baggageUrl: 'https://www.malaysiaairlines.com/uk/en/travel-info/baggage/cabin-baggage.html',
-    carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
+    carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true, weightRule: 'combinedWithPersonal', note: 'Economy: 7 kg combined across cabin bag and permitted personal item.' },
     personal: { rule: 'dimensions', w: 25, h: 36, d: 25, kg: 0, verified: true },
     checked: { kg: 0, total: 158, eco: 0, biz: 0, bags: 'Weight or piece concept depending on ticket', verified: true, rule: 'linear', manualCheck: true, note: 'Malaysia Airlines uses both Weight Concept and Piece Concept. Every standard piece must stay under 158 cm and no piece may exceed 32 kg. Weight Concept varies by fare (for example Economy Value 20 kg, Basic 25 kg, Flex 35 kg; Business 40–55 kg). Piece Concept international fares can use 2 × 23 kg Economy or 2 × 32 kg Business.' },
     classAllowances: [
-      { name: 'Economy Value', carryOn: '1 bag · 7 kg', checkedBags: '20 kg total', weightPerBag: 'Weight concept', note: 'Selected routes are excluded and may use different allowances.', verified: true },
-      { name: 'Economy Basic', carryOn: '1 bag · 7 kg', checkedBags: '25 kg total', weightPerBag: 'Weight concept', verified: true },
-      { name: 'Economy Flex', carryOn: '1 bag · 7 kg', checkedBags: '35 kg total', weightPerBag: 'Weight concept', verified: true },
+      { name: 'Economy Value', carryOn: '1 bag + personal item · 7 kg combined', checkedBags: '20 kg total', weightPerBag: 'Weight concept', note: 'Selected routes are excluded and may use different allowances.', verified: true },
+      { name: 'Economy Basic', carryOn: '1 bag + personal item · 7 kg combined', checkedBags: '25 kg total', weightPerBag: 'Weight concept', verified: true },
+      { name: 'Economy Flex', carryOn: '1 bag + personal item · 7 kg combined', checkedBags: '35 kg total', weightPerBag: 'Weight concept', verified: true },
       { name: 'Business Basic', carryOn: 'Up to 2 pieces · 14 kg combined, max 7 kg each', checkedBags: '40 kg total', weightPerBag: 'Weight concept', verified: true },
       { name: 'Business Flex', carryOn: 'Up to 2 pieces · 14 kg combined, max 7 kg each', checkedBags: '50 kg total', weightPerBag: 'Weight concept', verified: true },
       { name: 'Business Suite', carryOn: 'Up to 2 pieces · 14 kg combined, max 7 kg each', checkedBags: '55 kg total', weightPerBag: 'Weight concept', verified: true },
@@ -811,6 +811,7 @@ export const AIRLINES: Airline[] = [
       { name: 'Fly Light', carryOn: '1 underseat bag · 40 × 30 × 20 cm', checkedBags: '0 bags', weightPerBag: '—', verified: true },
       { name: 'Fly', carryOn: 'Underseat bag + choice of 10 kg overhead bag', checkedBags: 'Or choose 1 × 25 kg checked bag', weightPerBag: '25 kg if checked option selected', verified: true },
       { name: 'Fly Grande', carryOn: 'Underseat bag + 1 × 10 kg overhead bag', checkedBags: '1 bag', weightPerBag: '25 kg', verified: true },
+      { name: 'Fly Pro', carryOn: 'Underseat bag + 1 × 10 kg overhead bag', checkedBags: 'Check booking', weightPerBag: 'Check booking', note: 'Available through agency bookings.', verified: true },
     ],
   },
   {
