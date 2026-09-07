@@ -141,15 +141,21 @@ function clamp(v: number, lo: number, hi: number) {
   return Math.min(hi, Math.max(lo, v));
 }
 
+const VALID_TYPES: BagType[] = ['carryon', 'personal', 'checked'];
+
 export function SizeCheckerClient() {
   const searchParams = useSearchParams();
+  const paramType = searchParams.get('type');
+  const initialType: BagType = VALID_TYPES.includes(paramType as BagType) ? (paramType as BagType) : 'carryon';
+  const paramKg = Number(searchParams.get('kg')) || 0;
+
   const [metric, setMetric] = useState(searchParams.get('unit') !== 'in');
   const [W, setW] = useState(() => Number(searchParams.get('w')) || 40);
   const [H, setH] = useState(() => Number(searchParams.get('h')) || 55);
   const [D, setD] = useState(() => Number(searchParams.get('d')) || 20);
-  const [KG, setKG] = useState(() => Number(searchParams.get('kg')) || 10);
-  const [KGC, setKGC] = useState(20);
-  const [type, setType] = useState<BagType>('carryon');
+  const [KG, setKG] = useState(() => (initialType !== 'checked' && paramKg ? paramKg : 10));
+  const [KGC, setKGC] = useState(() => (initialType === 'checked' && paramKg ? paramKg : 20));
+  const [type, setType] = useState<BagType>(initialType);
   const [sel, setSel] = useState<string[]>([]);
   const [checked, setChecked] = useState(false);
   const [query, setQuery] = useState('');
