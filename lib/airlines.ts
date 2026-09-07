@@ -54,6 +54,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 40, h: 55, d: 23, kg: 0, verified: true },
     personal: { rule: 'dimensions', w: 43, h: 33, d: 16, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy on most fares', verified: true },
+    classAllowances: [
+      { name: 'Economy Basic', carryOn: 'Personal item only on certain itineraries', checkedBags: 'Varies by route', weightPerBag: '23 kg', note: 'Economy Basic carry-on restrictions apply on certain itineraries for tickets purchased on or after 3 Jan 2025.', verified: true },
+      { name: 'Economy Standard / Flex / Comfort / Latitude', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Varies by fare/route', weightPerBag: '23 kg', verified: true },
+      { name: 'Premium Economy', carryOn: '1 carry-on + 1 personal item', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
+      { name: 'Business Class', carryOn: '1 carry-on + 1 personal item', checkedBags: '2 bags', weightPerBag: '32 kg', verified: true },
+    ],
   },
   {
     name: 'Air France',
@@ -96,6 +102,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 40, h: 55, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy Light', carryOn: '1 bag · 8 kg + personal item', checkedBags: '0 bags', weightPerBag: '—', verified: true },
+      { name: 'Economy', carryOn: '1 bag · 8 kg + personal item', checkedBags: '1 bag', weightPerBag: '23 kg', note: 'Some routes/fare products include 2 checked bags.', verified: true },
+      { name: 'Premium Economy', carryOn: '1 bag · 8 kg + personal item', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
+      { name: 'Business', carryOn: 'Check ticket/fare; ITA publishes class-specific variations', checkedBags: '2 bags', weightPerBag: '32 kg', note: 'Domestic Italy may use 2 × 23 kg; some domestic Business products include 1 × 23 kg.', verified: true },
+    ],
   },
   {
     name: 'All Nippon Airways',
@@ -106,6 +118,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115, manualCheck: true, note: 'Standard rule for aircraft with 100+ seats: max 55 × 40 × 25 cm and 115 cm total. On ANA domestic aircraft with fewer than 100 seats, the stricter limit is 45 × 35 × 20 cm and 100 cm total.' },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy', carryOn: '1 carry-on + 1 personal item · 10 kg combined', checkedBags: '0–2 bags', weightPerBag: '23 kg', note: 'Checked-bag count depends on fare rules.', verified: true },
+      { name: 'Premium Economy', carryOn: '1 carry-on + 1 personal item · 10 kg combined', checkedBags: '1–2 bags', weightPerBag: '23 kg', note: 'Checked-bag count depends on fare rules.', verified: true },
+      { name: 'Business', carryOn: '1 carry-on + 1 personal item · 10 kg combined', checkedBags: '1–2 bags', weightPerBag: '32 kg', note: 'Checked-bag count depends on fare rules.', verified: true },
+      { name: 'First', carryOn: '1 carry-on + 1 personal item · 10 kg combined', checkedBags: '3 bags', weightPerBag: '32 kg', verified: true },
+    ],
   },
   {
     name: 'American Airlines',
@@ -116,6 +134,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 36, h: 56, d: 23, kg: 0, verified: true },
     personal: { rule: 'dimensions', w: 35, h: 45, d: 20, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy (fee applies on most domestic fares)', verified: true },
+    classAllowances: [
+      { name: 'Basic Economy / Main Cabin', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Varies by fare/route; fees often apply', weightPerBag: '23 kg', verified: true },
+      { name: 'Premium Economy', carryOn: '1 carry-on + 1 personal item', checkedBags: '2 bags on many international products', weightPerBag: '23 kg', note: 'Allowance varies by route/product.', verified: true },
+      { name: 'Business', carryOn: '1 carry-on + 1 personal item', checkedBags: '2 bags', weightPerBag: '32 kg', verified: true },
+      { name: 'First', carryOn: '1 carry-on + 1 personal item', checkedBags: '2–3 bags depending on First product/route', weightPerBag: '32 kg', verified: true },
+    ],
   },
   {
     name: 'Austrian Airlines',
