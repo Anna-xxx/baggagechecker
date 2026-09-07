@@ -42,7 +42,7 @@ export const AIRLINES: Airline[] = [
     website: 'https://www.aircanada.com',
     baggageUrl: 'https://www.aircanada.com/ca/en/aco/home/plan/baggage/carry-on.html',
     carryOn: { w: 40, h: 55, d: 23, kg: 0, verified: true },
-    personal: { rule: 'dimensions', w: 33, h: 43, d: 16, kg: 0, verified: true },
+    personal: { rule: 'dimensions', w: 43, h: 33, d: 16, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy on most fares', verified: true },
   },
   {
