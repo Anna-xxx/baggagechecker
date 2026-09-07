@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { type Airline } from '@/lib/airlines';
+import { airlineBaggageUrl, type Airline } from '@/lib/airlines';
 
 type Bag = { w: number; h: number; d: number; kg: number };
 type Personal = { w: number; h: number; d: number };
@@ -259,7 +259,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
               {fav ? 'Saved' : 'Add to Favorites'}
             </button>
             <a
-              href={airline.website}
+              href={airlineBaggageUrl(airline.code, airline.website)}
               target="_blank"
               rel="noopener noreferrer"
               className="cta-link"
