@@ -27,7 +27,7 @@ export type Airline = {
   country: string;
   website: string;
   baggageUrl: string;
-  carryOn: Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'>> & { verified: boolean };
+  carryOn: Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'>> & { verified: boolean; linearCm?: number; linearOnly?: boolean };
   personal: PersonalItemLimit;
   checked: CheckedBaggageLimit;
 };
@@ -81,7 +81,7 @@ export const AIRLINES: Airline[] = [
     country: 'Japan',
     website: 'https://www.ana.co.jp',
     baggageUrl: 'https://www.ana.co.jp/en/eur/travel-information/baggage-information/',
-    carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true },
+    carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115 },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
   },
@@ -191,7 +191,7 @@ export const AIRLINES: Airline[] = [
     country: 'United States',
     website: 'https://www.flyfrontier.com',
     baggageUrl: 'https://www.flyfrontier.com/travel/travel-info/bag-options/',
-    carryOn: { w: 41, h: 61, d: 25, kg: 15.9, verified: true },
+    carryOn: { w: 40.64, h: 60.96, d: 25.4, kg: 15.9, verified: true },
     personal: { rule: 'dimensions', w: 35.56, h: 45.72, d: 20.32, kg: 15.9, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
   },
@@ -241,7 +241,7 @@ export const AIRLINES: Airline[] = [
     country: 'Japan',
     website: 'https://www.jal.com',
     baggageUrl: 'https://www.jal.co.jp/jp/en/inter/baggage/inflight/',
-    carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true },
+    carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115 },
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
   },
@@ -331,7 +331,7 @@ export const AIRLINES: Airline[] = [
     country: 'Singapore',
     website: 'https://www.singaporeair.com',
     baggageUrl: 'https://www.singaporeair.com/es_ES/es/travel-info/baggage/cabin-baggage/',
-    carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true },
+    carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true, linearCm: 115, linearOnly: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 10, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
   },
