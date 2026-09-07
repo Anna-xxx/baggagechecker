@@ -46,14 +46,14 @@ function BagIllustration({ b, kind, metric }: { b: Bag; kind: BagKind; metric: b
         {s.straps && <div style={{ position: 'absolute', left: 'calc(50% + 20px)', top: -13, width: 20, height: 13, border: `1.5px solid ${s.stroke}`, borderRadius: 3, background: '#fff' }} />}
         {s.hard && <div style={{ position: 'absolute', left: '18%', bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
         {s.hard && <div style={{ position: 'absolute', right: '18%', bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
-        <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: s.ink, whiteSpace: 'nowrap' }}>{s.faceLabel}</span>
+        {kind !== 'checked' && <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: s.ink, whiteSpace: 'nowrap' }}>{s.faceLabel}</span>}
       </div>
       <div style={{ position: 'relative', width: s.drawD, height: s.drawH }}>
         {s.hard && <div style={{ position: 'absolute', left: '50%', top: -15, transform: 'translateX(-50%)', width: 5, height: 18, borderRadius: 3, background: '#94a3b8' }} />}
         <div style={{ position: 'absolute', inset: 0, background: s.sideFill, border: `2px solid ${s.stroke}`, borderRadius: s.radius }} />
         {s.hard && <div style={{ position: 'absolute', left: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
         {s.hard && <div style={{ position: 'absolute', right: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
-        <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: s.ink, whiteSpace: 'nowrap' }}>{s.depthValue}</span>
+        {kind !== 'checked' && <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: s.ink, whiteSpace: 'nowrap' }}>{s.depthValue}</span>}
       </div>
     </div>
   );
