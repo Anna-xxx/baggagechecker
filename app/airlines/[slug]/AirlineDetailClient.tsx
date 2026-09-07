@@ -65,7 +65,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const [openFaq, setOpenFaq] = useState(0);
 
   const baggage = getAirlineBaggage(airline);
-  const cabin: Bag = baggage.carryOn;
+  const cabin = baggage.carryOn;
   const personal = baggage.personal;
   const info = baggage.checked;
 
@@ -105,6 +105,20 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
                 { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
               ];
 
+  const carryOnRows = cabin.linearOnly
+    ? [
+        { label: 'Maximum total dimensions', value: `${cabin.linearCm} cm (L + W + H)` },
+        { label: 'Max weight', value: cabin.kg ? wt(cabin.kg) : 'No published limit' },
+      ]
+    : [
+        { label: 'Max dimensions', value: dims(cabin) },
+        { label: 'Max width', value: len(cabin.w) },
+        { label: 'Max height', value: len(cabin.h) },
+        { label: 'Max depth', value: len(cabin.d) },
+        ...(cabin.linearCm ? [{ label: 'Maximum total dimensions', value: `${cabin.linearCm} cm (L + W + H)` }] : []),
+        { label: 'Max weight', value: cabin.kg ? wt(cabin.kg) : 'No published limit' },
+      ];
+
   const sourceLabel = `Baggage allowance for ${airline.name} · check fare, route and operating-carrier conditions before travel`;
 
   const allowances = [
@@ -127,13 +141,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
       what: 'Goes in the overhead bin',
       bag: cabin,
       kind: 'carryon' as BagKind,
-      rows: [
-        { label: 'Max dimensions', value: dims(cabin) },
-        { label: 'Max width', value: len(cabin.w) },
-        { label: 'Max height', value: len(cabin.h) },
-        { label: 'Max depth', value: len(cabin.d) },
-        { label: 'Max weight', value: cabin.kg ? wt(cabin.kg) : 'No published limit' },
-      ],
+      rows: carryOnRows,
       note: 'One cabin bag per passenger. Measured with wheels and handles included.',
     },
     {
