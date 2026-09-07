@@ -36,7 +36,7 @@ export type Airline = {
   country: string;
   website: string;
   baggageUrl: string;
-  carryOn: Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'>> & { verified: boolean; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string };
+  carryOn: Required<Pick<BagLimit, 'w' | 'h' | 'd' | 'kg'>> & { verified: boolean; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none' };
   personal: PersonalItemLimit;
   checked: CheckedBaggageLimit;
   classAllowances?: CabinClassAllowance[];
