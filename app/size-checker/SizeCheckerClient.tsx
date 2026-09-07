@@ -224,11 +224,7 @@ export function SizeCheckerClient() {
         {
           key: 'KG' as DimKey,
           label: combinedWeight ? 'Combined cabin weight' : 'Weight',
-          detail: L.KG
-            ? combinedWeight
-              ? `${toDisp(KG, 'KG')} ${wU} bag / ${toDisp(L.KG, 'KG')} ${wU} combined`
-              : `${toDisp(KG, 'KG')} ${wU} / ${toDisp(L.KG, 'KG')} ${wU}`
-            : `${toDisp(KG, 'KG')} ${wU} / no published limit`,
+          detail: '',
           mark: weightOk ? (combinedWeight ? '!' : '✓') : '✗',
           color: weightOk ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
           over: !weightOk,
@@ -256,7 +252,7 @@ export function SizeCheckerClient() {
         {
           key: 'KG' as DimKey,
           label: 'Weight',
-          detail: L.KG ? `${toDisp(KG, 'KG')} ${wU} / ${toDisp(L.KG, 'KG')} ${wU}` : `${toDisp(KG, 'KG')} ${wU} / no published limit`,
+          detail: '',
           mark: weightOk ? '✓' : '✗',
           color: weightOk ? '#15803d' : '#b91c1c',
           over: !weightOk,
@@ -282,12 +278,7 @@ export function SizeCheckerClient() {
       return {
         key: f.key,
         label: combinedWeight ? 'Combined cabin weight' : f.label,
-        detail:
-          axis === 'KG'
-            ? combinedWeight
-              ? `${d(mine)} bag / ${d(max)} combined`
-              : `${d(mine)} / ${max >= 99 ? 'not weighed' : d(max)}`
-            : d(mine),
+        detail: axis === 'KG' ? '' : d(mine),
         mark: ok ? (combinedWeight ? '!' : '✓') : '✗',
         color: ok ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
         over: !ok,
@@ -702,7 +693,7 @@ export function SizeCheckerClient() {
                             <span style={{ fontSize: 11, fontWeight: 800, color: c.color }}>{c.mark}</span>
                             {c.label}
                           </div>
-                          <div style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{c.detail}</div>
+                          {c.detail && <div style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{c.detail}</div>}
                           {c.over && <div style={{ fontSize: 11, fontWeight: 700, color: '#b91c1c', marginTop: 3, whiteSpace: 'nowrap' }}>{c.excess}</div>}
                         </div>
                       ))}
