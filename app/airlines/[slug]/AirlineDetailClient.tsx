@@ -392,26 +392,6 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))', gap: 16 }}>
             <div>
               <div style={{ marginBottom: 14, borderRadius: 10, overflow: 'hidden', background: '#f8fafc', aspectRatio: '4/3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <svg aria-hidden="true" width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeOpacity={0.35} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="5" y="7" width="14" height="14" rx="2.5" />
-                  <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
-                </svg>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <span style={{ flex: 'none', display: 'flex', width: 32, height: 32, borderRadius: 9, background: '#e3f5f2', alignItems: 'center', justifyContent: 'center' }}>
-                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="5" y="7" width="14" height="14" rx="2.5" />
-                    <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
-                  </svg>
-                </span>
-                <div>
-                  <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 5 }}>Carry-on</div>
-                  <p style={{ margin: 0, fontSize: 12, lineHeight: 1.65, color: '#7a8798' }}>The wheeled case you take into the cabin and store in the overhead bin. Sized at the gate, and weighed by many airlines.</p>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div style={{ marginBottom: 14, borderRadius: 10, overflow: 'hidden', background: '#f8fafc', aspectRatio: '4/3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <svg aria-hidden="true" width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeOpacity={0.35} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
                   <path d="M7 9a5 5 0 0 1 10 0v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" />
                   <path d="M10 9V7a2 2 0 0 1 4 0v2" />
@@ -427,6 +407,26 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
                 <div>
                   <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 5 }}>Personal item</div>
                   <p style={{ margin: 0, fontSize: 12, lineHeight: 1.65, color: '#7a8798' }}>The small bag that goes under the seat in front of you — handbag, laptop bag or small backpack. Usually free and rarely weighed.</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style={{ marginBottom: 14, borderRadius: 10, overflow: 'hidden', background: '#f8fafc', aspectRatio: '4/3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg aria-hidden="true" width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeOpacity={0.35} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="5" y="7" width="14" height="14" rx="2.5" />
+                  <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
+                </svg>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <span style={{ flex: 'none', display: 'flex', width: 32, height: 32, borderRadius: 9, background: '#e3f5f2', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="5" y="7" width="14" height="14" rx="2.5" />
+                    <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
+                  </svg>
+                </span>
+                <div>
+                  <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 5 }}>Carry-on</div>
+                  <p style={{ margin: 0, fontSize: 12, lineHeight: 1.65, color: '#7a8798' }}>The wheeled case you take into the cabin and store in the overhead bin. Sized at the gate, and weighed by many airlines.</p>
                 </div>
               </div>
             </div>
