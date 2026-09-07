@@ -189,7 +189,7 @@ export function SizeCheckerClient() {
 
     if (type === 'carryon' && hasActiveLinearLimit(L)) {
       const total = W + H + D;
-      const maxTotal = L.linearCm;
+      const maxTotal = L.linearCm ?? 0;
       const totalOk = total <= maxTotal;
       const weightOk = !L.KG || KG <= L.KG;
       const combinedWeight = L.weightRule === 'combinedWithPersonal';
