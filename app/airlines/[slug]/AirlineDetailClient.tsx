@@ -88,7 +88,13 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
           { label: 'Max depth', value: len(personalBag.d) },
           { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
         ]
-      : personal.rule === 'linear'
+      : personal.rule === 'either'
+        ? [
+            { label: 'Max dimensions (or)', value: dims(personalBag) },
+            { label: 'Maximum total dimensions (or)', value: `${personal.linearCm} cm (L + W + H)` },
+            { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
+          ]
+        : personal.rule === 'linear'
         ? [
             { label: 'Maximum total dimensions', value: `${personal.linearCm} cm (L + W + H)` },
             { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },

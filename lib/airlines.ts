@@ -1,4 +1,4 @@
-export type PersonalItemRule = 'dimensions' | 'linear' | 'fitUnderSeat' | 'notSeparate' | 'unknown';
+export type PersonalItemRule = 'dimensions' | 'linear' | 'either' | 'fitUnderSeat' | 'notSeparate' | 'unknown';
 
 export type BagLimit = {
   w?: number;
@@ -715,7 +715,7 @@ export const AIRLINES: Airline[] = [
     website: 'https://www.thaiairways.com',
     baggageUrl: 'https://www.thaiairways.com/es-es/content/baggage/carry-on-baggage/',
     carryOn: { w: 45, h: 56, d: 25, kg: 7, verified: true },
-    personal: { rule: 'dimensions', w: 25, h: 37.5, d: 12.5, kg: 1.5, linearCm: 75, verified: true },
+    personal: { rule: 'either', w: 25, h: 37.5, d: 12.5, kg: 1.5, linearCm: 75, verified: true },
     checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Piece count depends on class, fare and sector', verified: true, rule: 'linear', note: 'For travel from 2 Mar 2026 under THAI’s new Piece Concept, every checked bag is limited to 158 cm. Economy/Premium Economy: 23 kg per piece; Royal Silk/Royal First/Premium Economy Plus: 32 kg per piece.' },
     classAllowances: [
       { name: 'Economy Saver / Standard', carryOn: '1 bag · 7 kg', checkedBags: 'International: 1 bag', weightPerBag: '23 kg', note: 'Saver has no checked bag on some destinations; new Piece Concept applies to covered travel from 2 Mar 2026.', verified: true },

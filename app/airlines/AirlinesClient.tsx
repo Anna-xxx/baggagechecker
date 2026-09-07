@@ -22,6 +22,7 @@ function personalItemSize(a: Airline): string {
   const baggage = getAirlineBaggage(a);
   const b = baggage.personal;
   if (b.rule === 'dimensions') return `${b.h} × ${b.w} × ${b.d} cm`;
+  if (b.rule === 'either') return `${b.h} × ${b.w} × ${b.d} cm or ≤ ${b.linearCm} cm total`;
   if (b.rule === 'linear') return `≤ ${b.linearCm} cm total`;
   if (b.rule === 'fitUnderSeat') return 'Must fit under seat';
   if (b.rule === 'notSeparate') return 'No separate item';

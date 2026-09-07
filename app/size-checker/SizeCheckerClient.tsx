@@ -444,6 +444,35 @@ export function SizeCheckerClient() {
       ];
     }
 
+    if (type === 'personal' && L.rule === 'either') {
+      const dimsOk = W <= L.W && H <= L.H && D <= L.D;
+      const total = W + H + D;
+      const maxTotal = L.linearCm ?? 0;
+      const totalOk = total <= maxTotal;
+      const sizeOk = dimsOk || totalOk;
+      const weightOk = !L.KG || KG <= L.KG;
+      return [
+        {
+          key: 'W' as DimKey,
+          label: 'Size (fixed size or total)',
+          detail: `${toDisp(W, 'W')} × ${toDisp(H, 'H')} × ${toDisp(D, 'D')} ${lenU} (max ${L.W} × ${L.H} × ${L.D}) or ${toDisp(total, 'W')} ${lenU} total (max ${toDisp(maxTotal, 'W')})`,
+          mark: sizeOk ? '✓' : '✗',
+          color: sizeOk ? '#15803d' : '#b91c1c',
+          over: !sizeOk,
+          excess: sizeOk ? '' : `Exceeds both the fixed dimensions and the ${toDisp(maxTotal, 'W')} ${lenU} total limit`,
+        },
+        {
+          key: 'KG' as DimKey,
+          label: 'Weight',
+          detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}` : 'No published limit',
+          mark: weightOk ? '✓' : '✗',
+          color: weightOk ? '#15803d' : '#b91c1c',
+          over: !weightOk,
+          excess: weightOk ? '' : `${toDisp(KG - L.KG, 'KG')} ${wU} over`,
+        },
+      ];
+    }
+
     if (type === 'personal' && L.rule === 'linear') {
       const total = W + H + D;
       const maxTotal = L.linearCm ?? 0;
@@ -556,7 +585,7 @@ export function SizeCheckerClient() {
           };
         }
 
-        if (type === 'personal' && L.rule && L.rule !== 'dimensions' && L.rule !== 'linear') {
+        if (type === 'personal' && L.rule && L.rule !== 'dimensions' && L.rule !== 'linear' && L.rule !== 'either') {
           const ruleText =
             L.rule === 'fitUnderSeat'
               ? 'Must fit under the seat'
@@ -612,7 +641,9 @@ export function SizeCheckerClient() {
               : `${L.W} × ${L.H} × ${L.D} cm · ≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg${L.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : ''}`
             : type === 'personal' && L.rule === 'linear'
               ? `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
-              : type === 'checked'
+              : type === 'personal' && L.rule === 'either'
+                ? `${L.H} × ${L.W} × ${L.D} cm or ≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
+                : type === 'checked'
                 ? L.checkedRule === 'dimensions'
                   ? `${L.H} × ${L.W} × ${L.D} cm${L.KG ? ` · ${L.KG} kg` : ''}`
                   : `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
