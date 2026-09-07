@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { airlineSlug } from '@/lib/airlines';
+import { AIRLINES as ALL_AIRLINES, airlineSlug, getAirlineBaggage } from '@/lib/airlines';
 
 type BagType = 'carryon' | 'personal' | 'checked';
 
@@ -64,16 +64,22 @@ function PhotoPlaceholder({ label, aspectRatio, radius = 0 }: { label: string; a
 
 type HomeAirline = { code: string; name: string; website: string; cabin: string; cabinKg: string };
 
-const AIRLINES: HomeAirline[] = [
-  { code: 'AF', name: 'Air France', website: 'https://www.airfrance.com', cabin: '55×35×25 cm', cabinKg: '12 kg' },
-  { code: 'AZ', name: 'ITA Airways', website: 'https://www.ita-airways.com', cabin: '55×35×25 cm', cabinKg: '8 kg' },
-  { code: 'KL', name: 'KLM Royal Dutch', website: 'https://www.klm.com', cabin: '55×35×25 cm', cabinKg: '12 kg' },
-  { code: 'AA', name: 'American Airlines', website: 'https://www.aa.com', cabin: '56×36×23 cm', cabinKg: 'No limit' },
-  { code: 'LH', name: 'Lufthansa', website: 'https://www.lufthansa.com', cabin: '55×40×23 cm', cabinKg: '8 kg' },
-  { code: 'BA', name: 'British Airways', website: 'https://www.britishairways.com', cabin: '56×45×25 cm', cabinKg: '23 kg' },
-  { code: 'FR', name: 'Ryanair', website: 'https://www.ryanair.com', cabin: '55×40×20 cm', cabinKg: '10 kg' },
-  { code: 'IB', name: 'Iberia', website: 'https://www.iberia.com', cabin: '56×40×25 cm', cabinKg: '10 kg' },
-];
+const POPULAR_AIRLINE_CODES = ['AF', 'AZ', 'KL', 'AA', 'LH', 'BA', 'FR', 'IB'];
+
+const AIRLINES: HomeAirline[] = POPULAR_AIRLINE_CODES.flatMap((code) => {
+  const airline = ALL_AIRLINES.find((a) => a.code === code);
+  if (!airline) return [];
+  const carryOn = getAirlineBaggage(airline).carryOn;
+  return [
+    {
+      code: airline.code,
+      name: airline.name,
+      website: airline.website,
+      cabin: `${carryOn.h}×${carryOn.w}×${carryOn.d} cm`,
+      cabinKg: carryOn.kg ? `${carryOn.kg} kg` : 'No limit',
+    },
+  ];
+});
 
 function fitsAirline(a: HomeAirline, w: number, h: number, d: number, kg: number) {
   const parts = a.cabin.replace(' cm', '').split('×').map(Number);
