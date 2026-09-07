@@ -239,6 +239,7 @@ export function SizeCheckerClient() {
   const [checked, setChecked] = useState(false);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
+  const [checkedVariantByCode, setCheckedVariantByCode] = useState<Record<string, string>>({});
 
   const weightKey: DimKey = type === 'checked' ? 'KGC' : 'KG';
   const weightMax = type === 'checked' ? 45 : 32;
@@ -280,6 +281,28 @@ export function SizeCheckerClient() {
   const faceRadius = type === 'personal' ? 16 : 10;
 
   const chosen = AIRLINES.filter((a) => sel.includes(a.name));
+
+  const selectedCheckedVariant = (code: string) => {
+    const id = checkedVariantByCode[code];
+    return CHECKED_VARIANTS[code]?.find((v) => v.id === id);
+  };
+
+  const checkedVariantLimits = (a: Airline): Limits => {
+    const base = a.limits.checked;
+    const v = selectedCheckedVariant(a.code);
+    if (!v) return base;
+    return {
+      ...base,
+      H: v.h ?? 0,
+      W: v.w ?? 0,
+      D: v.d ?? 0,
+      KG: v.kg,
+      linearCm: v.total,
+      checkedRule: v.rule,
+      manualCheck: v.manualCheck ?? false,
+      note: v.note,
+    };
+  };
 
   const hasActiveLinearLimit = (L: Limits) => Boolean(L.linearCm && (L.linearOnly || L.W + L.H + L.D > L.linearCm));
 
@@ -537,7 +560,15 @@ export function SizeCheckerClient() {
   };
 
   const removeAirline = (name: string) => {
+    const code = AIRLINES.find((a) => a.name === name)?.code;
     setSel((prev) => prev.filter((n) => n !== name));
+    if (code) {
+      setCheckedVariantByCode((prev) => {
+        const next = { ...prev };
+        delete next[code];
+        return next;
+      });
+    }
     setChecked(false);
   };
 
