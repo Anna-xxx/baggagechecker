@@ -10,7 +10,7 @@ import { AIRLINES as ALL_AIRLINES, airlineSlug, getAirlineBaggage } from '@/lib/
 
 type BagType = 'carryon' | 'personal' | 'checked';
 
-const BAG_TITLE: Record<BagType, string> = { carryon: 'Carry-on', personal: 'Personal Item', checked: 'Checked Bag' };
+const BAG_TITLE: Record<BagType, string> = { personal: 'Personal Item', carryon: 'Carry-on', checked: 'Checked Bag' };
 const BAG_STYLE: Record<BagType, { fill: string; sideFill: string; stroke: string; ink: string; radius: number; soft: boolean; hard: boolean; ribs: boolean; straps: boolean }> = {
   carryon: { fill: '#cff5ec', sideFill: '#b8efe1', stroke: '#5eddc4', ink: '#0b5f56', radius: 10, soft: false, hard: true, ribs: true, straps: false },
   personal: { fill: '#e7effc', sideFill: '#d5e3fb', stroke: '#93b4ef', ink: '#1b4694', radius: 16, soft: true, hard: false, ribs: false, straps: false },
