@@ -157,10 +157,6 @@ export const AIRLINES: Airline[] = [
     website: 'https://www.ana.co.jp',
     baggageUrl: 'https://www.ana.co.jp/en/eur/travel-information/baggage-information/',
     carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115, manualCheck: true, weightRule: 'combinedWithPersonal', note: 'Standard rule for aircraft with 100+ seats: max 55 × 40 × 25 cm and 115 cm total. On aircraft with fewer than 100 seats, the stricter limit is 45 × 35 × 20 cm and 100 cm total. The 10 kg limit is combined across the carry-on bag and personal item.' },
-    carryOnVariants: [
-      { id: '100plus', label: 'Aircraft with 100+ seats · 55 × 40 × 25 cm', w: 40, h: 55, d: 25, kg: 10, linearCm: 115, weightRule: 'combinedWithPersonal', verified: true },
-      { id: 'under100', label: 'Aircraft with fewer than 100 seats · 45 × 35 × 20 cm', w: 35, h: 45, d: 20, kg: 10, linearCm: 100, weightRule: 'combinedWithPersonal', verified: true },
-    ],
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 0, verified: true },
     checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare-dependent: Economy 0–2; Premium/Business 1–2; First 3', verified: true, rule: 'linear', note: 'ANA international checked bags are limited to 158 cm total per piece. Economy/Premium Economy: 23 kg per piece; Business/First: 32 kg per piece.' },
     classAllowances: [
@@ -463,11 +459,7 @@ export const AIRLINES: Airline[] = [
     country: 'Japan',
     website: 'https://www.jal.com',
     baggageUrl: 'https://www.jal.co.jp/jp/en/inter/baggage/inflight/',
-    carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115, weightRule: 'combinedWithPersonal', note: 'Standard rule for aircraft with 100+ seats: max 55 × 40 × 25 cm and 115 cm total. On aircraft with fewer than 100 seats, the stricter limit is 45 × 35 × 20 cm and 100 cm total. The 10 kg limit is combined across the carry-on bag and personal item.' },
-    carryOnVariants: [
-      { id: '100plus', label: 'Aircraft with 100+ seats · 55 × 40 × 25 cm', w: 40, h: 55, d: 25, kg: 10, linearCm: 115, weightRule: 'combinedWithPersonal', verified: true },
-      { id: 'under100', label: 'Aircraft with fewer than 100 seats · 45 × 35 × 20 cm', w: 35, h: 45, d: 20, kg: 10, linearCm: 100, weightRule: 'combinedWithPersonal', verified: true },
-    ],
+    carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115, manualCheck: true, weightRule: 'combinedWithPersonal', note: 'Standard rule for aircraft with 100+ seats: max 55 × 40 × 25 cm and 115 cm total. On aircraft with fewer than 100 seats, the stricter limit is 45 × 35 × 20 cm and 100 cm total. The 10 kg limit is combined across the carry-on bag and personal item.' },
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
     checked: { kg: 23, total: 203, eco: 23, biz: 32, bags: 'Economy/Premium Economy 2; Business/First 3', verified: true, rule: 'linear', note: 'JAL international checked bags may measure up to 203 cm total. Economy/Premium Economy: 2 × 23 kg. Business/First: 3 × 32 kg.' },
     classAllowances: [
