@@ -912,6 +912,7 @@ export function SizeCheckerClient() {
 
           <button
             onClick={submit}
+            disabled={!canCheck}
             style={{ width: '100%', marginTop: 22, padding: 15, border: 'none', borderRadius: 10, background: canCheck ? '#fbbf47' : '#eef2f7', color: canCheck ? '#3a2a05' : '#a9b4c2', fontFamily: 'inherit', fontSize: 15, fontWeight: 700, cursor: canCheck ? 'pointer' : 'not-allowed' }}
           >
             {canCheck ? 'Check my bag' : sel.length === 0 ? 'Select an airline first' : 'Choose route / allowance'}
