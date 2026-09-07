@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { SizeCheckerClient } from './SizeCheckerClient';
 
 export const metadata: Metadata = {
@@ -57,7 +58,9 @@ export default function SizeCheckerPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <SizeCheckerClient />
+      <Suspense fallback={null}>
+        <SizeCheckerClient />
+      </Suspense>
     </>
   );
 }

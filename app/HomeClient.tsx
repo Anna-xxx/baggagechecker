@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
@@ -102,6 +103,7 @@ const FOOTER_COLUMNS = [
 ];
 
 export function HomeClient() {
+  const router = useRouter();
   const [unit, setUnit] = useState<'cm' | 'in'>('cm');
   const [width, setWidth] = useState(40);
   const [height, setHeight] = useState(55);
@@ -136,6 +138,12 @@ export function HomeClient() {
   const fitSummary = `${airlines.filter((a) => a.fitLabel === 'Fits your bag').length} of ${airlines.length} popular airlines fit your bag`;
 
   const fits = height <= 56 && width <= 45 && depth <= 25;
+
+  const goToSizeChecker = () => {
+    const params = new URLSearchParams({ unit, w: String(width), h: String(height), d: String(depth), kg: String(weightKg) });
+    router.push(`/size-checker?${params.toString()}`);
+  };
+
   const boxW = Math.round(26 + width * 1.05);
   const boxH = Math.round(26 + height * 0.95);
   const depthW = Math.round(14 + depth * 0.75);
@@ -233,7 +241,7 @@ export function HomeClient() {
 
             <div style={{ fontSize: 11, color: '#7a8798', textAlign: 'center', marginBottom: 14 }}>{fits ? 'Fits most airline cabin sizers' : 'Too large for most cabin sizers'}</div>
 
-            <button className="btn-primary" style={{ width: '100%', padding: 13, background: '#fbbf47', color: '#3a2a05', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 800, fontFamily: 'inherit', cursor: 'pointer' }}>
+            <button onClick={goToSizeChecker} className="btn-primary" style={{ width: '100%', padding: 13, background: '#fbbf47', color: '#3a2a05', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 800, fontFamily: 'inherit', cursor: 'pointer' }}>
               Check Baggage Size
             </button>
           </div>

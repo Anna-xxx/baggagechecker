@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
@@ -141,11 +142,12 @@ function clamp(v: number, lo: number, hi: number) {
 }
 
 export function SizeCheckerClient() {
-  const [metric, setMetric] = useState(true);
-  const [W, setW] = useState(40);
-  const [H, setH] = useState(55);
-  const [D, setD] = useState(20);
-  const [KG, setKG] = useState(10);
+  const searchParams = useSearchParams();
+  const [metric, setMetric] = useState(searchParams.get('unit') !== 'in');
+  const [W, setW] = useState(() => Number(searchParams.get('w')) || 40);
+  const [H, setH] = useState(() => Number(searchParams.get('h')) || 55);
+  const [D, setD] = useState(() => Number(searchParams.get('d')) || 20);
+  const [KG, setKG] = useState(() => Number(searchParams.get('kg')) || 10);
   const [KGC, setKGC] = useState(20);
   const [type, setType] = useState<BagType>('carryon');
   const [sel, setSel] = useState<string[]>([]);
