@@ -202,7 +202,7 @@ export function SizeCheckerClient() {
             return {
               key: f.key,
               label: f.label,
-              detail: `${toDisp(f.mine, f.key)} ${lenU} / ${toDisp(f.max, f.key)} ${lenU}`,
+              detail: `${toDisp(f.mine, f.key)} ${lenU}`,
               mark: ok ? '✓' : '✗',
               color: ok ? '#15803d' : '#b91c1c',
               over: !ok,
@@ -215,7 +215,7 @@ export function SizeCheckerClient() {
         {
           key: 'W' as DimKey,
           label: 'Total dimensions',
-          detail: `${toDisp(total, 'W')} ${lenU} / ${toDisp(maxTotal, 'W')} ${lenU}`,
+          detail: `${toDisp(total, 'W')} ${lenU}`,
           mark: totalOk ? '✓' : '✗',
           color: totalOk ? '#15803d' : '#b91c1c',
           over: !totalOk,
@@ -247,7 +247,7 @@ export function SizeCheckerClient() {
         {
           key: 'W' as DimKey,
           label: 'Total dimensions',
-          detail: `${toDisp(total, 'W')} ${lenU} / ${toDisp(maxTotal, 'W')} ${lenU}`,
+          detail: `${toDisp(total, 'W')} ${lenU}`,
           mark: sizeOk ? '✓' : '✗',
           color: sizeOk ? '#15803d' : '#b91c1c',
           over: !sizeOk,
@@ -282,7 +282,12 @@ export function SizeCheckerClient() {
       return {
         key: f.key,
         label: combinedWeight ? 'Combined cabin weight' : f.label,
-        detail: combinedWeight ? `${d(mine)} bag / ${d(max)} combined` : `${d(mine)} / ${max >= 99 ? 'not weighed' : d(max)}`,
+        detail:
+          axis === 'KG'
+            ? combinedWeight
+              ? `${d(mine)} bag / ${d(max)} combined`
+              : `${d(mine)} / ${max >= 99 ? 'not weighed' : d(max)}`
+            : d(mine),
         mark: ok ? (combinedWeight ? '!' : '✓') : '✗',
         color: ok ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
         over: !ok,
