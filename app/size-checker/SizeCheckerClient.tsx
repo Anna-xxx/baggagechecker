@@ -8,7 +8,7 @@ import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
 import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, type PersonalItemRule } from '@/lib/airlines';
 
-type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItemRule; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none'; verified?: boolean };
+type Limits = { H: number; W: number; D: number; KG: number; rule?: PersonalItemRule; checkedRule?: 'linear' | 'dimensions'; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none'; verified?: boolean };
 type BagType = 'carryon' | 'personal' | 'checked';
 type Airline = { name: string; code: string; limits: Record<BagType, Limits> };
 
@@ -39,10 +39,15 @@ const AIRLINES: Airline[] = ALL_AIRLINES.map((a) => {
         verified: baggage.personal.verified,
       },
       checked: {
-        H: baggage.checked.h,
-        W: baggage.checked.w,
-        D: baggage.checked.d,
+        H: baggage.checked.h ?? 0,
+        W: baggage.checked.w ?? 0,
+        D: baggage.checked.d ?? 0,
         KG: baggage.checked.kg,
+        linearCm: baggage.checked.total,
+        checkedRule: baggage.checked.rule ?? 'linear',
+        manualCheck: baggage.checked.manualCheck,
+        note: baggage.checked.note,
+        verified: baggage.checked.verified,
       },
     },
   };
@@ -187,6 +192,55 @@ export function SizeCheckerClient() {
   const checksFor = (a: Airline) => {
     const L = a.limits[type];
 
+    if (type === 'checked') {
+      const weightOk = !L.KG || KGC <= L.KG;
+      const weightCheck = {
+        key: 'KGC' as DimKey,
+        label: 'Weight',
+        detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}` : 'No published limit',
+        mark: weightOk ? '✓' : '✗',
+        color: weightOk ? '#15803d' : '#b91c1c',
+        over: !weightOk,
+        excess: weightOk ? '' : `${toDisp(KGC - L.KG, 'KG')} ${wU} over`,
+      };
+
+      if (L.checkedRule === 'dimensions') {
+        const dimensionChecks = [
+          { key: 'W' as DimKey, label: 'Width', mine: W, max: L.W },
+          { key: 'H' as DimKey, label: 'Height', mine: H, max: L.H },
+          { key: 'D' as DimKey, label: 'Depth', mine: D, max: L.D },
+        ].map((f) => {
+          const ok = f.mine <= f.max;
+          return {
+            key: f.key,
+            label: f.label,
+            detail: `${toDisp(f.mine, f.key)} ${lenU}`,
+            mark: ok ? '✓' : '✗',
+            color: ok ? '#15803d' : '#b91c1c',
+            over: !ok,
+            excess: ok ? '' : `${toDisp(f.mine - f.max, f.key)} ${lenU} over`,
+          };
+        });
+        return [...dimensionChecks, weightCheck];
+      }
+
+      const total = W + H + D;
+      const maxTotal = L.linearCm ?? 0;
+      const sizeOk = total <= maxTotal;
+      return [
+        {
+          key: 'W' as DimKey,
+          label: 'Total dimensions',
+          detail: `${toDisp(total, 'W')} ${lenU}`,
+          mark: sizeOk ? '✓' : '✗',
+          color: sizeOk ? '#15803d' : '#b91c1c',
+          over: !sizeOk,
+          excess: sizeOk ? '' : `${toDisp(total - maxTotal, 'W')} ${lenU} over`,
+        },
+        weightCheck,
+      ];
+    }
+
     if (type === 'carryon' && hasActiveLinearLimit(L)) {
       const total = W + H + D;
       const maxTotal = L.linearCm ?? 0;
@@ -326,6 +380,19 @@ export function SizeCheckerClient() {
           };
         }
 
+        if (type === 'checked' && L.manualCheck) {
+          return {
+            airline: a,
+            checks: [],
+            limit: L.note ?? 'Checked baggage rule varies by route or fare',
+            verdict: 'Check airline',
+            color: '#b45309',
+            bg: '#fdf8ee',
+            showAdvice: true,
+            advice: L.note ?? `${a.name} has route- or fare-dependent checked baggage rules. Check your booked itinerary before travel.`,
+          };
+        }
+
         const checks = checksFor(a);
         const failed = checks.filter((c) => c.over);
         const manualChecks = checks.filter((c) => 'manual' in c && c.manual);
@@ -337,7 +404,11 @@ export function SizeCheckerClient() {
               : `${L.W} × ${L.H} × ${L.D} cm · ≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg${L.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : ''}`
             : type === 'personal' && L.rule === 'linear'
               ? `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
-              : `${L.W} × ${L.H} × ${L.D} cm${L.KG ? ` · ${L.KG} kg${L.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : ''}`;
+              : type === 'checked'
+                ? L.checkedRule === 'dimensions'
+                  ? `${L.H} × ${L.W} × ${L.D} cm${L.KG ? ` · ${L.KG} kg` : ''}`
+                  : `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`
+                : `${L.W} × ${L.H} × ${L.D} cm${L.KG ? ` · ${L.KG} kg${L.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : ''}`;
 
         return {
           airline: a,
