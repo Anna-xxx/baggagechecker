@@ -124,6 +124,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 45, h: 56, d: 25, kg: 23, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business', verified: true },
+    classAllowances: [
+      { name: 'Economy', carryOn: '1 cabin bag + 1 hand bag', checkedBags: '1 bag (0 on Economy Basic)', weightPerBag: '23 kg', verified: true },
+      { name: 'Premium Economy', carryOn: '1 cabin bag + 1 hand bag', checkedBags: '2 bags on most routes', weightPerBag: '23 kg', note: 'A limited number of routes have a lower checked-bag allowance.', verified: true },
+      { name: 'Business', carryOn: '1 cabin bag + 1 hand bag', checkedBags: '2 bags', weightPerBag: '32 kg', verified: true },
+      { name: 'First', carryOn: '1 cabin bag + 1 hand bag', checkedBags: '3 bags', weightPerBag: '32 kg', verified: true },
+    ],
   },
   {
     name: 'Brussels Airlines',
