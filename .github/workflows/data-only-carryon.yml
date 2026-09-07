@@ -1,0 +1,53 @@
+name: Data-only carry-on corrections
+on:
+  push:
+    paths:
+      - '.github/workflows/data-only-carryon.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply data-only corrections
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('lib/airlines.ts')
+          s = p.read_text()
+          reps = [
+            (
+              "carryOn: { w: 36, h: 56, d: 26, kg: 10, verified: true },",
+              "carryOn: { w: 36, h: 56, d: 26, kg: 10, verified: true, linearCm: 118 },"
+            ),
+            (
+              "carryOn: { w: 35, h: 56, d: 23, kg: 0, verified: true },\n    personal: { rule: 'unknown', kg: 0, verified: false },",
+              "carryOn: { w: 35, h: 56, d: 23, kg: 0, verified: true, linearCm: 114 },\n    personal: { rule: 'unknown', kg: 0, verified: false },"
+            ),
+            (
+              "carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },\n    personal: { rule: 'dimensions', w: 25, h: 36, d: 25, kg: 0, verified: true },",
+              "carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true, weightRule: 'combinedWithPersonal', note: 'Economy: 7 kg combined across cabin bag and permitted personal item.' },\n    personal: { rule: 'dimensions', w: 25, h: 36, d: 25, kg: 0, verified: true },"
+            ),
+            (
+              "{ name: 'Economy Value', carryOn: '1 bag · 7 kg', checkedBags: '20 kg total', weightPerBag: 'Weight concept', note: 'Selected routes are excluded and may use different allowances.', verified: true },\n      { name: 'Economy Basic', carryOn: '1 bag · 7 kg', checkedBags: '25 kg total', weightPerBag: 'Weight concept', verified: true },\n      { name: 'Economy Flex', carryOn: '1 bag · 7 kg', checkedBags: '35 kg total', weightPerBag: 'Weight concept', verified: true },",
+              "{ name: 'Economy Value', carryOn: '1 bag + personal item · 7 kg combined', checkedBags: '20 kg total', weightPerBag: 'Weight concept', note: 'Selected routes are excluded and may use different allowances.', verified: true },\n      { name: 'Economy Basic', carryOn: '1 bag + personal item · 7 kg combined', checkedBags: '25 kg total', weightPerBag: 'Weight concept', verified: true },\n      { name: 'Economy Flex', carryOn: '1 bag + personal item · 7 kg combined', checkedBags: '35 kg total', weightPerBag: 'Weight concept', verified: true },"
+            ),
+            (
+              "{ name: 'Fly Grande', carryOn: 'Underseat bag + 1 × 10 kg overhead bag', checkedBags: '1 bag', weightPerBag: '25 kg', verified: true },",
+              "{ name: 'Fly Grande', carryOn: 'Underseat bag + 1 × 10 kg overhead bag', checkedBags: '1 bag', weightPerBag: '25 kg', verified: true },\n      { name: 'Fly Pro', carryOn: 'Underseat bag + 1 × 10 kg overhead bag', checkedBags: 'Check booking', weightPerBag: 'Check booking', note: 'Available through agency bookings.', verified: true },"
+            ),
+          ]
+          for old, new in reps:
+              if old not in s:
+                  raise SystemExit('Expected source text not found: ' + old[:120])
+              s = s.replace(old, new, 1)
+          p.write_text(s)
+          PY
+          git config user.name 'carry-on-data-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add lib/airlines.ts
+          git diff --cached --check
+          git commit -m 'data: apply safe carry-on corrections'
+          git push
