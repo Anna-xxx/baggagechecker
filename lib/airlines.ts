@@ -67,6 +67,51 @@ export function findAirlineBySlug(slug: string): Airline | undefined {
   return AIRLINES.find((a) => airlineSlug(a.name) === slug);
 }
 
+const AIRLINE_BAGGAGE_URLS: Record<string, string> = {
+  AC: 'https://www.aircanada.com/ca/en/aco/home/plan/baggage/carry-on.html',
+  AF: 'https://wwws.airfrance.es/en/information/bagages/bagage-cabine-soute',
+  AI: 'https://www.airindia.com/in/en/travel-information/baggage-guidelines/cabin-baggage.html',
+  AZ: 'https://www.ita-airways.com/es/en/book-and-prepare/travel-information/baggage/carry-on-baggage',
+  NH: 'https://www.ana.co.jp/en/eur/travel-information/baggage-information/',
+  AA: 'https://www.aa.com/web/i18n/travel-info/baggage/carry-on-baggage.html',
+  OS: 'https://www.austrian.com/us/en/handgepaeck',
+  BA: 'https://www.britishairways.com/content/en/information/baggage-essentials',
+  SN: 'https://www.brusselsairlines.com/us/en/extra-services/baggage/carry-on-baggage',
+  CX: 'https://www.cathaypacific.com/cx/en_US/baggage/cabin-baggage.html',
+  CM: 'https://www.copaair.com/en-us/travel-information/baggage-information/carry-on/',
+  DL: 'https://www.delta.com/us/en/baggage/carry-on-baggage',
+  U2: 'https://www.easyjet.com/en/help/baggage/cabin-bags',
+  EK: 'https://www.emirates.com/english/before-you-fly/baggage/cabin-baggage-rules/',
+  ET: 'https://www.ethiopianairlines.com/information/baggage-information/carry-on-baggage',
+  F9: 'https://www.flyfrontier.com/travel/travel-info/bag-options/',
+  GA: 'https://www.garuda-indonesia.com/id/id/new-baggage-policy',
+  HU: 'https://www.hainanairlines.com/HUPortal/dyn/portal/DisplayPage?COUNTRY_SITE=MX&LANGUAGE=US&PAGE=CABA&SITE=CBHZCBHZ',
+  IB: 'https://www.iberia.com/es/luggage/hand-luggage/?BV_UseBVCookie=no',
+  '6E': 'https://www.goindigo.in/baggage/cabin-baggage.html',
+  JL: 'https://www.jal.co.jp/jp/en/inter/baggage/inflight/',
+  B6: 'https://www.jetblue.com/help/carry-on-bags',
+  KL: 'https://www.klm.com/information/baggage/hand-baggage-allowance',
+  LH: 'https://www.lufthansa.com/us/en/carry-on-baggage',
+  MH: 'https://www.malaysiaairlines.com/uk/en/travel-info/baggage/cabin-baggage.html',
+  QF: 'https://www.qantas.com/en-au/baggage/carry-on',
+  QR: 'https://www.qatarairways.com/en/baggage/allowance.onboardpopup.html',
+  FR: 'https://help.ryanair.com/hc/en-us/categories/12489112419089-Bag-Rules',
+  SK: 'https://www.flysas.com/no-en/travel-info/baggage/carry-on',
+  SQ: 'https://www.singaporeair.com/es_ES/es/travel-info/baggage/cabin-baggage/',
+  WN: 'https://support.southwest.com/helpcenter/article/carryon-baggage-policy',
+  TP: 'https://www.flytap.com/en-es/information/baggage/hand-baggage',
+  TG: 'https://www.thaiairways.com/es-es/content/baggage/carry-on-baggage/',
+  TK: 'https://www.turkishairlines.com/en-int/any-questions/carry-on-baggage/',
+  HY: 'https://www.uzairways.com/en/press-center/news/uzbekistan-airways-hand-baggage-regulations',
+  VS: 'https://www.virginatlantic.com/gb/en/travel-information/baggage-allowance.html',
+  VA: 'https://www.virginaustralia.com/au/en/travel-info/baggage/carry-on-baggage/',
+  VY: 'https://www.vueling.com/en/prepare-your-trip/luggage/cabin-luggage',
+};
+
+export function airlineBaggageUrl(code: string, fallbackWebsite: string): string {
+  return AIRLINE_BAGGAGE_URLS[code] ?? fallbackWebsite;
+}
+
 export function airlineDomain(website: string): string {
   return website.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '');
 }
