@@ -121,6 +121,22 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
         { label: 'Max weight', value: cabin.kg ? wt(cabin.kg) : 'No published limit' },
       ];
 
+  const checkedRows =
+    info.rule === 'dimensions'
+      ? [
+          { label: 'Max dimensions', value: `${info.h} × ${info.w} × ${info.d} cm` },
+          { label: 'Max weight (economy)', value: wt(info.eco) },
+          { label: 'Max weight (business)', value: wt(info.biz) },
+          { label: 'Bags included', value: info.bags },
+        ]
+      : [
+          { label: 'Max total dimensions', value: `${len(info.total)} (L + W + H)` },
+          { label: 'Max weight (economy)', value: wt(info.eco) },
+          { label: 'Max weight (business)', value: wt(info.biz) },
+          { label: 'Oversize threshold', value: `over ${len(info.total)}` },
+          { label: 'Bags included', value: info.bags },
+        ];
+
   const sourceLabel = `Baggage allowance for ${airline.name} · check fare, route and operating-carrier conditions before travel`;
 
   const allowances = [
@@ -154,14 +170,8 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
       what: 'Handed over at the check-in desk',
       bag: { w: 45, h: 67, d: 27, kg: info.eco },
       kind: 'checked' as BagKind,
-      rows: [
-        { label: 'Max total dimensions', value: `${len(info.total)} (L + W + H)` },
-        { label: 'Max weight (economy)', value: wt(info.eco) },
-        { label: 'Max weight (business)', value: wt(info.biz) },
-        { label: 'Oversize threshold', value: `over ${len(info.total)}` },
-        { label: 'Bags included', value: info.bags },
-      ],
-      note: 'Allowance depends on your fare. Extra bags can be added during booking.',
+      rows: checkedRows,
+      note: info.note ?? 'Allowance depends on your fare and route. Check your booking for the included number of bags.',
     },
   ];
 
