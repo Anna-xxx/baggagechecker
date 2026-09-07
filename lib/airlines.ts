@@ -215,6 +215,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 36, h: 56, d: 26, kg: 10, verified: true },
     personal: { rule: 'dimensions', w: 25, h: 43, d: 22, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy Basic', carryOn: '1 bag · 10 kg + personal item', checkedBags: '0 bags included', weightPerBag: '23 kg if purchased', verified: true },
+      { name: 'Economy Classic', carryOn: '1 bag · 10 kg + personal item', checkedBags: '1 bag', weightPerBag: '23 kg', verified: true },
+      { name: 'Economy Full', carryOn: '1 bag · 10 kg + personal item', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
+      { name: 'Business Promo / Full', carryOn: '1 bag · 10 kg + personal item', checkedBags: '2 bags', weightPerBag: '32 kg', verified: true },
+    ],
   },
   {
     name: 'Delta Air Lines',
@@ -225,6 +231,11 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 35, h: 56, d: 23, kg: 0, verified: true },
     personal: { rule: 'unknown', kg: 0, verified: false },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy on most international fares', verified: true },
+    classAllowances: [
+      { name: 'Delta Main / Delta Comfort', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Varies by route/fare', weightPerBag: '23 kg standard', note: 'Domestic standard checked bags are normally paid unless another benefit applies.', verified: true },
+      { name: 'Delta Premium Select', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Varies by route/fare', weightPerBag: '23 kg', note: 'Basic premium fares introduced in 2026 can have reduced checked-bag benefits.', verified: true },
+      { name: 'Delta First / Delta One', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Varies by route/fare', weightPerBag: '32 kg', note: 'Basic premium fare variants may have reduced checked-bag benefits.', verified: true },
+    ],
   },
   {
     name: 'easyJet',
@@ -294,6 +305,11 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
     personal: { rule: 'unknown', kg: 0, verified: false },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: 'See ticket', weightPerBag: 'Ticket-specific', note: 'For tickets issued/purchased from 1 Sep 2026, Garuda uses a new Piece Concept and prints the included piece count/weight on the ticket.', verified: true },
+      { name: 'Business', carryOn: '1 bag · 7 kg', checkedBags: 'See ticket', weightPerBag: 'Ticket-specific', note: 'New Piece Concept applies to Garuda-operated flights for tickets issued/purchased from 1 Sep 2026.', verified: true },
+      { name: 'First', carryOn: '1 bag · 7 kg', checkedBags: 'See ticket', weightPerBag: 'Ticket-specific', note: 'Where First Class is offered, use the allowance printed on the ticket under the new Piece Concept.', verified: true },
+    ],
   },
   {
     name: 'Hainan Airlines',
@@ -304,6 +320,11 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true, manualCheck: true, note: 'Domestic: max 55 × 40 × 20 cm and 7 kg. International/regional: max 115 cm total (L + W + H) and 10 kg per piece; US departures also use max 115 cm total and 10 kg.' },
     personal: { rule: 'dimensions', w: 30, h: 30, d: 20, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy', carryOn: 'Domestic: 1 × 7 kg · International: 1 × 10 kg', checkedBags: 'Varies by route/fare', weightPerBag: 'Usually 23 kg on piece routes', note: 'International cabin size is governed by 115 cm total dimensions.', verified: true },
+      { name: 'Business', carryOn: 'Domestic: 2 × 7 kg · International: 2 × 10 kg', checkedBags: 'Usually 2 bags on major international routes', weightPerBag: '32 kg on piece routes', note: 'Exact checked allowance varies by route and branded fare.', verified: true },
+      { name: 'Premium Economy', carryOn: 'Check route/ticket', checkedBags: 'Often 2 bags on transpacific routes', weightPerBag: '23 kg', note: 'Premium Economy is not offered on every route; use the operating-flight allowance.', verified: true },
+    ],
   },
   {
     name: 'Iberia',
@@ -314,6 +335,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 40, h: 56, d: 25, kg: 10, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy Basic', carryOn: '1 bag · 10 kg + personal item', checkedBags: '0 bags included', weightPerBag: '23 kg if purchased', verified: true },
+      { name: 'Economy Optima / Comfort / Flexible', carryOn: '1 bag · 10 kg + personal item', checkedBags: 'Usually 1 bag', weightPerBag: '23 kg', note: 'Exact inclusions depend on route/fare.', verified: true },
+      { name: 'Premium Economy', carryOn: '1 bag · 10 kg + personal item', checkedBags: '1–2 bags', weightPerBag: '23 kg', note: 'Promotional/Executive often include 1; Comfort/Flexible often include 2.', verified: true },
+      { name: 'Business', carryOn: '1 × 14 kg; 2 × 14 kg on most long-haul', checkedBags: 'Varies by fare/route', weightPerBag: 'Up to 32 kg', note: 'US departures have a different cabin-bag piece rule.', verified: true },
+    ],
   },
   {
     name: 'IndiGo',
@@ -324,6 +351,11 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 35, h: 55, d: 25, kg: 7, verified: true },
     personal: { rule: 'unknown', kg: 3, verified: false },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy Saver / Flexi', carryOn: '1 bag · 7 kg', checkedBags: 'Route dependent', weightPerBag: 'Check booking', note: 'Domestic and international allowances differ; selected long-haul services include up to 30 kg checked baggage.', verified: true },
+      { name: 'Super 6E', carryOn: '1 bag · 7 kg', checkedBags: 'Route dependent', weightPerBag: 'Check booking', note: 'Selected long-haul services include up to 35 kg checked baggage.', verified: true },
+      { name: 'IndiGoStretch / Stretch+', carryOn: '1 bag · up to 12 kg on applicable long-haul aircraft', checkedBags: 'Up to 2 bags on applicable long-haul services', weightPerBag: 'Allowance shown in booking', note: 'Current A321XLR/Norse-operated long-haul rules differ from standard domestic Economy.', verified: true },
+    ],
   },
   {
     name: 'Japan Airlines',
@@ -350,6 +382,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 35.56, h: 55.88, d: 22.86, kg: 0, verified: true },
     personal: { rule: 'dimensions', w: 33, h: 43.2, d: 20.32, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Blue Basic / Blue / Blue Extra', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid on most non-transatlantic routes', weightPerBag: '23 kg', note: 'On transatlantic Blue/Blue Extra, the first checked bag is normally included; Blue Basic remains paid.', verified: true },
+      { name: 'Blue Plus', carryOn: '1 carry-on + 1 personal item', checkedBags: '1 bag included', weightPerBag: '23 kg', verified: true },
+      { name: 'EvenMore', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid on most non-transatlantic routes', weightPerBag: '23 kg', note: 'EvenMore and EvenMore Flex include 1 checked bag on UK/Europe routes; EvenMore Base does not.', verified: true },
+      { name: 'Mint', carryOn: '1 carry-on + 1 personal item', checkedBags: '2 bags included', weightPerBag: '32 kg', verified: true },
+    ],
   },
   {
     name: 'KLM Royal Dutch Airlines',
@@ -395,6 +433,14 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
     personal: { rule: 'dimensions', w: 25, h: 36, d: 25, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy Value', carryOn: '1 bag · 7 kg', checkedBags: '20 kg total', weightPerBag: 'Weight concept', note: 'Selected routes are excluded and may use different allowances.', verified: true },
+      { name: 'Economy Basic', carryOn: '1 bag · 7 kg', checkedBags: '25 kg total', weightPerBag: 'Weight concept', verified: true },
+      { name: 'Economy Flex', carryOn: '1 bag · 7 kg', checkedBags: '35 kg total', weightPerBag: 'Weight concept', verified: true },
+      { name: 'Business Basic', carryOn: 'Up to 2 pieces · 14 kg combined, max 7 kg each', checkedBags: '40 kg total', weightPerBag: 'Weight concept', verified: true },
+      { name: 'Business Flex', carryOn: 'Up to 2 pieces · 14 kg combined, max 7 kg each', checkedBags: '50 kg total', weightPerBag: 'Weight concept', verified: true },
+      { name: 'Business Suite', carryOn: 'Up to 2 pieces · 14 kg combined, max 7 kg each', checkedBags: '55 kg total', weightPerBag: 'Weight concept', verified: true },
+    ],
   },
   {
     name: 'Qantas',
@@ -405,6 +451,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy', carryOn: 'International: 1 overhead bag · 7 kg + personal item', checkedBags: 'Domestic: 1 bag · Americas: 1 bag · Elsewhere: weight concept', weightPerBag: '23 kg domestic · 32 kg Americas · 30 kg total elsewhere', note: 'Domestic mainline carry-on can be up to 14 kg total; Dash 8 services are stricter.', verified: true },
+      { name: 'Premium Economy', carryOn: 'International: up to 14 kg total, max 10 kg per item', checkedBags: 'Domestic: 2 bags · Americas: 2 bags · Elsewhere: weight concept', weightPerBag: '23 kg domestic · 32 kg Americas · 40 kg total elsewhere', verified: true },
+      { name: 'Business', carryOn: 'International: up to 14 kg total, max 10 kg per item', checkedBags: 'Domestic/Americas: 2 bags · Elsewhere: weight concept', weightPerBag: '32 kg per piece where piece concept applies · 40 kg total elsewhere', verified: true },
+      { name: 'First', carryOn: 'International: up to 14 kg total, max 10 kg per item', checkedBags: 'Americas: 3 bags · Elsewhere: weight concept', weightPerBag: '32 kg per piece in Americas · 50 kg total elsewhere', verified: true },
+    ],
   },
   {
     name: 'Qatar Airways',
@@ -539,6 +591,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 40, h: 55, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 4, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business', verified: true },
+    classAllowances: [
+      { name: 'Economy EcoFly', carryOn: '1 bag · 8 kg', checkedBags: 'Domestic: 15 kg · International: route dependent', weightPerBag: '23 kg max on piece-concept routes', verified: true },
+      { name: 'Economy ExtraFly', carryOn: '1 bag · 8 kg', checkedBags: 'Domestic: 20 kg · International: route dependent', weightPerBag: '23 kg max on piece-concept routes', verified: true },
+      { name: 'Economy PrimeFly', carryOn: '1 bag · 8 kg', checkedBags: 'Domestic: 25 kg · International: route dependent', weightPerBag: '23 kg max on piece-concept routes', verified: true },
+      { name: 'Business', carryOn: '2 bags · 8 kg each', checkedBags: 'Domestic: 30 kg · International: route dependent', weightPerBag: '32 kg max on piece-concept routes', note: 'BusinessFly / BusinessPrime benefits vary by route.', verified: true },
+    ],
   },
   {
     name: 'Uzbekistan Airways',
@@ -549,6 +607,13 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 35, h: 55, d: 25, kg: 8, verified: true, linearCm: 115 },
     personal: { rule: 'linear', kg: 5, linearCm: 92, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy Lite', carryOn: '1 bag · 8 kg', checkedBags: '0 bags', weightPerBag: '—', verified: true },
+      { name: 'Economy Smart', carryOn: '1 bag · 8 kg', checkedBags: 'Included', weightPerBag: 'Usually 23 kg', note: 'Allowance varies by destination.', verified: true },
+      { name: 'Economy Comfort', carryOn: '1 bag · 8 kg', checkedBags: 'Included', weightPerBag: '23–32 kg depending route', note: 'On selected routes Comfort includes 2 × 23 kg; on many others 1 × 32 kg.', verified: true },
+      { name: 'Business Pro', carryOn: '1 bag · 10 kg', checkedBags: 'Included', weightPerBag: 'Usually 32 kg', note: 'Often 1 × 32 kg; destination rules apply.', verified: true },
+      { name: 'Business Elite', carryOn: '2 bags · 10 kg each', checkedBags: 'Included', weightPerBag: 'Usually 2 × 32 kg', note: 'Destination rules apply.', verified: true },
+    ],
   },
   {
     name: 'Virgin Atlantic',
