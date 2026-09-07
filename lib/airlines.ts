@@ -43,6 +43,7 @@ export type CarryOnVariant = {
   h?: number;
   d?: number;
   kg: number;
+  maxSingleKg?: number;
   linearCm?: number;
   linearOnly?: boolean;
   allowed?: boolean;
@@ -314,7 +315,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.easyjet.com/en/help/baggage/cabin-bags',
     carryOn: { w: 45, h: 56, d: 25, kg: 15, verified: true },
     carryOnVariants: [
-      { id: 'small-only', label: 'Small underseat bag only · 45 × 36 × 20 cm', w: 36, h: 45, d: 20, kg: 15, note: 'Included for every passenger; must fit under the seat.', verified: true },
+      { id: 'small-only', label: 'Small underseat bag only · 45 × 36 × 20 cm', kg: 0, allowed: false, note: 'The included bag must fit under the seat. Use the Personal item checker for this bag; a large overhead cabin bag must be included or purchased separately.', verified: true },
       { id: 'large', label: 'Large cabin bag included / purchased · 56 × 45 × 25 cm', w: 45, h: 56, d: 25, kg: 15, verified: true },
     ],
     personal: { rule: 'dimensions', w: 36, h: 45, d: 20, kg: 15, verified: true },
@@ -560,10 +561,10 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true, linearCm: 115, manualCheck: true, note: 'International Economy: 1 piece up to 7 kg. Premium Economy, Business and First: 2 pieces up to 7 kg each. Domestic and Dash 8 rules differ.' },
     carryOnVariants: [
       { id: 'domestic-standard', label: 'Domestic Australia · 1 overhead bag · 10 kg', w: 36, h: 56, d: 23, kg: 10, verified: true },
-      { id: 'domestic-two', label: 'Domestic Australia · 2 small bags · 14 kg total', w: 34, h: 48, d: 23, kg: 14, weightRule: 'combinedWithPersonal', note: 'Two small carry-on pieces share a 14 kg total limit; no single piece may exceed 10 kg.', verified: true },
+      { id: 'domestic-two', label: 'Domestic Australia · 2 small bags · 14 kg total', w: 34, h: 48, d: 23, kg: 14, maxSingleKg: 10, weightRule: 'combinedWithPersonal', note: 'Two small carry-on pieces share a 14 kg total limit; no single piece may exceed 10 kg.', verified: true },
       { id: 'dash8', label: 'QantasLink Dash 8 · 7 kg', w: 36, h: 56, d: 23, kg: 7, note: 'Dash 8 services have their own carry-on configuration and may impose tighter stowage constraints.', verified: true },
       { id: 'intl-economy', label: 'International Economy · 7 kg', w: 36, h: 56, d: 23, kg: 7, verified: true },
-      { id: 'intl-premium', label: 'International Premium / Business / First · 14 kg total', w: 36, h: 56, d: 23, kg: 14, weightRule: 'combinedWithPersonal', note: 'Allowance includes an overhead and underseat item; no individual item may exceed 10 kg.', verified: true },
+      { id: 'intl-premium', label: 'International Premium / Business / First · 14 kg total', w: 36, h: 56, d: 23, kg: 14, maxSingleKg: 10, weightRule: 'combinedWithPersonal', note: 'Allowance includes an overhead and underseat item; no individual item may exceed 10 kg.', verified: true },
     ],
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
     checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Route, cabin and status dependent', verified: true, rule: 'linear', manualCheck: true, note: 'Qantas size rules differ by route: Australian domestic bags are limited to 140 cm total, international bags to 158 cm. Economy is typically 1 × 23 kg domestic, 1 × 32 kg to the Americas, or 30 kg total on other international routes. Premium cabins and frequent-flyer status have different allowances.' },
@@ -766,7 +767,7 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 36, h: 56, d: 23, kg: 10, verified: true },
     carryOnVariants: [
       { id: 'economy-premium', label: 'Economy / Premium · 10 kg', w: 36, h: 56, d: 23, kg: 10, verified: true },
-      { id: 'upper', label: 'Upper Class · max 12 kg per bag / 16 kg total', w: 36, h: 56, d: 23, kg: 12, note: 'Upper Class allows two pieces, no more than 12 kg each and 16 kg combined.', verified: true },
+      { id: 'upper', label: 'Upper Class · max 12 kg per bag / 16 kg total', w: 36, h: 56, d: 23, kg: 16, maxSingleKg: 12, weightRule: 'combinedWithPersonal', note: 'Upper Class allows two pieces, no more than 12 kg each and 16 kg combined.', verified: true },
     ],
     personal: { rule: 'unknown', kg: 0, verified: false },
     checked: { w: 75, h: 90, d: 43, kg: 23, total: 208, eco: 23, biz: 32, bags: 'Economy Light 0; Classic/Delight 1; Premium 2; Upper Class 2', verified: true, rule: 'dimensions', note: 'Virgin Atlantic publishes a maximum of 90 × 75 × 43 cm per checked bag. Economy/Premium bags: 23 kg; Upper Class: 32 kg.' },
