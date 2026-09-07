@@ -225,7 +225,7 @@ export function SizeCheckerClient() {
         },
         {
           key: 'KG' as DimKey,
-          label: combinedWeight ? 'Combined cabin weight' : 'Weight',
+          label: combinedWeight ? 'Total cabin weight' : 'Weight',
           detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}${combinedWeight ? ' total' : ''}` : 'No published limit',
           mark: weightOk ? (combinedWeight ? '!' : '✓') : '✗',
           color: weightOk ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
@@ -279,7 +279,7 @@ export function SizeCheckerClient() {
       const combinedWeight = type === 'carryon' && axis === 'KG' && L.weightRule === 'combinedWithPersonal';
       return {
         key: f.key,
-        label: combinedWeight ? 'Combined cabin weight' : f.label,
+        label: combinedWeight ? 'Total cabin weight' : f.label,
         detail: axis === 'KG' ? (max >= 99 ? 'No published limit' : `${d(max)}${combinedWeight ? ' total' : ''}`) : d(mine),
         mark: ok ? (combinedWeight ? '!' : '✓') : '✗',
         color: ok ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
