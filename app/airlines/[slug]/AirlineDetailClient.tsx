@@ -323,32 +323,32 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
         </section>
 
         <section style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24, marginBottom: 20 }}>
-          <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Allowance by Cabin Class</h2>
+          <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Allowance by Cabin Class / Fare</h2>
           {classes.length > 0 ? (
             <div style={{ overflowX: 'auto' }}>
-              <div style={{ minWidth: 520 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr 1fr 1fr', gap: 12, padding: '0 4px 12px', fontSize: 11.5, fontWeight: 800, letterSpacing: '.03em', textTransform: 'uppercase', color: '#8494a8', borderBottom: '1px solid #eef2f6' }}>
-                  <span>Class</span>
+              <div style={{ minWidth: 560 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1.25fr 1.25fr 1fr', gap: 12, padding: '0 4px 12px', fontSize: 11.5, fontWeight: 800, letterSpacing: '.03em', textTransform: 'uppercase', color: '#8494a8', borderBottom: '1px solid #eef2f6' }}>
+                  <span>Class / fare</span>
                   <span>Carry-on</span>
                   <span>Checked bags</span>
                   <span>Weight per bag</span>
                 </div>
-                {classes.map((c) => (
-                  <div key={c.name} style={{ padding: '14px 4px', borderBottom: '1px solid #f5f8fb' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr 1fr 1fr', gap: 12, alignItems: 'center', fontSize: 12.5, color: '#475569', fontVariantNumeric: 'tabular-nums' }}>
-                      <span style={{ fontWeight: 700, color: '#0f1c2e' }}>{c.name}</span>
-                      <span>{c.cabin}</span>
-                      <span>{c.bags}</span>
-                      <span>{c.weight}</span>
+                {classes.map((row) => (
+                  <div key={row.name} style={{ padding: '14px 4px', borderBottom: '1px solid #f5f8fb' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1.25fr 1.25fr 1fr', gap: 12, alignItems: 'center', fontSize: 12.5, color: '#475569', fontVariantNumeric: 'tabular-nums' }}>
+                      <span style={{ fontWeight: 700, color: '#0f1c2e' }}>{row.name}</span>
+                      <span>{row.cabin}</span>
+                      <span>{row.bags}</span>
+                      <span>{row.weight}</span>
                     </div>
-                    {c.note && <div style={{ marginTop: 7, fontSize: 11, lineHeight: 1.5, color: '#8494a8' }}>{c.note}</div>}
+                    {row.note && <div style={{ marginTop: 7, fontSize: 11.5, lineHeight: 1.55, color: '#8494a8' }}>{row.note}</div>}
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <div style={{ background: '#f8fafc', borderRadius: 11, padding: '16px 18px', fontSize: 12.5, lineHeight: 1.7, color: '#57677c' }}>
-              Cabin-class baggage allowance for {airline.name} varies by fare, route and operating carrier. Class-specific values are shown here only after verification against the airline&apos;s current policy.
+            <div style={{ background: '#f8fafc', borderRadius: 11, padding: '15px 16px', fontSize: 12.5, lineHeight: 1.65, color: '#57677c' }}>
+              Exact cabin-class and fare baggage allowances vary by ticket, route and operating carrier. Use the airline baggage page or your booking confirmation for the applicable allowance.
             </div>
           )}
         </section>
