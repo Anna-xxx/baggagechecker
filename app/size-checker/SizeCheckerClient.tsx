@@ -898,6 +898,34 @@ export function SizeCheckerClient() {
             </div>
           )}
 
+          {type === 'carryon' && chosen.some((a) => a.carryOnVariants?.length) && (
+            <div style={{ display: 'grid', gap: 10, marginBottom: 14 }}>
+              {chosen.filter((a) => a.carryOnVariants?.length).map((a) => {
+                const variants = a.carryOnVariants ?? [];
+                return (
+                  <div key={`${a.code}-carryon-variant`} style={{ display: 'grid', gridTemplateColumns: 'minmax(150px,220px) 1fr', gap: 10, alignItems: 'center', background: '#f8fafc', border: '1px solid #edf0f3', borderRadius: 10, padding: '10px 12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9, minWidth: 0 }}>
+                      <AirlineLogo code={a.code} website={websiteFor(a.code)} width={30} height={22} radius={6} fontSize={9} />
+                      <span style={{ fontSize: 12.5, fontWeight: 800, color: '#0f1c2e', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.name}</span>
+                    </div>
+                    <select
+                      aria-label={`${a.name} carry-on fare route or class`}
+                      value={carryOnVariantByCode[a.code] ?? ''}
+                      onChange={(e) => {
+                        setCarryOnVariantByCode((prev) => ({ ...prev, [a.code]: e.target.value }));
+                        setChecked(false);
+                      }}
+                      style={{ width: '100%', minWidth: 0, border: '1px solid #dfe6ee', borderRadius: 8, background: '#fff', padding: '9px 10px', fontFamily: 'inherit', fontSize: 12.5, color: '#0f1c2e' }}
+                    >
+                      <option value="">Choose fare / route / class</option>
+                      {variants.map((v) => <option key={v.id} value={v.id}>{v.label}</option>)}
+                    </select>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {type === 'checked' && chosen.some((a) => CHECKED_VARIANTS[a.code]?.length) && (
             <div style={{ display: 'grid', gap: 10, marginBottom: 14 }}>
               {chosen.filter((a) => CHECKED_VARIANTS[a.code]?.length).map((a) => {
@@ -968,7 +996,7 @@ export function SizeCheckerClient() {
                       <AirlineLogo code={a.code} website={websiteFor(a.code)} width={32} height={24} radius={6} fontSize={9} />
                       <span style={{ flex: 1, minWidth: 0, fontSize: 13.5, fontWeight: 700, color: '#0f1c2e' }}>{a.name}</span>
                       <span style={{ fontSize: 11.5, color: '#8494a8', whiteSpace: 'nowrap' }}>
-                        {formatLimit(L)}
+                        {type === 'carryon' && a.carryOnVariants?.length ? 'Fare / route / class dependent' : formatLimit(L)}
                       </span>
                       <span style={{ fontSize: 12, fontWeight: 800, color: '#14b8a6', width: 12, textAlign: 'center' }}>{on ? '✓' : ''}</span>
                     </button>
