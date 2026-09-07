@@ -306,8 +306,8 @@ export function SizeCheckerClient() {
 
   const hasActiveLinearLimit = (L: Limits) => Boolean(L.linearCm && (L.linearOnly || L.W + L.H + L.D > L.linearCm));
 
-  const checksFor = (a: Airline) => {
-    const L = a.limits[type];
+  const checksFor = (a: Airline, override?: Limits) => {
+    const L = override ?? a.limits[type];
 
     if (type === 'checked') {
       const weightOk = !L.KG || KGC <= L.KG;
@@ -510,7 +510,7 @@ export function SizeCheckerClient() {
           };
         }
 
-        const checks = checksFor(a);
+        const checks = checksFor(a, L);
         const failed = checks.filter((c) => c.over);
         const manualChecks = checks.filter((c) => 'manual' in c && c.manual);
         const needsWeightCheck = failed.length === 0 && manualChecks.length > 0;
@@ -550,11 +550,20 @@ export function SizeCheckerClient() {
   const manualCount = results.filter((r) => r.verdict === 'Check airline' || r.verdict === 'Check weight').length;
   const allFit = results.length > 0 && fitCount === results.length;
   const noneFit = results.length > 0 && tooLargeCount === results.length;
-  const canCheck = sel.length > 0;
+  const checkedOptionsReady = type !== 'checked' || chosen.every((a) => !CHECKED_VARIANTS[a.code]?.length || Boolean(selectedCheckedVariant(a.code)));
+  const canCheck = sel.length > 0 && checkedOptionsReady;
 
   const toggleAirline = (name: string) => {
     const on = sel.includes(name);
+    const code = AIRLINES.find((a) => a.name === name)?.code;
     setSel((prev) => (on ? prev.filter((n) => n !== name) : prev.concat(name)));
+    if (on && code) {
+      setCheckedVariantByCode((prev) => {
+        const next = { ...prev };
+        delete next[code];
+        return next;
+      });
+    }
     setQuery('');
     setChecked(false);
   };
@@ -573,6 +582,12 @@ export function SizeCheckerClient() {
   };
 
   const formatLimit = (L: Limits) => {
+    if (type === 'checked') {
+      if (L.manualCheck && !L.linearCm && !L.W && !L.H && !L.D) return 'Route / fare dependent';
+      if (L.checkedRule === 'dimensions') return `${L.H} × ${L.W} × ${L.D} cm${L.KG ? ` · ${L.KG} kg` : ''}`;
+      if (L.linearCm) return `≤ ${L.linearCm} cm total${L.KG ? ` · ${L.KG} kg` : ''}`;
+      return 'Route / fare dependent';
+    }
     if (type === 'carryon' && hasActiveLinearLimit(L)) {
       return L.linearOnly ? `≤ ${L.linearCm} cm total` : `${L.W} × ${L.H} × ${L.D} cm · ≤ ${L.linearCm} cm total`;
     }
@@ -856,7 +871,7 @@ export function SizeCheckerClient() {
             onClick={submit}
             style={{ width: '100%', marginTop: 22, padding: 15, border: 'none', borderRadius: 10, background: canCheck ? '#fbbf47' : '#eef2f7', color: canCheck ? '#3a2a05' : '#a9b4c2', fontFamily: 'inherit', fontSize: 15, fontWeight: 700, cursor: canCheck ? 'pointer' : 'not-allowed' }}
           >
-            {canCheck ? 'Check my bag' : 'Select an airline first'}
+            {canCheck ? 'Check my bag' : sel.length === 0 ? 'Select an airline first' : 'Choose route / allowance'}
           </button>
         </section>
 
