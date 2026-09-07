@@ -119,7 +119,7 @@ export const AIRLINES: Airline[] = [
     country: 'Japan',
     website: 'https://www.ana.co.jp',
     baggageUrl: 'https://www.ana.co.jp/en/eur/travel-information/baggage-information/',
-    carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115, manualCheck: true, note: 'Standard rule for aircraft with 100+ seats: max 55 × 40 × 25 cm and 115 cm total. On ANA domestic aircraft with fewer than 100 seats, the stricter limit is 45 × 35 × 20 cm and 100 cm total.' },
+    carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115, manualCheck: true, weightRule: 'combinedWithPersonal', note: 'Standard rule for aircraft with 100+ seats: max 55 × 40 × 25 cm and 115 cm total. On aircraft with fewer than 100 seats, the stricter limit is 45 × 35 × 20 cm and 100 cm total. The 10 kg limit is combined across the carry-on bag and personal item.' },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
     classAllowances: [
@@ -377,7 +377,7 @@ export const AIRLINES: Airline[] = [
     country: 'Japan',
     website: 'https://www.jal.com',
     baggageUrl: 'https://www.jal.co.jp/jp/en/inter/baggage/inflight/',
-    carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115 },
+    carryOn: { w: 40, h: 55, d: 25, kg: 10, verified: true, linearCm: 115, weightRule: 'combinedWithPersonal', note: 'The 10 kg limit is combined across the carry-on bag and personal item.' },
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 203, eco: 23, biz: 32, bags: '2 in Economy/Premium Economy; 3 in Business/First', verified: true },
     classAllowances: [
