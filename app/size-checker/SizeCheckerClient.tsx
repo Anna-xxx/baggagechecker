@@ -948,61 +948,69 @@ export function SizeCheckerClient() {
             </div>
           )}
 
-          {type === 'carryon' && chosen.some((a) => a.carryOnVariants?.length) && (
-            <div style={{ display: 'grid', gap: 10, marginBottom: 14 }}>
-              {chosen.filter((a) => a.carryOnVariants?.length).map((a) => {
-                const variants = a.carryOnVariants ?? [];
-                return (
-                  <div key={`${a.code}-carryon-variant`} style={{ display: 'grid', gridTemplateColumns: 'minmax(150px,220px) 1fr', gap: 10, alignItems: 'center', background: '#f8fafc', border: '1px solid #edf0f3', borderRadius: 10, padding: '10px 12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 9, minWidth: 0 }}>
-                      <AirlineLogo code={a.code} website={websiteFor(a.code)} width={30} height={22} radius={6} fontSize={9} />
-                      <span style={{ fontSize: 12.5, fontWeight: 800, color: '#0f1c2e', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.name}</span>
-                    </div>
-                    <select
-                      aria-label={`${a.name} carry-on fare route or class`}
-                      value={carryOnVariantByCode[a.code] ?? ''}
-                      onChange={(e) => {
-                        setCarryOnVariantByCode((prev) => ({ ...prev, [a.code]: e.target.value }));
-                        setChecked(false);
-                      }}
-                      style={{ width: '100%', minWidth: 0, border: '1px solid #dfe6ee', borderRadius: 8, background: '#fff', padding: '9px 10px', fontFamily: 'inherit', fontSize: 12.5, color: '#0f1c2e' }}
-                    >
-                      <option value="">Choose fare / route / class</option>
-                      {variants.map((v) => <option key={v.id} value={v.id}>{v.label}</option>)}
-                    </select>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          {(() => {
+            const pickers =
+              type === 'carryon'
+                ? chosen
+                    .filter((a) => a.carryOnVariants?.length)
+                    .map((a) => ({
+                      code: a.code,
+                      name: a.name,
+                      axis: 'Fare / route / class',
+                      options: (a.carryOnVariants ?? []).map((v) => ({ id: v.id, label: v.label, selected: carryOnVariantByCode[a.code] === v.id })),
+                    }))
+                : type === 'checked'
+                ? chosen
+                    .filter((a) => CHECKED_VARIANTS[a.code]?.length)
+                    .map((a) => ({
+                      code: a.code,
+                      name: a.name,
+                      axis: 'Route / allowance',
+                      options: (CHECKED_VARIANTS[a.code] ?? []).map((v) => ({ id: v.id, label: v.label, selected: checkedVariantByCode[a.code] === v.id })),
+                    }))
+                : [];
 
-          {type === 'checked' && chosen.some((a) => CHECKED_VARIANTS[a.code]?.length) && (
-            <div style={{ display: 'grid', gap: 10, marginBottom: 14 }}>
-              {chosen.filter((a) => CHECKED_VARIANTS[a.code]?.length).map((a) => {
-                const variants = CHECKED_VARIANTS[a.code];
-                return (
-                  <div key={`${a.code}-checked-variant`} style={{ display: 'grid', gridTemplateColumns: 'minmax(150px,220px) 1fr', gap: 10, alignItems: 'center', background: '#f8fafc', border: '1px solid #edf0f3', borderRadius: 10, padding: '10px 12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 9, minWidth: 0 }}>
-                      <AirlineLogo code={a.code} website={websiteFor(a.code)} width={30} height={22} radius={6} fontSize={9} />
-                      <span style={{ fontSize: 12.5, fontWeight: 800, color: '#0f1c2e', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.name}</span>
+            if (pickers.length === 0) return null;
+
+            return (
+              <div style={{ display: 'grid', gap: 10, marginBottom: 16 }}>
+                {pickers.map((p) => (
+                  <div key={p.code} style={{ border: '1px solid #edf0f3', borderRadius: 11, padding: '11px 13px', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: 12.5, fontWeight: 700 }}>{p.name}</span>
+                    <span style={{ fontSize: 11.5, color: '#57677c' }}>{p.axis}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap', marginLeft: 'auto' }}>
+                      {p.options.map((v) => (
+                        <button
+                          key={v.id}
+                          onClick={() => {
+                            if (type === 'carryon') {
+                              setCarryOnVariantByCode((prev) => ({ ...prev, [p.code]: v.id }));
+                            } else {
+                              setCheckedVariantByCode((prev) => ({ ...prev, [p.code]: v.id }));
+                            }
+                            setChecked(false);
+                          }}
+                          style={{
+                            border: `1px solid ${v.selected ? '#0f766e' : '#e4eaf1'}`,
+                            background: v.selected ? '#0f766e' : '#fff',
+                            color: v.selected ? '#fff' : '#57677c',
+                            borderRadius: 999,
+                            padding: '6px 13px',
+                            fontFamily: 'inherit',
+                            fontSize: 11.5,
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {v.label}
+                        </button>
+                      ))}
                     </div>
-                    <select
-                      aria-label={`${a.name} checked baggage route or allowance`}
-                      value={checkedVariantByCode[a.code] ?? ''}
-                      onChange={(e) => {
-                        setCheckedVariantByCode((prev) => ({ ...prev, [a.code]: e.target.value }));
-                        setChecked(false);
-                      }}
-                      style={{ width: '100%', minWidth: 0, border: '1px solid #dfe6ee', borderRadius: 8, background: '#fff', padding: '9px 10px', fontFamily: 'inherit', fontSize: 12.5, color: '#0f1c2e' }}
-                    >
-                      <option value="">Choose route / allowance</option>
-                      {variants.map((v) => <option key={v.id} value={v.id}>{v.label}</option>)}
-                    </select>
                   </div>
-                );
-              })}
-            </div>
-          )}
+                ))}
+              </div>
+            );
+          })()}
 
           <div style={{ position: 'relative' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, border: `1px solid ${open ? '#14b8a6' : '#e4eaf1'}`, borderRadius: 10, padding: '11px 14px', background: '#fff' }}>
