@@ -351,6 +351,9 @@ export function SizeCheckerClient() {
   };
 
   const formatLimit = (L: Limits) => {
+    if (type === 'carryon' && L.linearCm) {
+      return L.linearOnly ? `≤ ${L.linearCm} cm total` : `${L.W} × ${L.H} × ${L.D} cm · ≤ ${L.linearCm} cm total`;
+    }
     if (type === 'personal') {
       if (L.rule === 'linear') return `≤ ${L.linearCm} cm total`;
       if (L.rule === 'fitUnderSeat') return 'Must fit under seat';
