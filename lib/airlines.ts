@@ -217,7 +217,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.cathaypacific.com/cx/en_US/baggage/cabin-baggage.html',
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
-    checked: { kg: 23, total: 203, eco: 23, biz: 32, bags: 'Route-dependent weight or piece concept', verified: true, rule: 'linear', manualCheck: true, note: 'Cathay rules vary by route. Most non-Americas routes use a weight concept and allow up to 203 cm per piece; Americas routes use a piece concept with 158 cm per piece. Check the itinerary before relying on an automatic size/weight result.' },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Economy Light 1; Economy Essential/Flex 2; Premium Economy 2; Business 2; First 3', verified: true, rule: 'linear', note: 'Cathay standard checked baggage is limited to 158 cm per piece. Economy Light: 1 × 23 kg; Economy Essential/Flex and Premium Economy: 2 × 23 kg; Business: 2 × 32 kg; First: 3 × 32 kg. Hong Kong–New Zealand Business has a 3 × 23 kg exception.' },
     classAllowances: [
       { name: 'Economy Light', carryOn: '1 bag · 7 kg + personal item', checkedBags: '1 bag', weightPerBag: '23 kg', verified: true },
       { name: 'Economy Essential / Flex', carryOn: '1 bag · 7 kg + personal item', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
