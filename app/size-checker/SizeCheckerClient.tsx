@@ -224,7 +224,7 @@ export function SizeCheckerClient() {
         {
           key: 'KG' as DimKey,
           label: combinedWeight ? 'Combined cabin weight' : 'Weight',
-          detail: '',
+          detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}${combinedWeight ? ' total' : ''}` : 'No published limit',
           mark: weightOk ? (combinedWeight ? '!' : '✓') : '✗',
           color: weightOk ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
           over: !weightOk,
@@ -252,7 +252,7 @@ export function SizeCheckerClient() {
         {
           key: 'KG' as DimKey,
           label: 'Weight',
-          detail: '',
+          detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}` : 'No published limit',
           mark: weightOk ? '✓' : '✗',
           color: weightOk ? '#15803d' : '#b91c1c',
           over: !weightOk,
@@ -278,7 +278,7 @@ export function SizeCheckerClient() {
       return {
         key: f.key,
         label: combinedWeight ? 'Combined cabin weight' : f.label,
-        detail: axis === 'KG' ? '' : d(mine),
+        detail: axis === 'KG' ? (max >= 99 ? 'No published limit' : `${d(max)}${combinedWeight ? ' total' : ''}`) : d(mine),
         mark: ok ? (combinedWeight ? '!' : '✓') : '✗',
         color: ok ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
         over: !ok,
