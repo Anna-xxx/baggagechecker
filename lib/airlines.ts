@@ -444,6 +444,10 @@ export const AIRLINES: Airline[] = [
     website: 'https://www.goindigo.in',
     baggageUrl: 'https://www.goindigo.in/baggage/cabin-baggage.html',
     carryOn: { w: 35, h: 55, d: 25, kg: 7, verified: true, linearCm: 115 },
+    carryOnVariants: [
+      { id: 'economy', label: 'Economy / Super 6E · 7 kg', w: 35, h: 55, d: 25, kg: 7, linearCm: 115, verified: true },
+      { id: 'stretch', label: 'IndiGoStretch / Stretch+ · 12 kg', w: 35, h: 55, d: 25, kg: 12, linearCm: 115, verified: true },
+    ],
     personal: { rule: 'unknown', kg: 3, verified: false },
     checked: { kg: 0, total: 158, eco: 0, biz: 0, bags: 'Weight allowance depends heavily on route', verified: true, rule: 'linear', manualCheck: true, note: 'IndiGo standard checked size is 158 cm total, but free weight varies by route: e.g. 15 kg domestic, 20–30 kg on many international routes, and codeshares may use piece limits. ATR aircraft also have a separate dimensional rule.' },
     classAllowances: [
@@ -577,6 +581,11 @@ export const AIRLINES: Airline[] = [
     website: 'https://www.qatarairways.com',
     baggageUrl: 'https://www.qatarairways.com/en/baggage/allowance.onboardpopup.html',
     carryOn: { w: 37, h: 50, d: 25, kg: 7, verified: true },
+    carryOnVariants: [
+      { id: 'economy', label: 'Economy · 7 kg', w: 37, h: 50, d: 25, kg: 7, verified: true },
+      { id: 'economy-brazil', label: 'Economy to / from Brazil · 10 kg', w: 37, h: 50, d: 25, kg: 10, verified: true },
+      { id: 'business-first', label: 'Business / First · 15 kg total', w: 37, h: 50, d: 25, kg: 15, weightRule: 'combinedWithPersonal', note: 'Business and First allow two cabin pieces with a combined maximum of 15 kg. US departures are limited to one cabin bag plus one personal item.', verified: true },
+    ],
     personal: { rule: 'unknown', kg: 0, verified: false },
     checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Piece concept for Africa/Americas; weight concept elsewhere', verified: true, rule: 'linear', manualCheck: true, note: 'Qatar Airways uses 158 cm per bag on flights to/from Africa or the Americas and up to 300 cm on most other routes. Africa/Americas use a piece allowance; other routes use total weight. No single checked bag may exceed 32 kg.' },
     classAllowances: [
