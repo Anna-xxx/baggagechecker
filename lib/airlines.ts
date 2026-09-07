@@ -67,7 +67,7 @@ export const AIRLINES: Airline[] = [
     country: 'France',
     website: 'https://www.airfrance.com',
     baggageUrl: 'https://wwws.airfrance.es/en/information/bagages/bagage-cabine-soute',
-    carryOn: { w: 35, h: 55, d: 25, kg: 12, verified: true },
+    carryOn: { w: 35, h: 55, d: 25, kg: 12, verified: true, weightRule: 'combinedWithPersonal', note: '12 kg combined across cabin bag and personal item.' },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business', verified: true },
     classAllowances: [
@@ -408,7 +408,7 @@ export const AIRLINES: Airline[] = [
     country: 'Netherlands',
     website: 'https://www.klm.com',
     baggageUrl: 'https://www.klm.com/information/baggage/hand-baggage-allowance',
-    carryOn: { w: 35, h: 55, d: 25, kg: 12, verified: true },
+    carryOn: { w: 35, h: 55, d: 25, kg: 12, verified: true, weightRule: 'combinedWithPersonal', note: '12 kg combined across cabin bag and personal item.' },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
     classAllowances: [
