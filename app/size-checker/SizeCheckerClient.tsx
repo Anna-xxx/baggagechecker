@@ -8,7 +8,7 @@ import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
 import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, type PersonalItemRule, type CarryOnVariant } from '@/lib/airlines';
 
-type Limits = { H: number; W: number; D: number; KG: number; allowed?: boolean; rule?: PersonalItemRule; checkedRule?: 'linear' | 'dimensions'; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none'; verified?: boolean };
+type Limits = { H: number; W: number; D: number; KG: number; maxSingleKg?: number; allowed?: boolean; rule?: PersonalItemRule; checkedRule?: 'linear' | 'dimensions'; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none'; verified?: boolean };
 type BagType = 'carryon' | 'personal' | 'checked';
 type Airline = { name: string; code: string; limits: Record<BagType, Limits>; carryOnVariants?: CarryOnVariant[] };
 
@@ -306,6 +306,7 @@ export function SizeCheckerClient() {
       W: v.w ?? 0,
       D: v.d ?? 0,
       KG: v.kg,
+      maxSingleKg: v.maxSingleKg,
       allowed: v.allowed ?? true,
       linearCm: v.linearCm,
       linearOnly: v.linearOnly,
@@ -391,8 +392,9 @@ export function SizeCheckerClient() {
       const total = W + H + D;
       const maxTotal = L.linearCm ?? 0;
       const totalOk = total <= maxTotal;
-      const weightOk = !L.KG || KG <= L.KG;
       const combinedWeight = L.weightRule === 'combinedWithPersonal';
+      const singleWeightLimit = combinedWeight && L.maxSingleKg ? L.maxSingleKg : L.KG;
+      const weightOk = !singleWeightLimit || KG <= singleWeightLimit;
       const dimensionChecks = L.linearOnly
         ? []
         : [
@@ -426,12 +428,18 @@ export function SizeCheckerClient() {
         {
           key: 'KG' as DimKey,
           label: combinedWeight ? 'Total cabin weight' : 'Weight',
-          detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}${combinedWeight ? ' total' : ''}` : 'No published limit',
+          detail: L.KG
+            ? combinedWeight
+              ? L.maxSingleKg
+                ? `${toDisp(L.maxSingleKg, 'KG')} ${wU} per item · ${toDisp(L.KG, 'KG')} ${wU} total`
+                : `${toDisp(L.KG, 'KG')} ${wU} total`
+              : `${toDisp(L.KG, 'KG')} ${wU}`
+            : 'No published limit',
           mark: weightOk ? (combinedWeight ? '!' : '✓') : '✗',
           color: weightOk ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
           over: !weightOk,
           manual: combinedWeight && weightOk,
-          excess: weightOk ? (combinedWeight ? 'Add personal-item weight' : '') : `${toDisp(KG - L.KG, 'KG')} ${wU} over`,
+          excess: weightOk ? (combinedWeight ? 'Add other cabin-item weight' : '') : `${toDisp(KG - singleWeightLimit, 'KG')} ${wU} over`,
         },
       ];
     }
@@ -463,7 +471,8 @@ export function SizeCheckerClient() {
       ];
     }
 
-    const lim: Record<DimKey, number> = { W: L.W, H: L.H, D: L.D, KG: L.KG || 999, KGC: L.KG || 999 };
+    const carrySingleWeightLimit = type === 'carryon' && L.weightRule === 'combinedWithPersonal' && L.maxSingleKg ? L.maxSingleKg : L.KG;
+    const lim: Record<DimKey, number> = { W: L.W, H: L.H, D: L.D, KG: carrySingleWeightLimit || 999, KGC: L.KG || 999 };
     return [
       { key: 'W' as DimKey, label: 'Width' },
       { key: 'H' as DimKey, label: 'Height' },
@@ -480,12 +489,22 @@ export function SizeCheckerClient() {
       return {
         key: f.key,
         label: combinedWeight ? 'Total cabin weight' : f.label,
-        detail: axis === 'KG' ? (max >= 99 ? 'No published limit' : `${d(max)}${combinedWeight ? ' total' : ''}`) : d(mine),
+        detail: axis === 'KG'
+          ? combinedWeight
+            ? L.maxSingleKg
+              ? `${d(L.maxSingleKg)} per item · ${d(L.KG)} total`
+              : L.KG
+                ? `${d(L.KG)} total`
+                : 'No published limit'
+            : max >= 99
+              ? 'No published limit'
+              : d(max)
+          : d(mine),
         mark: ok ? (combinedWeight ? '!' : '✓') : '✗',
         color: ok ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
         over: !ok,
         manual: combinedWeight && ok,
-        excess: ok ? (combinedWeight ? 'Add personal-item weight' : '') : `${d(mine - max)} over`,
+        excess: ok ? (combinedWeight ? 'Add other cabin-item weight' : '') : `${d(mine - max)} over`,
       };
     });
   };
@@ -611,7 +630,7 @@ export function SizeCheckerClient() {
             failed.length > 0
               ? `Over the limit on ${failed.map((c) => c.label.toLowerCase()).join(' and ')}. You would need to check this bag into the hold, or repack into a smaller case.`
               : needsWeightCheck
-                ? `${a.name} publishes ${L.KG} kg as a combined cabin-baggage limit. Add the weight of your personal item before treating this as a pass.`
+                ? `${a.name} publishes ${L.KG} kg as a combined cabin-baggage limit. Add the weight of your other cabin items before treating this as a pass.`
                 : '',
         };
       })
