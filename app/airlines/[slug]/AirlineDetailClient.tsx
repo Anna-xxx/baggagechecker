@@ -67,6 +67,37 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const baggage = getAirlineBaggage(airline);
   const cabin: Bag = baggage.carryOn;
   const personal = baggage.personal;
+  const personalBag: Bag = {
+    w: personal.w ?? 30,
+    h: personal.h ?? 40,
+    d: personal.d ?? 20,
+    kg: personal.kg,
+  };
+  const personalRows =
+    personal.rule === 'dimensions'
+      ? [
+          { label: 'Max dimensions', value: dims(personalBag) },
+          { label: 'Max width', value: len(personalBag.w) },
+          { label: 'Max height', value: len(personalBag.h) },
+          { label: 'Max depth', value: len(personalBag.d) },
+          { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
+        ]
+      : personal.rule === 'linear'
+        ? [
+            { label: 'Maximum total dimensions', value: `${personal.linearCm} cm (L + W + H)` },
+            { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
+          ]
+        : personal.rule === 'fitUnderSeat'
+          ? [
+              { label: 'Size rule', value: 'Must fit under the seat' },
+              { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
+            ]
+          : personal.rule === 'notSeparate'
+            ? [{ label: 'Allowance', value: 'No separate personal item' }]
+            : [
+                { label: 'Dimensions', value: 'No fixed size published' },
+                { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
+              ];
   const info = baggage.checked;
 
   const len = (v: number) => (metric ? `${v} cm` : `${Math.round(v / 2.54)} in`);
@@ -82,15 +113,9 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
       tint: '#e7effc',
       iconColor: '#2563eb',
       what: 'Goes under the seat in front of you',
-      bag: { ...personal, kg: 0 },
+      bag: personalBag,
       kind: 'personal' as BagKind,
-      rows: [
-        { label: 'Max dimensions', value: dims({ ...personal, kg: 0 }) },
-        { label: 'Max width', value: len(personal.w) },
-        { label: 'Max height', value: len(personal.h) },
-        { label: 'Max depth', value: len(personal.d) },
-        { label: 'Max weight', value: 'Not weighed' },
-      ],
+      rows: personalRows,
       note: 'A handbag, laptop bag or small backpack that fits under the seat in front of you.',
     },
     {
