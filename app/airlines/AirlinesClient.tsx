@@ -174,7 +174,9 @@ export function AirlinesClient() {
                   <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px' }}>
                     <div style={{ fontSize: 10.5, color: '#8494a8', marginBottom: 4 }}>Carry-on max size</div>
                     <div style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-                      {baggage.carryOn.h} × {baggage.carryOn.w} × {baggage.carryOn.d} cm
+                      {baggage.carryOn.linearOnly
+                        ? `≤ ${baggage.carryOn.linearCm} cm total`
+                        : `${baggage.carryOn.h} × ${baggage.carryOn.w} × ${baggage.carryOn.d} cm${baggage.carryOn.linearCm ? ` · ≤ ${baggage.carryOn.linearCm} cm total` : ''}`}
                     </div>
                   </div>
                   <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px' }}>
