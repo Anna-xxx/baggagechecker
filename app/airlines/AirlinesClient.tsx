@@ -5,31 +5,22 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { AIRLINES, airlineSlug, type Airline } from '@/lib/airlines';
+import { AIRLINES, airlineSlug, getAirlineBaggage, type Airline } from '@/lib/airlines';
 
 function volume(a: Airline) {
-  return a.cabin[0] * a.cabin[1] * a.cabin[2];
+  const b = getAirlineBaggage(a).carryOn;
+  return b.w * b.h * b.d;
 }
 
 const LOW_COST_CODES = new Set(['U2', 'F9', '6E', 'FR', 'WN', 'NK', 'VY', 'W6']);
-const PERSONAL_ITEM_TYPICAL: Record<string, string> = {
-  FR: '40 × 30 × 20 cm',
-  U2: '45 × 36 × 20 cm',
-  VY: '40 × 30 × 20 cm',
-  F9: '45 × 35 × 20 cm',
-  NK: '45 × 35 × 20 cm',
-  '6E': '35 × 25 × 20 cm',
-  WN: '42 × 34 × 21 cm',
-  BA: '40 × 30 × 15 cm',
-  W6: '40 × 30 × 20 cm',
-};
 
 function airlineType(code: string): 'Low-cost' | 'Full-service' {
   return LOW_COST_CODES.has(code) ? 'Low-cost' : 'Full-service';
 }
 
-function personalItemSize(code: string): string {
-  return PERSONAL_ITEM_TYPICAL[code] || '40 × 30 × 20 cm';
+function personalItemSize(a: Airline): string {
+  const b = getAirlineBaggage(a).personal;
+  return `${b.h} × ${b.w} × ${b.d} cm`;
 }
 
 type Sort = 'name' | 'strict' | 'generous';
@@ -52,8 +43,8 @@ export function AirlinesClient() {
         (country === 'All countries' || a.country === country) &&
         (type === 'All types' || airlineType(a.code) === type)
     );
-    if (sort === 'strict') filtered = [...filtered].sort((a, b) => volume(a) - volume(b) || a.cabinKg - b.cabinKg);
-    else if (sort === 'generous') filtered = [...filtered].sort((a, b) => volume(b) - volume(a) || b.cabinKg - a.cabinKg);
+    if (sort === 'strict') filtered = [...filtered].sort((a, b) => volume(a) - volume(b) || getAirlineBaggage(a).carryOn.kg - getAirlineBaggage(b).carryOn.kg);
+    else if (sort === 'generous') filtered = [...filtered].sort((a, b) => volume(b) - volume(a) || getAirlineBaggage(b).carryOn.kg - getAirlineBaggage(a).carryOn.kg);
     else filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
     return filtered;
   }, [query, country, type, sort]);
@@ -147,8 +138,9 @@ export function AirlinesClient() {
         <h2 style={{ margin: '0 0 20px', fontSize: 17, fontWeight: 800, letterSpacing: '-.02em' }}>{resultsLabel}</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(min(100%,300px),1fr))', gap: 18 }}>
           {rows.map((a) => {
+            const baggage = getAirlineBaggage(a);
             const on = fav.includes(a.code);
-            const kgColor = a.cabinKg >= 12 ? '#15803d' : a.cabinKg <= 7 ? '#b45309' : '#0f1c2e';
+            const kgColor = baggage.carryOn.kg >= 12 ? '#15803d' : baggage.carryOn.kg > 0 && baggage.carryOn.kg <= 7 ? '#b45309' : '#0f1c2e';
             const kind = airlineType(a.code);
             const typeColor = kind === 'Low-cost' ? '#b45309' : '#0f766e';
             const typeBg = kind === 'Low-cost' ? '#fdf1dc' : '#e3f5f2';
@@ -177,12 +169,12 @@ export function AirlinesClient() {
                   <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px' }}>
                     <div style={{ fontSize: 10.5, color: '#8494a8', marginBottom: 4 }}>Carry-on max size</div>
                     <div style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-                      {a.cabin[0]} × {a.cabin[1]} × {a.cabin[2]} cm
+                      {baggage.carryOn.h} × {baggage.carryOn.w} × {baggage.carryOn.d} cm
                     </div>
                   </div>
                   <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px' }}>
                     <div style={{ fontSize: 10.5, color: '#8494a8', marginBottom: 4 }}>Carry-on max weight</div>
-                    <div style={{ fontSize: 12.5, fontWeight: 700, color: kgColor }}>{a.cabinKg} kg</div>
+                    <div style={{ fontSize: 12.5, fontWeight: 700, color: kgColor }}>{baggage.carryOn.kg ? `${baggage.carryOn.kg} kg` : 'No published limit'}</div>
                   </div>
                 </div>
 
@@ -190,7 +182,7 @@ export function AirlinesClient() {
                   <span style={{ fontSize: 10.5, color: '#8494a8' }}>
                     Personal item <span style={{ color: '#a9b4c2' }}>(typical)</span>
                   </span>
-                  <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{personalItemSize(a.code)}</span>
+                  <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{personalItemSize(a)}</span>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, color: '#a9b4c2' }}>
