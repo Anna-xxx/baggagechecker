@@ -150,6 +150,12 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 40, h: 55, d: 23, kg: 8, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy', carryOn: '1 bag · 8 kg + personal item', checkedBags: '1 bag (0 on Basic/Light)', weightPerBag: '23 kg', note: 'Some routes include more.', verified: true },
+      { name: 'Premium Economy', carryOn: '1 bag · 8 kg + personal item', checkedBags: '1–2 bags depending on fare', weightPerBag: '23 kg', note: 'Premium Economy Light: 1 bag; most other Premium Economy fares: 2 bags.', verified: true },
+      { name: 'Business', carryOn: '2 bags · 8 kg each + personal item', checkedBags: '1–2 bags depending on fare', weightPerBag: '32 kg', note: 'Business Light/Comfort variants may include 1 bag; standard Business generally 2.', verified: true },
+      { name: 'First', carryOn: '2 bags · 8 kg each + personal item', checkedBags: '3 bags', weightPerBag: '32 kg', verified: true },
+    ],
   },
   {
     name: 'British Airways',
@@ -193,6 +199,13 @@ export const AIRLINES: Airline[] = [
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
     personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { w: 55, h: 80, d: 30, kg: 23, total: 158, eco: 23, biz: 32, bags: '1 in economy', verified: false },
+    classAllowances: [
+      { name: 'Economy Light', carryOn: '1 bag · 7 kg + personal item', checkedBags: '1 bag', weightPerBag: '23 kg', verified: true },
+      { name: 'Economy Essential / Flex', carryOn: '1 bag · 7 kg + personal item', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
+      { name: 'Premium Economy', carryOn: '1 bag · 7 kg + personal item', checkedBags: '2 bags', weightPerBag: '23 kg', verified: true },
+      { name: 'Business', carryOn: '1 bag · 10 kg + personal item', checkedBags: '2 bags', weightPerBag: '32 kg', note: 'Hong Kong–New Zealand may use 3 × 23 kg.', verified: true },
+      { name: 'First', carryOn: '1 bag · 15 kg + personal item', checkedBags: '3 bags', weightPerBag: '32 kg', verified: true },
+    ],
   },
   {
     name: 'Copa Airlines',
