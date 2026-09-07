@@ -8,26 +8,6 @@ import { AirlineLogo } from '@/components/AirlineLogo';
 import { airlineBaggageUrl, getAirlineBaggage, type Airline } from '@/lib/airlines';
 
 type Bag = { w: number; h: number; d: number; kg: number };
-type Personal = { w: number; h: number; d: number };
-type CheckedInfo = { total: number; eco: number; biz: number; bags: string };
-
-const AIRLINE_OVERRIDES: Record<string, { cabin: Bag; personal: Personal } & CheckedInfo> = {
-  AA: { cabin: { w: 36, h: 56, d: 23, kg: 0 }, personal: { w: 36, h: 46, d: 20 }, total: 158, eco: 23, biz: 32, bags: '1 in economy (fee applies on most domestic fares)' },
-  DL: { cabin: { w: 35, h: 56, d: 23, kg: 0 }, personal: { w: 36, h: 43, d: 20 }, total: 158, eco: 23, biz: 32, bags: '1 in economy on most international fares' },
-  BA: { cabin: { w: 45, h: 56, d: 25, kg: 23 }, personal: { w: 30, h: 40, d: 15 }, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
-  LH: { cabin: { w: 40, h: 55, d: 23, kg: 8 }, personal: { w: 30, h: 40, d: 10 }, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
-  AC: { cabin: { w: 40, h: 55, d: 23, kg: 0 }, personal: { w: 33, h: 43, d: 16 }, total: 158, eco: 23, biz: 32, bags: '1 in economy on most fares' },
-  AF: { cabin: { w: 35, h: 55, d: 25, kg: 12 }, personal: { w: 30, h: 40, d: 15 }, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
-  EK: { cabin: { w: 38, h: 55, d: 22, kg: 7 }, personal: { w: 30, h: 40, d: 15 }, total: 150, eco: 30, biz: 40, bags: 'weight concept: 30 kg in economy' },
-  QR: { cabin: { w: 37, h: 50, d: 25, kg: 7 }, personal: { w: 30, h: 40, d: 15 }, total: 158, eco: 25, biz: 32, bags: '1–2 bags depending on fare' },
-  TK: { cabin: { w: 40, h: 55, d: 23, kg: 8 }, personal: { w: 30, h: 40, d: 15 }, total: 158, eco: 23, biz: 32, bags: '1 in economy, 2 in business' },
-  FR: { cabin: { w: 40, h: 55, d: 20, kg: 10 }, personal: { w: 30, h: 40, d: 20 }, total: 119, eco: 20, biz: 20, bags: 'none included — checked bags are paid extras' },
-  U2: { cabin: { w: 45, h: 56, d: 25, kg: 15 }, personal: { w: 36, h: 45, d: 20 }, total: 275, eco: 23, biz: 23, bags: 'none included — checked bags are paid extras' },
-};
-
-const GENERIC_PERSONAL: Personal = { w: 30, h: 40, d: 20 };
-const GENERIC_CHECKED: CheckedInfo = { total: 158, eco: 23, biz: 32, bags: '1 in economy' };
-
 type BagKind = 'carryon' | 'personal' | 'checked';
 
 const BAG_STYLE: Record<BagKind, { fill: string; sideFill: string; stroke: string; ink: string; radius: number; soft: boolean; hard: boolean; ribs: boolean; straps: boolean }> = {
