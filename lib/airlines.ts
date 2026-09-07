@@ -299,7 +299,7 @@ export const AIRLINES: Airline[] = [
     website: 'https://www.delta.com',
     baggageUrl: 'https://www.delta.com/us/en/baggage/carry-on-baggage',
     carryOn: { w: 35, h: 56, d: 23, kg: 0, verified: true, linearCm: 114 },
-    personal: { rule: 'unknown', kg: 0, verified: false },
+    personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
     checked: { kg: 23, total: 157, eco: 23, biz: 32, bags: 'Fare and route dependent', verified: true, rule: 'linear', note: 'Delta standard checked bags are limited to 62 linear inches (about 157 cm). Main/Comfort standard bags are 23 kg; eligible First/Delta One bags may be 32 kg.' },
     classAllowances: [
       { name: 'Delta Main / Delta Comfort', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Varies by route/fare', weightPerBag: '23 kg standard', note: 'Domestic standard checked bags are normally paid unless another benefit applies.', verified: true },
@@ -449,7 +449,7 @@ export const AIRLINES: Airline[] = [
       { id: 'economy', label: 'Economy / Super 6E · 7 kg', w: 35, h: 55, d: 25, kg: 7, linearCm: 115, verified: true },
       { id: 'stretch', label: 'IndiGoStretch / Stretch+ · 12 kg', w: 35, h: 55, d: 25, kg: 12, linearCm: 115, verified: true },
     ],
-    personal: { rule: 'unknown', kg: 3, verified: false },
+    personal: { rule: 'unknown', kg: 3, verified: true },
     checked: { kg: 0, total: 158, eco: 0, biz: 0, bags: 'Weight allowance depends heavily on route', verified: true, rule: 'linear', manualCheck: true, note: 'IndiGo standard checked size is 158 cm total, but free weight varies by route: e.g. 15 kg domestic, 20–30 kg on many international routes, and codeshares may use piece limits. ATR aircraft also have a separate dimensional rule.' },
     classAllowances: [
       { name: 'Economy Saver / Flexi', carryOn: '1 bag · 7 kg', checkedBags: 'Route dependent', weightPerBag: 'Check booking', note: 'Domestic and international allowances differ; selected long-haul services include up to 30 kg checked baggage.', verified: true },
