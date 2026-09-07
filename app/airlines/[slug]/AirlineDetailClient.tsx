@@ -331,7 +331,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
                   <span>Class / fare</span>
                   <span>Carry-on</span>
                   <span>Checked bags</span>
-                  <span>Weight per bag</span>
+                  <span>Weight / allowance</span>
                 </div>
                 {classes.map((row) => (
                   <div key={row.name} style={{ padding: '14px 4px', borderBottom: '1px solid #f5f8fb' }}>
