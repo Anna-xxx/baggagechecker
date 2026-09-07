@@ -558,7 +558,7 @@ export const AIRLINES: Airline[] = [
     country: 'Australia',
     website: 'https://www.qantas.com',
     baggageUrl: 'https://www.qantas.com/en-au/baggage/carry-on',
-    carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true, linearCm: 115, manualCheck: true, note: 'International Economy: 1 piece up to 7 kg. Premium Economy, Business and First: 2 pieces up to 7 kg each. Domestic and Dash 8 rules differ.' },
+    carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true, linearCm: 115, manualCheck: true, note: 'International Economy: 1 piece up to 7 kg. Premium Economy, Business and First: higher multi-piece allowances apply. Domestic and Dash 8 rules differ. On international flights departing India, additional personal items are not permitted; Economy allows 1 standard piece up to 7 kg and Business 1 standard piece up to 10 kg.' },
     carryOnVariants: [
       { id: 'domestic-standard', label: 'Domestic Australia · 1 overhead bag · 10 kg', w: 36, h: 56, d: 23, kg: 10, verified: true },
       { id: 'domestic-two', label: 'Domestic Australia · 2 small bags · 14 kg total', w: 34, h: 48, d: 23, kg: 14, maxSingleKg: 10, weightRule: 'combinedWithPersonal', note: 'Two small carry-on pieces share a 14 kg total limit; no single piece may exceed 10 kg.', verified: true },
@@ -785,7 +785,7 @@ export const AIRLINES: Airline[] = [
     website: 'https://www.virginaustralia.com',
     baggageUrl: 'https://www.virginaustralia.com/au/en/travel-info/baggage/carry-on-baggage/',
     carryOn: { w: 36, h: 56, d: 23, kg: 8, verified: true },
-    personal: { rule: 'dimensions', w: 33, h: 45, d: 20, kg: 8, verified: true },
+    personal: { rule: 'dimensions', w: 33, h: 45, d: 20, kg: 0, verified: true },
     checked: { kg: 23, total: 140, eco: 23, biz: 32, bags: 'Lite 0; Choice/Flex 1; Business 2 for standard members', verified: true, rule: 'linear', note: 'Virgin Australia checked bags are limited to 140 cm total. Economy Choice/Flex standard allowance is 1 × 23 kg; Business is 2 × 32 kg. Status and partner-operated services can differ.' },
     classAllowances: [
       { name: 'Economy Lite', carryOn: '1 bag · 8 kg + personal item', checkedBags: '0 bags', weightPerBag: '—', verified: true },
