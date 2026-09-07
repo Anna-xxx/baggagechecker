@@ -110,7 +110,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const carryOnRows = cabin.linearOnly
     ? [
         { label: 'Maximum total dimensions', value: `${cabin.linearCm} cm (L + W + H)` },
-        { label: cabin.weightRule === 'combinedWithPersonal' ? 'Max combined cabin weight' : 'Max weight', value: cabin.kg ? `${wt(cabin.kg)}${cabin.weightRule === 'combinedWithPersonal' ? ' incl. personal item' : ''}` : 'No published limit' },
+        { label: cabin.weightRule === 'combinedWithPersonal' ? 'Max total cabin weight' : 'Max weight', value: cabin.kg ? `${wt(cabin.kg)}${cabin.weightRule === 'combinedWithPersonal' ? ' incl. personal item' : ''}` : 'No published limit' },
       ]
     : [
         { label: 'Max dimensions', value: dims(cabin) },
