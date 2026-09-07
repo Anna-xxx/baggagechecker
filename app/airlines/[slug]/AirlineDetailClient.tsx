@@ -121,8 +121,12 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
         { label: 'Max weight', value: cabin.kg ? wt(cabin.kg) : 'No published limit' },
       ];
 
-  const checkedRows =
-    info.rule === 'dimensions'
+  const checkedRows = info.manualCheck
+    ? [
+        { label: 'Allowance', value: 'Route / fare dependent' },
+        ...(info.total ? [{ label: 'Published size limit', value: `${len(info.total)} (L + W + H)` }] : []),
+      ]
+    : info.rule === 'dimensions'
       ? [
           { label: 'Max dimensions', value: `${info.h} × ${info.w} × ${info.d} cm` },
           { label: 'Max weight (economy)', value: wt(info.eco) },
