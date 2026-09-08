@@ -334,7 +334,7 @@ export const AIRLINES: Airline[] = [
       { id: 'business-first', label: 'Business / First · 7 kg per piece', w: 38, h: 55, d: 22, kg: 7, note: 'Business and First allow two cabin items; this checks the larger handbag-sized piece.', verified: true },
       { id: 'brazil', label: 'Departure from Brazil · 10 kg', w: 38, h: 55, d: 22, kg: 10, verified: true },
     ],
-    personal: { rule: 'unknown', kg: 0, verified: false },
+    personal: { rule: 'notSeparate', kg: 0, verified: false },
     checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Weight or piece concept depending on route', verified: true, rule: 'linear', manualCheck: true, note: 'Emirates uses two different checked-baggage systems. Weight-concept routes allow each piece up to 203 cm and use total class weight; piece-concept routes use 150 cm per piece with different piece/weight allowances. Check the booked route.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: '20–35 kg total', weightPerBag: '32 kg max each', note: 'Checked allowance depends on Special / Saver / Flex / Flex Plus and route.', verified: true },
@@ -350,7 +350,7 @@ export const AIRLINES: Airline[] = [
     website: 'https://www.ethiopianairlines.com',
     baggageUrl: 'https://www.ethiopianairlines.com/information/baggage-information/carry-on-baggage',
     carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true },
-    personal: { rule: 'unknown', kg: 3, verified: false },
+    personal: { rule: 'fitUnderSeat', kg: 3, verified: false },
     checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Usually 2 pieces; route/fare exceptions apply', verified: true, rule: 'linear', note: 'Standard international piece limit is 158 cm. Economy: 23 kg per piece. Cloud Nine: up to 32 kg per piece, with some routes/fare products using different piece counts.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 bag · 7 kg + personal item', checkedBags: 'Usually 2 bags internationally', weightPerBag: '23 kg', note: 'Exact allowance varies by route/fare.', verified: true },
@@ -383,10 +383,6 @@ export const AIRLINES: Airline[] = [
     website: 'https://www.garuda-indonesia.com',
     baggageUrl: 'https://www.garuda-indonesia.com/id/id/new-baggage-policy',
     carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true, linearCm: 115, manualCheck: true, note: 'Standard jets: max 56 × 36 × 23 cm, 115 cm total and 7 kg. On CRJ/ATR Economy flights, a stricter 41 × 34 × 17 cm and 92 cm total limit applies.' },
-    carryOnVariants: [
-      { id: 'standard-jet', label: 'Standard jet · 56 × 36 × 23 cm · 7 kg', w: 36, h: 56, d: 23, kg: 7, linearCm: 115, verified: true },
-      { id: 'crj-atr', label: 'CRJ / ATR Economy · 41 × 34 × 17 cm · 7 kg', w: 34, h: 41, d: 17, kg: 7, linearCm: 92, verified: true },
-    ],
     personal: { rule: 'unknown', kg: 0, verified: false },
     checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Ticket-specific under the new Piece Concept', verified: true, rule: 'linear', manualCheck: true, note: 'For tickets purchased or issued from 1 Sep 2026, Garuda uses a new Piece Concept. The ticket shows the included number of bags and weight per bag, so the checker should not assume one universal allowance.' },
     classAllowances: [
@@ -445,7 +441,7 @@ export const AIRLINES: Airline[] = [
       { id: 'economy', label: 'Economy / Super 6E · 7 kg', w: 35, h: 55, d: 25, kg: 7, linearCm: 115, verified: true },
       { id: 'stretch', label: 'IndiGoStretch / Stretch+ · 12 kg', w: 35, h: 55, d: 25, kg: 12, linearCm: 115, verified: true },
     ],
-    personal: { rule: 'unknown', kg: 3, verified: true },
+    personal: { rule: 'fitUnderSeat', kg: 3, verified: false },
     checked: { kg: 0, total: 158, eco: 0, biz: 0, bags: 'Weight allowance depends heavily on route', verified: true, rule: 'linear', manualCheck: true, note: 'IndiGo standard checked size is 158 cm total, but free weight varies by route: e.g. 15 kg domestic, 20–30 kg on many international routes, and codeshares may use piece limits. ATR aircraft also have a separate dimensional rule.' },
     classAllowances: [
       { name: 'Economy Saver / Flexi', carryOn: '1 bag · 7 kg', checkedBags: 'Route dependent', weightPerBag: 'Check booking', note: 'Domestic and international allowances differ; selected long-haul services include up to 30 kg checked baggage.', verified: true },
@@ -583,7 +579,7 @@ export const AIRLINES: Airline[] = [
       { id: 'economy-brazil', label: 'Economy to / from Brazil · 10 kg', w: 37, h: 50, d: 25, kg: 10, verified: true },
       { id: 'business-first', label: 'Business / First · 15 kg total', w: 37, h: 50, d: 25, kg: 15, weightRule: 'combinedWithPersonal', note: 'Business and First allow two cabin pieces with a combined maximum of 15 kg. US departures are limited to one cabin bag plus one personal item.', verified: true },
     ],
-    personal: { rule: 'unknown', kg: 0, verified: false },
+    personal: { rule: 'fitUnderSeat', kg: 0, verified: false },
     checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Piece concept for Africa/Americas; weight concept elsewhere', verified: true, rule: 'linear', manualCheck: true, note: 'Qatar Airways uses 158 cm per bag on flights to/from Africa or the Americas and up to 300 cm on most other routes. Africa/Americas use a piece allowance; other routes use total weight. No single checked bag may exceed 32 kg.' },
     classAllowances: [
       { name: 'Economy', carryOn: '1 bag · 7 kg', checkedBags: '20–35 kg total or 1–2 bags', weightPerBag: '23 kg on Americas/Africa piece routes', note: 'Lite / Classic / Convenience / Comfort and route determine the exact allowance; Brazil cabin allowance is 10 kg.', verified: true },
