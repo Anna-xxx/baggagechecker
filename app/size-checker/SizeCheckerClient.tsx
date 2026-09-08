@@ -679,6 +679,7 @@ export function SizeCheckerClient() {
 
   const toggleAirline = (name: string) => {
     const on = sel.includes(name);
+    if (!on && sel.length >= MAX_AIRLINES) return;
     const code = AIRLINES.find((a) => a.name === name)?.code;
     setSel((prev) => (on ? prev.filter((n) => n !== name) : prev.concat(name)));
     if (on && code) {
