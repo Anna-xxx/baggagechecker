@@ -595,7 +595,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://help.ryanair.com/hc/en-us/categories/12489112419089-Bag-Rules',
     carryOn: { w: 40, h: 55, d: 20, kg: 10, verified: true },
     carryOnVariants: [
-      { id: 'basic', label: 'Basic / Plus · small personal bag only', kg: 0, allowed: false, note: 'The free 40 × 30 × 20 cm bag belongs under the seat and is handled as Personal item in this checker.', verified: true },
+      { id: 'basic', label: 'Basic / Plus · small personal bag only', kg: 0, allowed: false, note: 'Free personal item: 40 × 30 × 20 cm. Must fit under the seat.', verified: true },
       { id: 'priority', label: 'Priority / Regular / Flexi Plus · 10 kg overhead bag', w: 40, h: 55, d: 20, kg: 10, verified: true },
     ],
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 0, verified: true },
@@ -794,7 +794,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.vueling.com/en/prepare-your-trip/luggage/cabin-luggage',
     carryOn: { w: 40, h: 55, d: 20, kg: 10, verified: true },
     carryOnVariants: [
-      { id: 'light', label: 'Fly Light · underseat bag only', kg: 0, allowed: false, note: 'The included 40 × 30 × 20 cm underseat bag is handled as Personal item in this checker.', verified: true },
+      { id: 'light', label: 'Fly Light · underseat bag only', kg: 0, allowed: false, note: 'Included personal item: 40 × 30 × 20 cm. Must fit under the seat.', verified: true },
       { id: 'overhead', label: 'Overhead bag included / purchased · 10 kg', w: 40, h: 55, d: 20, kg: 10, verified: true },
     ],
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 0, verified: true },
@@ -814,7 +814,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://ssr-weu2.wizzair.com/en-gb/help-centre/booking-information-and-services/baggage/baggage-allowance/cabin-baggage',
     carryOn: { w: 40, h: 55, d: 23, kg: 10, verified: true },
     carryOnVariants: [
-      { id: 'basic', label: 'Basic · underseat bag only', kg: 0, allowed: false, note: 'The free 40 × 30 × 20 cm bag is handled as Personal item in this checker.', verified: true },
+      { id: 'basic', label: 'Basic · underseat bag only', kg: 0, allowed: false, note: 'Free personal item: 40 × 30 × 20 cm. Must fit under the seat.', verified: true },
       { id: 'priority', label: 'WIZZ Priority / trolley included · 10 kg', w: 40, h: 55, d: 23, kg: 10, verified: true },
     ],
     personal: { rule: 'dimensions', w: 30, h: 40, d: 20, kg: 10, verified: true },
