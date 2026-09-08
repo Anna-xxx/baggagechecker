@@ -250,7 +250,7 @@ export function SizeCheckerClient() {
   const base: Record<DimKey, number> = { W, H, D, KG, KGC };
   const setBase: Record<DimKey, (n: number) => void> = { W: setW, H: setH, D: setD, KG: setKG, KGC: setKGC };
 
-  const toDisp = (v: number, k: DimKey) => (metric ? v : Math.round(k === 'KG' || k === 'KGC' ? v * 2.205 : v / 2.54));
+  const toDisp = (v: number, k: DimKey) => (metric ? Math.round(v * 10) / 10 : Math.round(k === 'KG' || k === 'KGC' ? v * 2.205 : v / 2.54));
   const toBase = (v: number, k: DimKey) => (metric ? v : k === 'KG' || k === 'KGC' ? v / 2.205 : v * 2.54);
   const lenU = metric ? 'cm' : 'in';
   const wU = metric ? 'kg' : 'lb';
