@@ -949,25 +949,54 @@ export function SizeCheckerClient() {
           )}
 
           {(() => {
+            const pillShortLabel = (label: string) => {
+              const parts = label.split(' · ');
+              return parts.length > 1 ? parts.slice(0, -1).join(' · ') : label;
+            };
+
+            const variantSizeText = (v: {
+              w?: number; h?: number; d?: number; kg?: number; total?: number;
+              linearCm?: number; linearOnly?: boolean; allowed?: boolean; manualCheck?: boolean; rule?: 'linear' | 'dimensions';
+            }) => {
+              if (v.allowed === false) return 'Personal item only — no separate carry-on';
+              const total = v.total ?? v.linearCm;
+              if (v.manualCheck && v.w == null && !total) return 'Route / fare dependent — check airline';
+              const linearOnly = v.linearOnly || v.rule === 'linear';
+              if (linearOnly && total) return `≤ ${total} cm total${v.kg ? ` · ${v.kg} kg` : ''}`;
+              if (v.w != null && v.h != null && v.d != null) {
+                const extra = total ? ` · ≤ ${total} cm total` : '';
+                return `${v.w} × ${v.h} × ${v.d} cm${extra}${v.kg ? ` · ${v.kg} kg` : ''}`;
+              }
+              return v.kg ? `${v.kg} kg` : '';
+            };
+
             const pickers =
               type === 'carryon'
                 ? chosen
                     .filter((a) => a.carryOnVariants?.length)
-                    .map((a) => ({
-                      code: a.code,
-                      name: a.name,
-                      axis: 'Fare / route / class',
-                      options: (a.carryOnVariants ?? []).map((v) => ({ id: v.id, label: v.label, selected: carryOnVariantByCode[a.code] === v.id })),
-                    }))
+                    .map((a) => {
+                      const selected = a.carryOnVariants?.find((v) => v.id === carryOnVariantByCode[a.code]);
+                      return {
+                        code: a.code,
+                        name: a.name,
+                        axis: 'Fare / route / class',
+                        selectedSize: selected ? variantSizeText(selected) : null,
+                        options: (a.carryOnVariants ?? []).map((v) => ({ id: v.id, label: pillShortLabel(v.label), selected: carryOnVariantByCode[a.code] === v.id })),
+                      };
+                    })
                 : type === 'checked'
                 ? chosen
                     .filter((a) => CHECKED_VARIANTS[a.code]?.length)
-                    .map((a) => ({
-                      code: a.code,
-                      name: a.name,
-                      axis: 'Route / allowance',
-                      options: (CHECKED_VARIANTS[a.code] ?? []).map((v) => ({ id: v.id, label: v.label, selected: checkedVariantByCode[a.code] === v.id })),
-                    }))
+                    .map((a) => {
+                      const selected = CHECKED_VARIANTS[a.code]?.find((v) => v.id === checkedVariantByCode[a.code]);
+                      return {
+                        code: a.code,
+                        name: a.name,
+                        axis: 'Route / allowance',
+                        selectedSize: selected ? variantSizeText(selected) : null,
+                        options: (CHECKED_VARIANTS[a.code] ?? []).map((v) => ({ id: v.id, label: pillShortLabel(v.label), selected: checkedVariantByCode[a.code] === v.id })),
+                      };
+                    })
                 : [];
 
             if (pickers.length === 0) return null;
@@ -975,37 +1004,42 @@ export function SizeCheckerClient() {
             return (
               <div style={{ display: 'grid', gap: 10, marginBottom: 16 }}>
                 {pickers.map((p) => (
-                  <div key={p.code} style={{ border: '1px solid #edf0f3', borderRadius: 11, padding: '11px 13px', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: 12.5, fontWeight: 700 }}>{p.name}</span>
-                    <span style={{ fontSize: 11.5, color: '#57677c' }}>{p.axis}</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap', marginLeft: 'auto' }}>
-                      {p.options.map((v) => (
-                        <button
-                          key={v.id}
-                          onClick={() => {
-                            if (type === 'carryon') {
-                              setCarryOnVariantByCode((prev) => ({ ...prev, [p.code]: v.id }));
-                            } else {
-                              setCheckedVariantByCode((prev) => ({ ...prev, [p.code]: v.id }));
-                            }
-                            setChecked(false);
-                          }}
-                          style={{
-                            border: `1px solid ${v.selected ? '#0f766e' : '#e4eaf1'}`,
-                            background: v.selected ? '#0f766e' : '#fff',
-                            color: v.selected ? '#fff' : '#57677c',
-                            borderRadius: 999,
-                            padding: '6px 13px',
-                            fontFamily: 'inherit',
-                            fontSize: 11.5,
-                            fontWeight: 700,
-                            cursor: 'pointer',
-                          }}
-                        >
-                          {v.label}
-                        </button>
-                      ))}
+                  <div key={p.code} style={{ border: '1px solid #edf0f3', borderRadius: 11, padding: '11px 13px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 12.5, fontWeight: 700 }}>{p.name}</span>
+                      <span style={{ fontSize: 11.5, color: '#57677c' }}>{p.axis}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap', marginLeft: 'auto' }}>
+                        {p.options.map((v) => (
+                          <button
+                            key={v.id}
+                            onClick={() => {
+                              if (type === 'carryon') {
+                                setCarryOnVariantByCode((prev) => ({ ...prev, [p.code]: v.id }));
+                              } else {
+                                setCheckedVariantByCode((prev) => ({ ...prev, [p.code]: v.id }));
+                              }
+                              setChecked(false);
+                            }}
+                            style={{
+                              border: `1px solid ${v.selected ? '#0f766e' : '#e4eaf1'}`,
+                              background: v.selected ? '#0f766e' : '#fff',
+                              color: v.selected ? '#fff' : '#57677c',
+                              borderRadius: 999,
+                              padding: '6px 13px',
+                              fontFamily: 'inherit',
+                              fontSize: 11.5,
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                            }}
+                          >
+                            {v.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
+                    {p.selectedSize && (
+                      <div style={{ marginTop: 8, fontSize: 11.5, color: '#0f766e', fontWeight: 700 }}>→ {p.selectedSize}</div>
+                    )}
                   </div>
                 ))}
               </div>
