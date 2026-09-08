@@ -154,7 +154,7 @@ function websiteFor(code: string): string {
   return ALL_AIRLINES.find((a) => a.code === code)?.website ?? '';
 }
 
-const MAX_AIRLINES = 3;
+const MAX_AIRLINES = AIRLINES.length;
 
 type DimKey = 'W' | 'H' | 'D' | 'KG' | 'KGC';
 
@@ -931,7 +931,7 @@ export function SizeCheckerClient() {
               {sel.length} of {MAX_AIRLINES} selected
             </span>
           </div>
-          <p style={{ margin: '0 0 16px 34px', fontSize: 13, color: '#7a8798' }}>Pick up to three airlines to compare your bag against.</p>
+          <p style={{ margin: '0 0 16px 34px', fontSize: 13, color: '#7a8798' }}>Pick as many airlines as you want to compare your bag against.</p>
 
           {chosen.length > 0 && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 9, marginBottom: 14 }}>
@@ -1159,7 +1159,7 @@ export function SizeCheckerClient() {
               </span>
               <h3 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 800, letterSpacing: '-.02em' }}>{canCheck ? 'Ready to check' : 'No airlines selected yet'}</h3>
               <p style={{ margin: '0 auto', maxWidth: 430, fontSize: 13, lineHeight: 1.7, color: '#8494a8' }}>
-                {canCheck ? 'Press "Check my bag" above to compare your dimensions with the airlines you picked.' : 'Pick one to three airlines in step 2 to see whether your bag fits their cabin allowance.'}
+                {canCheck ? 'Press "Check my bag" above to compare your dimensions with the airlines you picked.' : 'Pick one or more airlines in step 2 to see whether your bag fits their cabin allowance.'}
               </p>
             </div>
           )}
