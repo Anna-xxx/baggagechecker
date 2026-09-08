@@ -995,7 +995,7 @@ export function SizeCheckerClient() {
                         name: a.name,
                         axis: 'Route / allowance',
                         selectedSize: selected ? variantSizeText(selected) : null,
-                        options: (CHECKED_VARIANTS[a.code] ?? []).map((v) => ({ id: v.id, label: pillShortLabel(v.label), selected: checkedVariantByCode[a.code] === v.id })),
+                        options: (CHECKED_VARIANTS[a.code] ?? []).map((v) => ({ id: v.id, label: v.label.replace(' · allowance', '').replace(' allowance', ''), selected: checkedVariantByCode[a.code] === v.id })),
                       };
                     })
                 : [];
