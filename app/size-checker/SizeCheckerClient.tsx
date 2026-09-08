@@ -608,7 +608,7 @@ export function SizeCheckerClient() {
           return {
             airline: a,
             checks: [],
-            limit: L.note ?? 'Carry-on rule varies by route or aircraft',
+            limit: 'Carry-on rule varies by route or aircraft',
             verdict: 'Check airline',
             color: '#b45309',
             bg: '#fdf8ee',
@@ -621,7 +621,7 @@ export function SizeCheckerClient() {
           return {
             airline: a,
             checks: [],
-            limit: L.note ?? 'Checked baggage rule varies by route or fare',
+            limit: 'Checked baggage rule varies by route or fare',
             verdict: 'Check airline',
             color: '#b45309',
             bg: '#fdf8ee',

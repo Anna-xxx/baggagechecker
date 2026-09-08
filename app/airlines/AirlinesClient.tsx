@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -31,8 +31,39 @@ function personalItemSize(a: Airline): string {
 
 function checkedEconomySize(a: Airline): string {
   const checked = getAirlineBaggage(a).checked;
-  return `${checked.total} cm · ${checked.eco} kg`;
+  return `${checked.total} cm total · ${checked.eco} kg`;
 }
+
+function carryOnSize(a: Airline): string {
+  const c = getAirlineBaggage(a).carryOn;
+  const dims = c.linearOnly
+    ? `≤ ${c.linearCm} cm total`
+    : `${c.h} × ${c.w} × ${c.d} cm${c.linearCm && c.w + c.h + c.d > c.linearCm ? ` · ≤ ${c.linearCm} cm total` : ''}`;
+  const weight = c.kg ? `${c.kg} kg${c.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : 'No published limit';
+  return `${dims} · ${weight}`;
+}
+
+const ROW_ICONS: Record<'carryon' | 'personal' | 'checked', ReactNode> = {
+  carryon: (
+    <>
+      <rect x="5" y="7" width="14" height="14" rx="2.5" />
+      <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
+    </>
+  ),
+  personal: (
+    <>
+      <path d="M7 9a5 5 0 0 1 10 0v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" />
+      <path d="M10 9V7a2 2 0 0 1 4 0v2" />
+    </>
+  ),
+  checked: (
+    <>
+      <rect x="4" y="6" width="16" height="15" rx="2.5" />
+      <path d="M9 6V3.6A.6.6 0 0 1 9.6 3h4.8a.6.6 0 0 1 .6.6V6" />
+      <path d="M9.6 11v6M14.4 11v6" />
+    </>
+  ),
+};
 
 type Sort = 'name' | 'strict' | 'generous';
 type TypeFilter = 'All types' | 'Full-service' | 'Low-cost';
@@ -146,27 +177,24 @@ export function AirlinesClient() {
       </section>
 
       <section id="directory" style={{ maxWidth: 1200, margin: '0 auto', padding: '34px 24px 8px' }}>
-        <h2 style={{ margin: '0 0 20px', fontSize: 17, fontWeight: 800, letterSpacing: '-.02em' }}>{resultsLabel}</h2>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap', marginBottom: 20 }}>
+          <h2 style={{ margin: 0, fontSize: 17, fontWeight: 800, letterSpacing: '-.02em' }}>{resultsLabel}</h2>
+          <span style={{ fontSize: 12, color: '#a9b4c2' }}>All figures are standard published limits — always confirm with your airline.</span>
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(min(100%,300px),1fr))', gap: 18 }}>
           {rows.map((a) => {
             const baggage = getAirlineBaggage(a);
             const on = fav.includes(a.code);
             const kgColor = baggage.carryOn.kg >= 12 ? '#15803d' : baggage.carryOn.kg > 0 && baggage.carryOn.kg <= 7 ? '#b45309' : '#0f1c2e';
-            const kind = airlineType(a.code);
-            const typeColor = kind === 'Low-cost' ? '#b45309' : '#0f766e';
-            const typeBg = kind === 'Low-cost' ? '#fdf1dc' : '#e3f5f2';
             return (
               <div key={a.code} className="card-hover" style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                   <AirlineLogo code={a.code} website={a.website} width={48} height={48} radius={10} fontSize={12} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: '-.01em' }}>{a.name}</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4, fontSize: 11.5, color: '#8494a8' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4, fontSize: 11.5, color: '#8494a8' }}>
                       <span style={{ fontWeight: 700, color: '#57677c' }}>{a.code}</span>
-                      <span>·</span>
                       <span>{a.country}</span>
-                      <span>·</span>
-                      <span style={{ fontWeight: 800, color: typeColor, background: typeBg, borderRadius: 999, padding: '2px 7px', fontSize: 10 }}>{kind}</span>
                     </div>
                   </div>
                   <button onClick={() => toggleFav(a.code)} style={{ flex: 'none', border: 'none', background: 'none', padding: 2, cursor: 'pointer', lineHeight: 0 }}>
@@ -176,36 +204,28 @@ export function AirlinesClient() {
                   </button>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1.25fr 1fr', gap: 10 }}>
-                  <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px' }}>
-                    <div style={{ fontSize: 11, color: '#57677c', marginBottom: 4 }}>Carry-on max size</div>
-                    <div style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-                      {baggage.carryOn.linearOnly
-                        ? `≤ ${baggage.carryOn.linearCm} cm total`
-                        : `${baggage.carryOn.h} × ${baggage.carryOn.w} × ${baggage.carryOn.d} cm${baggage.carryOn.linearCm && baggage.carryOn.w + baggage.carryOn.h + baggage.carryOn.d > baggage.carryOn.linearCm ? ` · ≤ ${baggage.carryOn.linearCm} cm total` : ''}`}
+                <div>
+                  {[
+                    { key: 'carryon' as const, label: 'Carry-on', value: carryOnSize(a) },
+                    { key: 'personal' as const, label: 'Personal item', value: personalItemSize(a) },
+                    { key: 'checked' as const, label: 'Checked, economy', value: checkedEconomySize(a) },
+                  ].map((row, i) => (
+                    <div key={row.key} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', rowGap: 3, gap: 9, padding: '10px 0', borderBottom: i < 2 ? '1px solid #f0f2f5' : 'none' }}>
+                      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8494a8" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flex: 'none' }}>
+                        {ROW_ICONS[row.key]}
+                      </svg>
+                      <span style={{ flex: 'none', fontSize: 12, color: '#57677c', whiteSpace: 'nowrap' }}>{row.label}</span>
+                      <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, color: row.key === 'carryon' ? kgColor : undefined, fontVariantNumeric: 'tabular-nums', textAlign: 'right' }}>{row.value}</span>
                     </div>
-                  </div>
-                  <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px' }}>
-                    <div style={{ fontSize: 11, color: '#57677c', marginBottom: 4 }}>{baggage.carryOn.weightRule === 'combinedWithPersonal' ? 'Total cabin weight' : 'Carry-on max weight'}</div>
-                    <div style={{ fontSize: 12.5, fontWeight: 700, color: kgColor }}>
-                      {baggage.carryOn.kg ? `${baggage.carryOn.kg} kg${baggage.carryOn.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : 'No published limit'}
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                <div style={{ display: 'grid', gap: 6 }}>
-                  <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px', display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                    <span style={{ fontSize: 11, color: '#57677c' }}>
-                      Personal item <span style={{ color: '#57677c' }}>({baggage.personal.verified ? 'published' : 'typical'})</span>
-                    </span>
-                    <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{personalItemSize(a)}</span>
-                  </div>
-                  <div style={{ background: '#f8fafc', borderRadius: 9, padding: '10px 12px', display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                    <span style={{ fontSize: 11, color: '#57677c' }}>
-                      Checked, economy <span style={{ color: '#57677c' }}>({baggage.checked.verified ? 'published' : 'standard'})</span>
-                    </span>
-                    <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{checkedEconomySize(a)}</span>
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 7, fontSize: 10.5, lineHeight: 1.5, color: '#a9b4c2' }}>
+                  <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} style={{ flex: 'none', marginTop: 1 }}>
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 8v5M12 16h.01" strokeLinecap="round" />
+                  </svg>
+                  Standard limits for economy tickets. Fare type and route can change the allowance.
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, color: '#a9b4c2' }}>
