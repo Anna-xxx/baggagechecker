@@ -130,3 +130,15 @@ input[type='text']:focus {
 .back-link:hover {
   color: #0d9488;
 }
+
+.checker-fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 40px;
+}
+
+@media (min-width: 820px) {
+  .checker-fields {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

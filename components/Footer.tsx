@@ -58,7 +58,7 @@ export function Footer({
           gap,
         }}
       >
-        {disclaimer && <p style={{ margin: '0 0 14px', fontSize: 11.5, lineHeight: 1.6, color: '#8494a8' }}>{disclaimer}</p>}
+        {disclaimer && <p style={{ margin: '0 0 14px', fontSize: 12, lineHeight: 1.6, color: '#57677c' }}>{disclaimer}</p>}
 
         <div>
           {showWordmark ? (

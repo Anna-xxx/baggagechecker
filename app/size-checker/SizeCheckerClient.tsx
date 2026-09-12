@@ -108,6 +108,28 @@ const CHECKED_VARIANTS: Record<string, CheckedVariant[]> = {
   ],
 };
 
+type AircraftSizeVariant = { label: string; w: number; h: number; d: number; kg: number; linearCm: number };
+
+/**
+ * Carry-on limits that vary by aircraft, not by fare — the passenger can't pick this in
+ * advance, so instead of gating the check behind a picker, both known sizes are checked
+ * against the entered bag and reported as a single "fits on most flights" style verdict.
+ */
+const AIRCRAFT_SIZE_VARIANTS: Record<string, AircraftSizeVariant[]> = {
+  NH: [
+    { label: 'Aircraft with 100+ seats', w: 40, h: 55, d: 25, kg: 10, linearCm: 115 },
+    { label: 'Aircraft with fewer than 100 seats', w: 35, h: 45, d: 20, kg: 10, linearCm: 100 },
+  ],
+  JL: [
+    { label: 'Aircraft with 100+ seats', w: 40, h: 55, d: 25, kg: 10, linearCm: 115 },
+    { label: 'Aircraft with fewer than 100 seats', w: 35, h: 45, d: 20, kg: 10, linearCm: 100 },
+  ],
+  GA: [
+    { label: 'Standard jet', w: 36, h: 56, d: 23, kg: 7, linearCm: 115 },
+    { label: 'CRJ / ATR Economy', w: 34, h: 41, d: 17, kg: 7, linearCm: 92 },
+  ],
+};
+
 const AIRLINES: Airline[] = ALL_AIRLINES.map((a) => {
   const baggage = getAirlineBaggage(a);
   return {
@@ -269,10 +291,13 @@ export function SizeCheckerClient() {
     setChecked(false);
   };
 
-  const boxW = Math.max(80, Math.round(W * 1.9));
-  const boxH = Math.max(80, Math.round(H * 1.9));
-  const depthW = Math.max(28, Math.round(20 + D * 1.1));
-  const faceLabel = `${toDisp(W, 'W')} × ${toDisp(H, 'H')} ${lenU}`;
+  const panelBoxScale = 90 + ((clamp(H, 10, 100) - 10) / 90) * 130; // target box height in px, 90..220
+  const boxScale = panelBoxScale / H;
+  const boxW = Math.max(92, Math.round(W * boxScale));
+  const boxH = Math.round(panelBoxScale);
+  const depthW = Math.max(30, Math.round(D * boxScale));
+  const widthLabel = `${toDisp(W, 'W')} ${lenU}`;
+  const heightLabel = `${toDisp(H, 'H')} ${lenU}`;
   const depthValue = toDisp(D, 'D');
 
   const showHandle = type !== 'personal';
@@ -393,8 +418,10 @@ export function SizeCheckerClient() {
       const maxTotal = L.linearCm ?? 0;
       const totalOk = total <= maxTotal;
       const combinedWeight = L.weightRule === 'combinedWithPersonal';
+      const pureCombinedCap = combinedWeight && !L.maxSingleKg;
       const singleWeightLimit = combinedWeight && L.maxSingleKg ? L.maxSingleKg : L.KG;
-      const weightOk = !singleWeightLimit || KG <= singleWeightLimit;
+      const weightHardFail = Boolean(singleWeightLimit) && (pureCombinedCap ? KG >= singleWeightLimit : KG > singleWeightLimit);
+      const weightOk = !weightHardFail;
       const dimensionChecks = L.linearOnly
         ? []
         : [
@@ -439,7 +466,13 @@ export function SizeCheckerClient() {
           color: weightOk ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
           over: !weightOk,
           manual: combinedWeight && weightOk,
-          excess: weightOk ? (combinedWeight ? 'Add other cabin-item weight' : '') : `${toDisp(KG - singleWeightLimit, 'KG')} ${wU} over`,
+          excess: weightOk
+            ? combinedWeight
+              ? 'Add other cabin-item weight'
+              : ''
+            : pureCombinedCap
+              ? 'Shared with personal item'
+              : `${toDisp(KG - singleWeightLimit, 'KG')} ${wU} over`,
         },
       ];
     }
@@ -511,10 +544,11 @@ export function SizeCheckerClient() {
       const axis: DimKey = f.key === 'KGC' ? 'KG' : f.key;
       const mine = base[f.key];
       const max = lim[f.key];
-      const ok = mine <= max;
       const unit = axis === 'KG' ? wU : lenU;
       const d = (v: number) => `${toDisp(v, axis)} ${unit}`;
       const combinedWeight = type === 'carryon' && axis === 'KG' && L.weightRule === 'combinedWithPersonal';
+      const pureCombinedCap = combinedWeight && !L.maxSingleKg && Boolean(L.KG);
+      const ok = pureCombinedCap ? mine < max : mine <= max;
       return {
         key: f.key,
         label: combinedWeight ? 'Total cabin weight' : f.label,
@@ -533,7 +567,13 @@ export function SizeCheckerClient() {
         color: ok ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
         over: !ok,
         manual: combinedWeight && ok,
-        excess: ok ? (combinedWeight ? 'Add other cabin-item weight' : '') : `${d(mine - max)} over`,
+        excess: ok
+          ? combinedWeight
+            ? 'Add other cabin-item weight'
+            : ''
+          : pureCombinedCap
+            ? 'Shared with personal item'
+            : `${d(mine - max)} over`,
       };
     });
   };
@@ -589,7 +629,7 @@ export function SizeCheckerClient() {
           return {
             airline: a,
             checks: [],
-            limit: 'Not included',
+            limit: '',
             verdict: 'Not included',
             color: '#b45309',
             bg: '#fdf8ee',
@@ -609,6 +649,55 @@ export function SizeCheckerClient() {
             bg: '#fdf8ee',
             showAdvice: true,
             advice: `${a.name} does not publish a fixed three-dimension personal-item limit that this checker can validate automatically. Check the airline rule for your fare before travel.`,
+          };
+        }
+
+        if (type === 'carryon' && L.manualCheck && AIRCRAFT_SIZE_VARIANTS[a.code]) {
+          const variants = AIRCRAFT_SIZE_VARIANTS[a.code];
+          const total = W + H + D;
+          const combinedCap = L.weightRule === 'combinedWithPersonal';
+          const evaluated = variants.map((v) => ({
+            ...v,
+            fits: W <= v.w && H <= v.h && D <= v.d && total <= v.linearCm && (!v.kg || (combinedCap ? KG < v.kg : KG <= v.kg)),
+          }));
+          const passing = evaluated.filter((v) => v.fits);
+          const failing = evaluated.filter((v) => !v.fits);
+
+          if (failing.length === 0) {
+            return {
+              airline: a,
+              checks: [],
+              limit: `Fits both: ${variants.map((v) => v.label).join(' and ')}`,
+              verdict: 'Fits',
+              color: '#15803d',
+              bg: '#dcfce7',
+              showAdvice: false,
+              advice: '',
+            };
+          }
+
+          if (passing.length === 0) {
+            return {
+              airline: a,
+              checks: [],
+              limit: 'Too large for any aircraft size',
+              verdict: 'Too large',
+              color: '#b91c1c',
+              bg: '#fee2e2',
+              showAdvice: true,
+              advice: failing.map((v) => `On ${v.label} — max ${v.h} × ${v.w} × ${v.d} cm, ${v.kg} kg`).join(' · '),
+            };
+          }
+
+          return {
+            airline: a,
+            checks: [],
+            limit: `Depends on aircraft: ${passing.length}/${variants.length} sizes fit`,
+            verdict: 'Fits on most flights',
+            color: '#b45309',
+            bg: '#fdf8ee',
+            showAdvice: true,
+            advice: [...passing.map((v) => `On ${v.label} — fits`), ...failing.map((v) => `On ${v.label} — ${v.h} × ${v.w} × ${v.d} cm, too large`)].join(' · '),
           };
         }
 
@@ -678,6 +767,7 @@ export function SizeCheckerClient() {
   const fitCount = results.filter((r) => r.verdict === 'Fits').length;
   const tooLargeCount = results.filter((r) => r.verdict === 'Too large').length;
   const notIncludedCount = results.filter((r) => r.verdict === 'Not included').length;
+  const dependsCount = results.filter((r) => r.verdict === 'Fits on most flights').length;
   const manualCount = results.filter((r) => r.verdict === 'Check airline' || r.verdict === 'Check weight').length;
   const allFit = results.length > 0 && fitCount === results.length;
   const noneFit = results.length > 0 && tooLargeCount === results.length;
@@ -756,8 +846,14 @@ export function SizeCheckerClient() {
       ? results.length === 1
         ? 'Your bag is too large for this airline'
         : `Your bag is too large for all ${results.length} airlines`
-      : manualCount || notIncludedCount
-        ? [fitCount ? `${fitCount} fit` : '', tooLargeCount ? `${tooLargeCount} too large` : '', notIncludedCount ? `${notIncludedCount} not included` : '', manualCount ? `${manualCount} need a rule/weight check` : ''].filter(Boolean).join(' · ')
+      : manualCount || notIncludedCount || dependsCount
+        ? [
+            fitCount ? `${fitCount} fit` : '',
+            dependsCount ? `${dependsCount} depend${dependsCount === 1 ? 's' : ''} on your aircraft` : '',
+            tooLargeCount ? `${tooLargeCount} too large` : '',
+            notIncludedCount ? `${notIncludedCount} not included` : '',
+            manualCount ? `${manualCount} need${manualCount === 1 ? 's' : ''} a manual check` : '',
+          ].filter(Boolean).join(' · ')
         : `Your bag fits ${fitCount} of ${results.length} airlines`;
   const summaryMark = allFit ? '✓' : noneFit ? '✗' : '!';
   const summaryColor = allFit ? '#15803d' : noneFit ? '#b91c1c' : '#b45309';
@@ -834,7 +930,7 @@ export function SizeCheckerClient() {
               </div>
             </div>
 
-            <div className="range-mint" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: '22px 40px' }}>
+            <div className="range-mint checker-fields">
               {FIELD_DEFS.map((def) => {
                 const value = toDisp(base[def.key], def.key);
                 return (
@@ -867,7 +963,7 @@ export function SizeCheckerClient() {
 
             <div style={{ marginTop: 26, background: '#f8fafc', borderRadius: 12, padding: '20px 22px 26px' }}>
               <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 16 }}>Visual Representation</div>
-              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 16, flexWrap: 'wrap', minHeight: 170 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 16, flexWrap: 'wrap', minHeight: 260 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                   <div style={{ position: 'relative', width: boxW, height: boxH }}>
                     {showHandle && (
@@ -890,8 +986,9 @@ export function SizeCheckerClient() {
                           <div style={{ position: 'absolute', left: 0, right: 0, bottom: '22%', height: 7, background: 'rgba(185,129,7,.35)' }} />
                         </>
                       )}
-                      <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 12, fontWeight: 700, color: INK_COLOR[type], textAlign: 'center', lineHeight: 1.35, whiteSpace: 'nowrap' }}>
-                        {faceLabel}
+                      <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 12, fontWeight: 700, color: INK_COLOR[type], textAlign: 'center', lineHeight: 1.6, whiteSpace: 'nowrap' }}>
+                        <div>W {widthLabel}</div>
+                        <div>H {heightLabel}</div>
                       </div>
                     </div>
                     {showWheels && (
@@ -919,7 +1016,7 @@ export function SizeCheckerClient() {
                         <div style={{ position: 'absolute', right: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />
                       </>
                     )}
-                    <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 12, fontWeight: 700, color: INK_COLOR[type], whiteSpace: 'nowrap' }}>{depthValue}</span>
+                    <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 12, fontWeight: 700, color: INK_COLOR[type], whiteSpace: 'nowrap' }}>D {depthValue} {lenU}</span>
                   </div>
                   <span style={{ fontSize: 11, color: '#8494a8', fontWeight: 600 }}>depth</span>
                 </div>
@@ -1138,7 +1235,7 @@ export function SizeCheckerClient() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', background: '#f8fafc', padding: '13px 16px' }}>
                       <AirlineLogo code={r.airline.code} website={websiteFor(r.airline.code)} width={34} height={26} radius={7} fontSize={10} />
                       <span style={{ fontSize: 14, fontWeight: 800 }}>{r.airline.name}</span>
-                      <span style={{ fontSize: 12, color: '#7a8798' }}>{r.limit}</span>
+                      {r.limit && <span style={{ fontSize: 12, color: '#7a8798' }}>{r.limit}</span>}
                       <span style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 800, color: r.color, background: r.bg, borderRadius: 999, padding: '6px 13px', whiteSpace: 'nowrap' }}>{r.verdict}</span>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,150px),1fr))' }}>
@@ -1187,7 +1284,7 @@ export function SizeCheckerClient() {
                 Using our <a href="#checker">luggage size checker</a> before you travel helps you avoid unexpected fees and delays at check-in.
               </p>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 14 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
               {[
                 { color: '#2563eb', title: 'Aircraft Limits', text: 'Overhead space varies by plane model', icon: <path d="M2 13l20-7-7 20-3-8z" /> },
                 { color: '#15803d', title: 'Passenger Safety', text: 'Weight limits ensure safe operations', icon: (<><circle cx="9" cy="8" r="3.2" /><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" /><path d="M16 6.5a3 3 0 0 1 0 5.6M18 20c0-2.4-1-4.2-2.6-5.2" /></>) },
@@ -1252,11 +1349,6 @@ export function SizeCheckerClient() {
               },
             ].map((card) => (
               <div key={card.title} style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 22 }}>
-                <div style={{ marginBottom: 14, borderRadius: 10, overflow: 'hidden', background: '#f8fafc', aspectRatio: '4/3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <svg aria-hidden="true" width="46" height="46" viewBox="0 0 24 24" fill="none" stroke={card.iconColor} strokeOpacity={0.35} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                    {card.icon}
-                  </svg>
-                </div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                   <span style={{ flex: 'none', display: 'flex', width: 32, height: 32, borderRadius: 9, background: card.tint, alignItems: 'center', justifyContent: 'center' }}>
                     <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={card.iconColor} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
@@ -1306,7 +1398,7 @@ export function SizeCheckerClient() {
           </div>
         </section>
 
-        <section style={{ maxWidth: 1000, margin: '0 auto', padding: 'clamp(44px,6vw,72px) 0px 0' }}>
+        <section style={{ maxWidth: 1000, margin: '0 auto', padding: 'clamp(44px,6vw,72px) 0px clamp(48px,6vw,72px)' }}>
           <h2 style={{ margin: '0 0 28px', textAlign: 'center', fontSize: 'clamp(21px,2.6vw,26px)', fontWeight: 800, letterSpacing: '-.025em' }}>Pro Tips for Checking Suitcase Size Online</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 20 }}>
             <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: '26px 26px 28px' }}>
@@ -1334,20 +1426,6 @@ export function SizeCheckerClient() {
                 <span>Using wrong measurement units</span>
                 <span>Not checking weight limits</span>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section style={{ maxWidth: 1000, margin: '0 auto', padding: 'clamp(44px,6vw,72px) 0px clamp(48px,6vw,72px)' }}>
-          <div style={{ borderRadius: 18, background: '#fdf8ee', border: '1px solid #f3ebdb', padding: 'clamp(32px,5vw,50px) 28px', textAlign: 'center', color: '#0f1c2e' }}>
-            <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(20px,2.6vw,26px)', fontWeight: 800, letterSpacing: '-.025em' }}>Ready to Check Your Luggage Size?</h2>
-            <p style={{ margin: '0 auto 24px', maxWidth: 620, fontSize: 14, lineHeight: 1.7, color: '#57677c' }}>Use our free luggage size checker above to ensure your bags meet airline requirements and travel with confidence.</p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
-              {['Free to Use', 'All Major Airlines', 'Instant Results'].map((label) => (
-                <span key={label} style={{ background: '#fff', border: '1px solid #f0e2c0', color: '#8a5a06', borderRadius: 999, padding: '9px 17px', fontSize: 12.5, fontWeight: 700, whiteSpace: 'nowrap' }}>
-                  {label}
-                </span>
-              ))}
             </div>
           </div>
         </section>
