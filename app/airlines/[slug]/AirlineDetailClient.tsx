@@ -86,29 +86,29 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
           { label: 'Max width', value: len(personalBag.w) },
           { label: 'Max height', value: len(personalBag.h) },
           { label: 'Max depth', value: len(personalBag.d) },
-          { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
+          { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No weight limit' },
         ]
       : personal.rule === 'either'
         ? [
             { label: 'Max dimensions (or)', value: dims(personalBag) },
             { label: 'Maximum total dimensions (or)', value: `${personal.linearCm} cm (L + W + H)` },
-            { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
+            { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No weight limit' },
           ]
         : personal.rule === 'linear'
         ? [
             { label: 'Maximum total dimensions', value: `${personal.linearCm} cm (L + W + H)` },
-            { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
+            { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No weight limit' },
           ]
         : personal.rule === 'fitUnderSeat'
           ? [
-              { label: 'Size rule', value: 'Must fit under the seat' },
-              { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
+              { label: 'Size rule', value: 'Must fit under seat' },
+              { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No weight limit' },
             ]
           : personal.rule === 'notSeparate'
-            ? [{ label: 'Allowance', value: 'No separate personal item' }]
+            ? [{ label: 'Allowance', value: 'Not included' }]
             : [
-                { label: 'Dimensions', value: 'No fixed size published' },
-                { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No published limit' },
+                { label: 'Dimensions', value: 'Not published' },
+                { label: 'Max weight', value: personal.kg ? wt(personal.kg) : 'No weight limit' },
               ];
 
   const carryOnLinearAddsConstraint = Boolean(cabin.linearCm && (cabin.linearOnly || cabin.w + cabin.h + cabin.d > cabin.linearCm));
@@ -116,7 +116,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const carryOnRows = cabin.linearOnly
     ? [
         { label: 'Maximum total dimensions', value: `${cabin.linearCm} cm (L + W + H)` },
-        { label: cabin.weightRule === 'combinedWithPersonal' ? 'Max total cabin weight' : 'Max weight', value: cabin.kg ? `${wt(cabin.kg)}${cabin.weightRule === 'combinedWithPersonal' ? ' incl. personal item' : ''}` : 'No published limit' },
+        { label: cabin.weightRule === 'combinedWithPersonal' ? 'Max total cabin weight' : 'Max weight', value: cabin.kg ? `${wt(cabin.kg)}${cabin.weightRule === 'combinedWithPersonal' ? ' incl. personal item' : ''}` : 'No weight limit' },
       ]
     : [
         { label: 'Max dimensions', value: dims(cabin) },
@@ -124,7 +124,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
         { label: 'Max height', value: len(cabin.h) },
         { label: 'Max depth', value: len(cabin.d) },
         ...(carryOnLinearAddsConstraint && cabin.linearCm ? [{ label: 'Maximum total dimensions', value: `${cabin.linearCm} cm (L + W + H)` }] : []),
-        { label: 'Max weight', value: cabin.kg ? wt(cabin.kg) : 'No published limit' },
+        { label: 'Max weight', value: cabin.kg ? wt(cabin.kg) : 'No weight limit' },
       ];
 
   const checkedRows = info.manualCheck

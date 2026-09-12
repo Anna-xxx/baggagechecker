@@ -363,17 +363,17 @@ export const AIRLINES: Airline[] = [
     country: 'United States',
     website: 'https://www.flyfrontier.com',
     baggageUrl: 'https://www.flyfrontier.com/travel/travel-info/bag-options/',
-    carryOn: { w: 40.64, h: 60.96, d: 25.4, kg: 15.9, verified: true },
+    carryOn: { w: 41, h: 61, d: 25, kg: 16, verified: true },
     carryOnVariants: [
       { id: 'personal-only', label: 'Personal item only · no carry-on purchased', kg: 0, allowed: false, verified: true },
-      { id: 'carryon', label: 'Carry-on purchased / included · 35 lb', w: 40.64, h: 60.96, d: 25.4, kg: 15.9, verified: true },
+      { id: 'carryon', label: 'Carry-on purchased / included · 35 lb', w: 41, h: 61, d: 25, kg: 16, verified: true },
     ],
-    personal: { rule: 'dimensions', w: 35.56, h: 45.72, d: 20.32, kg: 15.9, verified: true },
-    checked: { kg: 18.1, total: 157, eco: 18.1, biz: 22.7, bags: 'Paid unless included with a bundle/status', verified: true, rule: 'linear', note: 'Frontier standard checked bag: 62 linear inches and 40 lb (18.1 kg). Certain bundles allow 50 lb (22.7 kg). Bags over 100 lb are not accepted.' },
+    personal: { rule: 'dimensions', w: 36, h: 46, d: 20, kg: 16, verified: true },
+    checked: { kg: 18, total: 157, eco: 18, biz: 23, bags: 'Paid unless included with a bundle/status', verified: true, rule: 'linear', note: 'Frontier standard checked bag: 62 linear inches and 40 lb (18 kg). Certain bundles allow 50 lb (23 kg). Bags over 100 lb are not accepted.' },
     classAllowances: [
-      { name: 'Basic', carryOn: 'Personal item included; carry-on optional', checkedBags: 'Optional', weightPerBag: '40 lb / 18.1 kg standard', verified: true },
-      { name: 'Economy / Premium bundle', carryOn: '1 carry-on · up to 35 lb / 15.9 kg', checkedBags: 'Check bundle', weightPerBag: '40 lb / 18.1 kg standard', verified: true },
-      { name: 'Business bundle', carryOn: '1 carry-on · up to 35 lb / 15.9 kg', checkedBags: '2 bags included', weightPerBag: '50 lb / 22.7 kg', verified: true },
+      { name: 'Basic', carryOn: 'Personal item included; carry-on optional', checkedBags: 'Optional', weightPerBag: '40 lb / 18 kg standard', verified: true },
+      { name: 'Economy / Premium bundle', carryOn: '1 carry-on · up to 35 lb / 16 kg', checkedBags: 'Check bundle', weightPerBag: '40 lb / 18 kg standard', verified: true },
+      { name: 'Business bundle', carryOn: '1 carry-on · up to 35 lb / 16 kg', checkedBags: '2 bags included', weightPerBag: '50 lb / 23 kg', verified: true },
     ],
   },
   {
@@ -471,9 +471,9 @@ export const AIRLINES: Airline[] = [
     country: 'United States',
     website: 'https://www.jetblue.com',
     baggageUrl: 'https://www.jetblue.com/help/carry-on-bags',
-    carryOn: { w: 35.56, h: 55.88, d: 22.86, kg: 0, verified: true },
-    personal: { rule: 'dimensions', w: 33, h: 43.2, d: 20.32, kg: 0, verified: true },
-    checked: { kg: 22.68, total: 158, eco: 22.68, biz: 32, bags: 'Fare-dependent; Mint/Mint Flex include 2 bags', verified: true, rule: 'linear', note: 'Standard JetBlue checked bag: 62 in / 158 cm total and 50 lb / 22.68 kg. Mint and Mint Flex include 2 bags up to 70 lb / 32 kg each.' },
+    carryOn: { w: 36, h: 56, d: 23, kg: 0, verified: true },
+    personal: { rule: 'dimensions', w: 33, h: 43, d: 20, kg: 0, verified: true },
+    checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Fare-dependent; Mint/Mint Flex include 2 bags', verified: true, rule: 'linear', note: 'Standard JetBlue checked bag: 62 in / 158 cm total and 50 lb / 23 kg. Mint and Mint Flex include 2 bags up to 70 lb / 32 kg each.' },
     classAllowances: [
       { name: 'Main Base / Main / Main Flex', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid on most routes', weightPerBag: '23 kg', note: 'Checked-bag price and inclusions vary by market; verify the booked fare.', verified: true },
       { name: 'EvenMore Base / EvenMore / EvenMore Flex', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid on most routes', weightPerBag: '23 kg', note: 'Some international markets may include a bag; use the booked fare allowance.', verified: true },
@@ -649,9 +649,9 @@ export const AIRLINES: Airline[] = [
     country: 'United States',
     website: 'https://www.southwest.com',
     baggageUrl: 'https://support.southwest.com/helpcenter/article/carryon-baggage-policy',
-    carryOn: { w: 40.64, h: 60.96, d: 25.4, kg: 0, verified: true },
+    carryOn: { w: 41, h: 61, d: 25, kg: 0, verified: true },
     personal: { rule: 'fitUnderSeat', kg: 0, verified: true },
-    checked: { kg: 22.68, total: 157.48, eco: 22.68, biz: 22.68, bags: 'Basic/Choice/Choice Preferred paid; Choice Extra includes 2', verified: true, rule: 'linear', note: 'Southwest standard checked bag limit is 62 linear inches (157.48 cm) and 50 lb (22.68 kg). Since April 9, 2026, Basic, Choice and Choice Preferred normally pay for checked bags; Choice Extra includes two.' },
+    checked: { kg: 23, total: 157, eco: 23, biz: 23, bags: 'Basic/Choice/Choice Preferred paid; Choice Extra includes 2', verified: true, rule: 'linear', note: 'Southwest standard checked bag limit is 62 linear inches (157 cm) and 50 lb (23 kg). Since April 9, 2026, Basic, Choice and Choice Preferred normally pay for checked bags; Choice Extra includes two.' },
     classAllowances: [
       { name: 'Basic', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid', weightPerBag: '23 kg standard', verified: true },
       { name: 'Choice', carryOn: '1 carry-on + 1 personal item', checkedBags: 'Paid', weightPerBag: '23 kg standard', verified: true },
@@ -671,11 +671,11 @@ export const AIRLINES: Airline[] = [
       { id: 'included', label: 'Premium Economy / Spirit First / purchased carry-on', w: 46, h: 56, d: 25, kg: 0, verified: true },
     ],
     personal: { rule: 'dimensions', w: 35, h: 45, d: 20, kg: 0, verified: true },
-    checked: { kg: 22.6, total: 158, eco: 22.6, biz: 22.6, bags: 'Value/Premium Economy paid; Spirit First includes 1', verified: true, rule: 'linear', note: 'Spirit standard checked bag: 158 cm total and 50 lb / 22.6 kg. Spirit First includes one checked bag; other travel options can add checked baggage separately.' },
+    checked: { kg: 23, total: 158, eco: 23, biz: 23, bags: 'Value/Premium Economy paid; Spirit First includes 1', verified: true, rule: 'linear', note: 'Spirit standard checked bag: 158 cm total and 50 lb / 23 kg. Spirit First includes one checked bag; other travel options can add checked baggage separately.' },
     classAllowances: [
-      { name: 'Value', carryOn: 'Personal item included; carry-on paid', checkedBags: 'Paid', weightPerBag: 'Up to 50 lb / 22.7 kg', verified: true },
-      { name: 'Premium Economy', carryOn: '1 carry-on + personal item', checkedBags: 'Paid', weightPerBag: 'Up to 50 lb / 22.7 kg', verified: true },
-      { name: 'Spirit First', carryOn: '1 carry-on + personal item', checkedBags: '1 bag included', weightPerBag: 'Up to 50 lb / 22.7 kg', verified: true },
+      { name: 'Value', carryOn: 'Personal item included; carry-on paid', checkedBags: 'Paid', weightPerBag: 'Up to 50 lb / 23 kg', verified: true },
+      { name: 'Premium Economy', carryOn: '1 carry-on + personal item', checkedBags: 'Paid', weightPerBag: 'Up to 50 lb / 23 kg', verified: true },
+      { name: 'Spirit First', carryOn: '1 carry-on + personal item', checkedBags: '1 bag included', weightPerBag: 'Up to 50 lb / 23 kg', verified: true },
     ],
   },
   {
@@ -865,4 +865,22 @@ export function airlineDomain(website: string): string {
 export function airlineLogoSources(code: string, website: string, width: number, height: number): string[] {
   const size = Math.max(width, height) * 2;
   return [`https://www.google.com/s2/favicons?domain=${airlineDomain(website)}&sz=${size}`, `https://pics.avs.io/${width * 2}/${height * 2}/${code}.png`];
+}
+
+const CARRYON_BASELINE = { h: 55, w: 40, d: 23, kg: 10 };
+
+/**
+ * Single strictness rule for carry-on values, relative to the common 55×40×23 cm / 10 kg baseline.
+ * Combines size and weight into one score so every card colors carry-on the same way.
+ */
+export function carryOnStrictnessColor(airline: Airline): string {
+  const c = airline.carryOn;
+  if (!c.kg) return '#0f1c2e';
+  const baseVolume = CARRYON_BASELINE.h * CARRYON_BASELINE.w * CARRYON_BASELINE.d;
+  const volumeRatio = (c.h * c.w * c.d) / baseVolume;
+  const weightRatio = c.kg / CARRYON_BASELINE.kg;
+  const score = (volumeRatio + weightRatio) / 2;
+  if (score > 1.05) return '#15803d';
+  if (score < 0.95) return '#b45309';
+  return '#0f1c2e';
 }

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { AIRLINES, airlineSlug, getAirlineBaggage, type Airline } from '@/lib/airlines';
+import { AIRLINES, airlineSlug, getAirlineBaggage, carryOnStrictnessColor, type Airline } from '@/lib/airlines';
 
 function volume(a: Airline) {
   const b = getAirlineBaggage(a).carryOn;
@@ -25,12 +25,13 @@ function personalItemSize(a: Airline): string {
   if (b.rule === 'either') return `${b.h} × ${b.w} × ${b.d} cm or ≤ ${b.linearCm} cm total`;
   if (b.rule === 'linear') return `≤ ${b.linearCm} cm total`;
   if (b.rule === 'fitUnderSeat') return 'Must fit under seat';
-  if (b.rule === 'notSeparate') return 'No separate item';
-  return 'No fixed size published';
+  if (b.rule === 'notSeparate') return 'Not included';
+  return 'Not published';
 }
 
 function checkedEconomySize(a: Airline): string {
   const checked = getAirlineBaggage(a).checked;
+  if (checked.manualCheck && !checked.total && !checked.eco) return 'Route / fare dependent';
   return `${checked.total} cm total · ${checked.eco} kg`;
 }
 
@@ -39,7 +40,7 @@ function carryOnSize(a: Airline): string {
   const dims = c.linearOnly
     ? `≤ ${c.linearCm} cm total`
     : `${c.h} × ${c.w} × ${c.d} cm${c.linearCm && c.w + c.h + c.d > c.linearCm ? ` · ≤ ${c.linearCm} cm total` : ''}`;
-  const weight = c.kg ? `${c.kg} kg${c.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : 'No published limit';
+  const weight = c.kg ? `${c.kg} kg${c.weightRule === 'combinedWithPersonal' ? ' combined' : ''}` : 'No weight limit';
   return `${dims} · ${weight}`;
 }
 
@@ -185,7 +186,7 @@ export function AirlinesClient() {
           {rows.map((a) => {
             const baggage = getAirlineBaggage(a);
             const on = fav.includes(a.code);
-            const kgColor = baggage.carryOn.kg >= 12 ? '#15803d' : baggage.carryOn.kg > 0 && baggage.carryOn.kg <= 7 ? '#b45309' : '#0f1c2e';
+            const carryOnColor = carryOnStrictnessColor(a);
             return (
               <div key={a.code} className="card-hover" style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -215,7 +216,7 @@ export function AirlinesClient() {
                         {ROW_ICONS[row.key]}
                       </svg>
                       <span style={{ flex: 'none', fontSize: 12, color: '#57677c', whiteSpace: 'nowrap' }}>{row.label}</span>
-                      <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, color: row.key === 'carryon' ? kgColor : undefined, fontVariantNumeric: 'tabular-nums', textAlign: 'right' }}>{row.value}</span>
+                      <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, color: row.key === 'carryon' ? carryOnColor : undefined, fontVariantNumeric: 'tabular-nums', textAlign: 'right' }}>{row.value}</span>
                     </div>
                   ))}
                 </div>

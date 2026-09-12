@@ -344,7 +344,7 @@ export function SizeCheckerClient() {
       const weightCheck = {
         key: 'KGC' as DimKey,
         label: 'Weight',
-        detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}` : 'No published limit',
+        detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}` : 'No weight limit',
         mark: weightOk ? '✓' : '✗',
         color: weightOk ? '#15803d' : '#b91c1c',
         over: !weightOk,
@@ -434,7 +434,7 @@ export function SizeCheckerClient() {
                 ? `${toDisp(L.maxSingleKg, 'KG')} ${wU} per item · ${toDisp(L.KG, 'KG')} ${wU} total`
                 : `${toDisp(L.KG, 'KG')} ${wU} total`
               : `${toDisp(L.KG, 'KG')} ${wU}`
-            : 'No published limit',
+            : 'No weight limit',
           mark: weightOk ? (combinedWeight ? '!' : '✓') : '✗',
           color: weightOk ? (combinedWeight ? '#b45309' : '#15803d') : '#b91c1c',
           over: !weightOk,
@@ -464,7 +464,7 @@ export function SizeCheckerClient() {
         {
           key: 'KG' as DimKey,
           label: 'Weight',
-          detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}` : 'No published limit',
+          detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}` : 'No weight limit',
           mark: weightOk ? '✓' : '✗',
           color: weightOk ? '#15803d' : '#b91c1c',
           over: !weightOk,
@@ -491,7 +491,7 @@ export function SizeCheckerClient() {
         {
           key: 'KG' as DimKey,
           label: 'Weight',
-          detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}` : 'No published limit',
+          detail: L.KG ? `${toDisp(L.KG, 'KG')} ${wU}` : 'No weight limit',
           mark: weightOk ? '✓' : '✗',
           color: weightOk ? '#15803d' : '#b91c1c',
           over: !weightOk,
@@ -524,9 +524,9 @@ export function SizeCheckerClient() {
               ? `${d(L.maxSingleKg)} per item · ${d(L.KG)} total`
               : L.KG
                 ? `${d(L.KG)} total`
-                : 'No published limit'
+                : 'No weight limit'
             : max >= 99
-              ? 'No published limit'
+              ? 'No weight limit'
               : d(max)
           : d(mine),
         mark: ok ? (combinedWeight ? '!' : '✓') : '✗',
@@ -585,13 +585,21 @@ export function SizeCheckerClient() {
           };
         }
 
+        if (type === 'personal' && L.rule === 'notSeparate') {
+          return {
+            airline: a,
+            checks: [],
+            limit: 'Not included',
+            verdict: 'Not included',
+            color: '#b45309',
+            bg: '#fdf8ee',
+            showAdvice: true,
+            advice: `${a.name} does not offer a separate personal item — everything must fit in your one cabin bag.`,
+          };
+        }
+
         if (type === 'personal' && L.rule && L.rule !== 'dimensions' && L.rule !== 'linear' && L.rule !== 'either') {
-          const ruleText =
-            L.rule === 'fitUnderSeat'
-              ? 'Must fit under the seat'
-              : L.rule === 'notSeparate'
-                ? 'No separate personal item published'
-                : 'No fixed personal-item dimensions published';
+          const ruleText = L.rule === 'fitUnderSeat' ? 'Must fit under seat' : 'Not published';
           return {
             airline: a,
             checks: [],
@@ -729,8 +737,8 @@ export function SizeCheckerClient() {
     if (type === 'personal') {
       if (L.rule === 'linear') return `≤ ${L.linearCm} cm total`;
       if (L.rule === 'fitUnderSeat') return 'Must fit under seat';
-      if (L.rule === 'notSeparate') return 'No separate item';
-      if (L.rule === 'unknown') return 'No fixed size published';
+      if (L.rule === 'notSeparate') return 'Not included';
+      if (L.rule === 'unknown') return 'Not published';
     }
     return `${L.W} × ${L.H} × ${L.D} cm`;
   };
