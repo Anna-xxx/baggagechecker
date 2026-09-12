@@ -207,8 +207,8 @@ export function AirlinesClient() {
 
                 <div>
                   {[
-                    { key: 'carryon' as const, label: 'Carry-on', value: carryOnSize(a) },
                     { key: 'personal' as const, label: 'Personal item', value: personalItemSize(a) },
+                    { key: 'carryon' as const, label: 'Carry-on', value: carryOnSize(a) },
                     { key: 'checked' as const, label: 'Checked, economy', value: checkedEconomySize(a) },
                   ].map((row, i) => (
                     <div key={row.key} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', rowGap: 3, gap: 9, padding: '10px 0', borderBottom: i < 2 ? '1px solid #f0f2f5' : 'none' }}>
