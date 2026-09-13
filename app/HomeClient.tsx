@@ -4,15 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { BagDiagram, type BagType } from '@/components/BagDiagram';
 import { DEFAULT_BAG, BAGGAGE_RULES_REVIEW_DATE } from '@/lib/airlines';
-
-type BagType = 'personal' | 'carryon' | 'checked';
-
-const BAG_STYLE: Record<BagType, { fill: string; sideFill: string; stroke: string; ink: string; radius: number }> = {
-  personal: { fill: '#e7effc', sideFill: '#d5e3fb', stroke: '#93b4ef', ink: '#1b4694', radius: 16 },
-  carryon: { fill: '#cff5ec', sideFill: '#b8efe1', stroke: '#5eddc4', ink: '#0b5f56', radius: 10 },
-  checked: { fill: '#fdf1dc', sideFill: '#f8e3bd', stroke: '#e9b969', ink: '#7a5406', radius: 10 },
-};
 
 const TYPE_TABS: { key: BagType; title: string; icon: React.ReactNode }[] = [
   {
@@ -103,18 +96,13 @@ export function HomeClient() {
   // checker's own toggles. The checker itself owns every fits/too-large decision from here.
   const sizeCheckerHref = `/size-checker?w=${width}&h=${height}&d=${depth}&kg=${weightKg}&unit=${unit === 'cm' ? 'metric' : 'in'}&type=${type}`;
 
-  const panelBoxScale = 90 + ((Math.min(100, Math.max(10, height)) - 10) / 90) * 130;
-  const boxScale = panelBoxScale / height;
-  const boxW = Math.max(92, Math.round(width * boxScale));
-  const boxH = Math.round(panelBoxScale);
-  const depthW = Math.max(30, Math.round(depth * boxScale));
 
   return (
     <div style={{ width: '100%', overflowX: 'hidden' }}>
       <Header />
 
       <section id="home" style={{ background: '#f7f8f9', padding: '56px 24px 64px' }}>
-        <div className="grid-split" style={{ maxWidth: 1200, margin: '0 auto', alignItems: 'center' }}>
+        <div className="grid-split" style={{ maxWidth: 1200, margin: '0 auto', alignItems: 'start' }}>
           <div>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#e3f5f2', color: '#0f766e', border: '1px solid #c6ebe5', borderRadius: 999, padding: '6px 12px', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fbbf47' }} /> Airline Luggage Sizes
@@ -168,26 +156,17 @@ export function HomeClient() {
                 ))}
               </div>
 
-              <div style={{ marginBottom: 14, background: '#f8fafc', borderRadius: 12, padding: '20px 16px 16px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 18, minHeight: 190 }}>
-                <div style={{ position: 'relative', width: boxW, height: boxH }}>
-                  <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', width: '34%', height: 16, border: '3px solid #94a3b8', borderBottom: 'none', borderRadius: '8px 8px 0 0' }} />
-                  <div style={{ position: 'absolute', inset: 0, background: BAG_STYLE[type].fill, border: `2px solid ${BAG_STYLE[type].stroke}`, borderRadius: BAG_STYLE[type].radius, zIndex: 1, overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', left: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />
-                    <div style={{ position: 'absolute', right: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />
-                    <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 12, fontWeight: 700, color: BAG_STYLE[type].ink, whiteSpace: 'nowrap' }}>
-                      {conv(width)}×{conv(height)}
-                    </span>
-                  </div>
-                  <div style={{ position: 'absolute', left: '18%', bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569', zIndex: 2 }} />
-                  <div style={{ position: 'absolute', right: '18%', bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569', zIndex: 2 }} />
-                </div>
-                <div style={{ position: 'relative', width: depthW, height: boxH }}>
-                  <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', width: 4, height: 16, borderRadius: 2, background: '#94a3b8' }} />
-                  <div style={{ position: 'absolute', inset: 0, background: BAG_STYLE[type].sideFill, border: `2px solid ${BAG_STYLE[type].stroke}`, borderRadius: BAG_STYLE[type].radius }} />
-                  <div style={{ position: 'absolute', left: 2, bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569' }} />
-                  <div style={{ position: 'absolute', right: 2, bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569' }} />
-                  <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 12, fontWeight: 700, color: BAG_STYLE[type].ink, whiteSpace: 'nowrap' }}>{conv(depth)}</span>
-                </div>
+              <div style={{ marginBottom: 14, background: '#f8fafc', borderRadius: 12, padding: '20px 16px 16px' }}>
+                <BagDiagram
+                  type={type}
+                  w={width}
+                  h={height}
+                  d={depth}
+                  widthLabel={`${conv(width)} ${unit}`}
+                  heightLabel={`${conv(height)} ${unit}`}
+                  depthLabel={`${conv(depth)} ${unit}`}
+                  minHeight={210}
+                />
               </div>
               {/* Echoes the input rather than judging it — Home never decides whether a bag fits. */}
               <p style={{ margin: '0 0 16px', fontSize: 12.5, fontWeight: 700, color: '#57677c', textAlign: 'center' }}>
@@ -243,7 +222,7 @@ export function HomeClient() {
         </div>
       </section>
 
-      <section id="sizes" style={{ background: '#f7f8f9', padding: '48px 24px 56px' }}>
+      <section id="sizes" style={{ background: '#f7f8f9', padding: '48px 24px 0' }}>
         <div style={{ maxWidth: 820, margin: '0 auto' }}>
           <h2 style={{ margin: '0 0 8px', textAlign: 'center', fontSize: 26, fontWeight: 800, letterSpacing: '-.02em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
             <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
@@ -262,7 +241,7 @@ export function HomeClient() {
         </div>
       </section>
 
-      <section style={{ background: '#f7f8f9', padding: '36px 24px' }}>
+      <section style={{ background: '#f7f8f9', padding: '48px 24px 56px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 26, textAlign: 'center' }}>
           <p style={{ margin: '0 0 16px', fontSize: 15, fontWeight: 700 }}>If your flight is delayed or cancelled, you could get $250–$600 compensation — check eligibility here.</p>
           <Link href="/size-checker" style={{ display: 'inline-block', padding: '11px 24px', background: '#fbbf47', color: '#3a2a05', borderRadius: 9, fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>
@@ -271,7 +250,7 @@ export function HomeClient() {
         </div>
       </section>
 
-      <section style={{ background: '#fff', padding: '8px 24px 56px' }}>
+      <section style={{ background: '#fff', padding: '56px 24px 0' }}>
         <div style={{ maxWidth: 820, margin: '0 auto' }}>
           <h2 style={{ margin: '0 0 14px', textAlign: 'center', fontSize: 24, fontWeight: 800, letterSpacing: '-.02em' }}>Understanding Luggage Size Requirements</h2>
           <p style={{ margin: '0 0 22px', textAlign: 'center', fontSize: 13.5, lineHeight: 1.75, color: '#3d4759', maxWidth: 620, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -285,7 +264,7 @@ export function HomeClient() {
         </div>
       </section>
 
-      <section style={{ background: '#fff', padding: '44px 24px 56px' }}>
+      <section style={{ background: '#fff', padding: '56px 24px 64px' }}>
         <div style={{ maxWidth: 820, margin: '0 auto' }}>
           <h2 style={{ margin: '0 0 24px', textAlign: 'center', fontSize: 24, fontWeight: 800, letterSpacing: '-.02em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
             <svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">

@@ -59,8 +59,6 @@ export function Footer({
           gap,
         }}
       >
-        {disclaimer && <p style={{ margin: '0 0 14px', fontSize: 12, lineHeight: 1.6, color: '#57677c' }}>{disclaimer}</p>}
-
         <div>
           {showWordmark ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: 14, marginBottom: 10 }}>
@@ -119,6 +117,12 @@ export function Footer({
             </>
           )}
       </div>
+
+      {/* A legal footnote, not a column — inside the grid it took the first slot and
+          pushed the brand into the second. */}
+      {disclaimer && (
+        <p style={{ maxWidth, margin: '28px auto 0', paddingTop: 18, borderTop: '1px solid #f0f2f5', fontSize: 12, lineHeight: 1.6, color: '#57677c' }}>{disclaimer}</p>
+      )}
     </footer>
   );
 }
