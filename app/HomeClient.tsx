@@ -4,9 +4,61 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { AIRLINES as ALL_AIRLINES, DEFAULT_BAG, BAGGAGE_RULES_REVIEW_DATE } from '@/lib/airlines';
+import { DEFAULT_BAG, BAGGAGE_RULES_REVIEW_DATE } from '@/lib/airlines';
 
-const BAG_STYLE = { fill: '#cff5ec', sideFill: '#b8efe1', stroke: '#5eddc4', ink: '#0b5f56', radius: 10 };
+type BagType = 'personal' | 'carryon' | 'checked';
+
+const BAG_STYLE: Record<BagType, { fill: string; sideFill: string; stroke: string; ink: string; radius: number }> = {
+  personal: { fill: '#e7effc', sideFill: '#d5e3fb', stroke: '#93b4ef', ink: '#1b4694', radius: 16 },
+  carryon: { fill: '#cff5ec', sideFill: '#b8efe1', stroke: '#5eddc4', ink: '#0b5f56', radius: 10 },
+  checked: { fill: '#fdf1dc', sideFill: '#f8e3bd', stroke: '#e9b969', ink: '#7a5406', radius: 10 },
+};
+
+const TYPE_TABS: { key: BagType; title: string; icon: React.ReactNode }[] = [
+  {
+    key: 'personal',
+    title: 'Personal Item',
+    icon: (
+      <>
+        <path d="M7 9a5 5 0 0 1 10 0v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" />
+        <path d="M10 9V7a2 2 0 0 1 4 0v2" />
+      </>
+    ),
+  },
+  {
+    key: 'carryon',
+    title: 'Carry-on',
+    icon: (
+      <>
+        <rect x="5" y="7" width="14" height="14" rx="2.5" />
+        <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
+      </>
+    ),
+  },
+  {
+    key: 'checked',
+    title: 'Checked Bag',
+    icon: (
+      <>
+        <rect x="4" y="6" width="16" height="15" rx="2.5" />
+        <path d="M9 6V3.6A.6.6 0 0 1 9.6 3h4.8a.6.6 0 0 1 .6.6V6" />
+        <path d="M9.6 11v6M14.4 11v6" />
+      </>
+    ),
+  },
+];
+
+const HERO_TITLE: Record<BagType, string> = {
+  personal: 'Enter Your Personal Item Dimensions',
+  carryon: 'Enter Your Carry-on Dimensions',
+  checked: 'Enter Your Checked Bag Dimensions',
+};
+
+const FIT_CAPTION: Record<BagType, string> = {
+  personal: 'Fits most airline personal item limits',
+  carryon: 'Fits most airline cabin sizers',
+  checked: 'Fits most airline checked bag limits',
+};
 
 const STEPS = [
   'Place your luggage upright on a flat surface.',
@@ -37,6 +89,7 @@ const FAQS = [
 
 export function HomeClient() {
   const [unit, setUnit] = useState<'cm' | 'in'>('cm');
+  const [type, setType] = useState<BagType>('carryon');
   const [width, setWidth] = useState(DEFAULT_BAG.w);
   const [height, setHeight] = useState(DEFAULT_BAG.h);
   const [depth, setDepth] = useState(DEFAULT_BAG.d);
@@ -52,9 +105,9 @@ export function HomeClient() {
     { label: 'Weight', min: 1, max: 32, value: weightKg, display: `${weightKg} kg`, onChange: setWeightKg },
   ];
 
-  // Values in the handoff URL are always metric integers; `unit` only sets the checker's
-  // display toggle. The checker itself owns every fits/too-large decision from here.
-  const sizeCheckerHref = `/size-checker?w=${width}&h=${height}&d=${depth}&kg=${weightKg}&unit=${unit === 'cm' ? 'metric' : 'in'}`;
+  // Values in the handoff URL are always metric integers; `unit` and `type` only set the
+  // checker's own toggles. The checker itself owns every fits/too-large decision from here.
+  const sizeCheckerHref = `/size-checker?w=${width}&h=${height}&d=${depth}&kg=${weightKg}&unit=${unit === 'cm' ? 'metric' : 'in'}&type=${type}`;
 
   const panelBoxScale = 90 + ((Math.min(100, Math.max(10, height)) - 10) / 90) * 130;
   const boxScale = panelBoxScale / height;
@@ -78,7 +131,7 @@ export function HomeClient() {
             </p>
             <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 22 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
-                <h2 style={{ margin: 0, fontSize: 14, fontWeight: 800, letterSpacing: '-.01em', color: '#57677c' }}>Your bag</h2>
+                <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800, letterSpacing: '-.01em' }}>{HERO_TITLE[type]}</h2>
                 <button
                   onClick={() => setUnit((u) => (u === 'cm' ? 'in' : 'cm'))}
                   className="btn-outline"
@@ -87,11 +140,29 @@ export function HomeClient() {
                   <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth={2.2} strokeLinecap="round">
                     <path d="M4 8h14l-3-3M20 16H6l3 3" />
                   </svg>{' '}
-                  {unit === 'cm' ? 'cm / kg' : 'in / lb'}
+                  {unit}
                 </button>
               </div>
 
-              <div className="range-compact" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px 20px', marginBottom: 18 }}>
+              <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+                {TYPE_TABS.map((t) => {
+                  const on = type === t.key;
+                  return (
+                    <button
+                      key={t.key}
+                      onClick={() => setType(t.key)}
+                      style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, border: `1px solid ${on ? '#14b8a6' : '#e4eaf1'}`, background: on ? '#f4faf9' : '#fff', borderRadius: 10, padding: '10px 6px', fontFamily: 'inherit', cursor: 'pointer' }}
+                    >
+                      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={on ? '#0f766e' : '#7a8798'} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
+                        {t.icon}
+                      </svg>
+                      <span style={{ fontSize: 11.5, fontWeight: 700, color: on ? '#0f766e' : '#57677c', textAlign: 'center' }}>{t.title}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="range-compact" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 14, marginBottom: 18 }}>
                 {dims.map((d) => (
                   <div key={d.label}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 }}>
@@ -103,43 +174,36 @@ export function HomeClient() {
                 ))}
               </div>
 
-              <div style={{ marginBottom: 18, background: '#f8fafc', borderRadius: 12, padding: '20px 16px 16px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 18, minHeight: 190 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                  <div style={{ position: 'relative', width: boxW, height: boxH }}>
-                    <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', width: '34%', height: 16, border: '3px solid #94a3b8', borderBottom: 'none', borderRadius: '8px 8px 0 0' }} />
-                    <div style={{ position: 'absolute', inset: 0, background: BAG_STYLE.fill, border: `2px solid ${BAG_STYLE.stroke}`, borderRadius: BAG_STYLE.radius, zIndex: 1, overflow: 'hidden' }}>
-                      <div style={{ position: 'absolute', left: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />
-                      <div style={{ position: 'absolute', right: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />
-                      <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 11, fontWeight: 700, color: BAG_STYLE.ink, whiteSpace: 'nowrap', textAlign: 'center', lineHeight: 1.5 }}>
-                        W {conv(width)} {unit}
-                        <br />H {conv(height)} {unit}
-                      </span>
-                    </div>
-                    <div style={{ position: 'absolute', left: '18%', bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569', zIndex: 2 }} />
-                    <div style={{ position: 'absolute', right: '18%', bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569', zIndex: 2 }} />
+              <div style={{ marginBottom: 14, background: '#f8fafc', borderRadius: 12, padding: '20px 16px 16px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 18, minHeight: 190 }}>
+                <div style={{ position: 'relative', width: boxW, height: boxH }}>
+                  <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', width: '34%', height: 16, border: '3px solid #94a3b8', borderBottom: 'none', borderRadius: '8px 8px 0 0' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: BAG_STYLE[type].fill, border: `2px solid ${BAG_STYLE[type].stroke}`, borderRadius: BAG_STYLE[type].radius, zIndex: 1, overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', left: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />
+                    <div style={{ position: 'absolute', right: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />
+                    <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 12, fontWeight: 700, color: BAG_STYLE[type].ink, whiteSpace: 'nowrap' }}>
+                      {conv(width)}×{conv(height)}×{conv(depth)}
+                    </span>
                   </div>
-                  <span style={{ fontSize: 10.5, color: '#94a3b8', fontWeight: 600 }}>front</span>
+                  <div style={{ position: 'absolute', left: '18%', bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569', zIndex: 2 }} />
+                  <div style={{ position: 'absolute', right: '18%', bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569', zIndex: 2 }} />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                  <div style={{ position: 'relative', width: depthW, height: boxH }}>
-                    <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', width: 4, height: 16, borderRadius: 2, background: '#94a3b8' }} />
-                    <div style={{ position: 'absolute', inset: 0, background: BAG_STYLE.sideFill, border: `2px solid ${BAG_STYLE.stroke}`, borderRadius: BAG_STYLE.radius }} />
-                    <div style={{ position: 'absolute', left: 2, bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569' }} />
-                    <div style={{ position: 'absolute', right: 2, bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569' }} />
-                    <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 11, fontWeight: 700, color: BAG_STYLE.ink, whiteSpace: 'nowrap' }}>D {conv(depth)}</span>
-                  </div>
-                  <span style={{ fontSize: 10.5, color: '#94a3b8', fontWeight: 600 }}>side, same bag</span>
+                <div style={{ position: 'relative', width: depthW, height: boxH }}>
+                  <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', width: 4, height: 16, borderRadius: 2, background: '#94a3b8' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: BAG_STYLE[type].sideFill, border: `2px solid ${BAG_STYLE[type].stroke}`, borderRadius: BAG_STYLE[type].radius }} />
+                  <div style={{ position: 'absolute', left: 2, bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569' }} />
+                  <div style={{ position: 'absolute', right: 2, bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569' }} />
+                  <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 12, fontWeight: 700, color: BAG_STYLE[type].ink, whiteSpace: 'nowrap' }}>{conv(depth)}</span>
                 </div>
               </div>
+              <p style={{ margin: '0 0 16px', fontSize: 12.5, fontWeight: 700, color: '#b45309', textAlign: 'center' }}>{FIT_CAPTION[type]}</p>
 
               <Link
                 href={sizeCheckerHref}
                 className="btn-primary"
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: 13, background: '#fbbf47', color: '#3a2a05', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 800, textDecoration: 'none' }}
               >
-                Check against {ALL_AIRLINES.length} airlines
+                Check Baggage Size
               </Link>
-              <p style={{ margin: '10px 0 0', fontSize: 11, color: '#8494a8', textAlign: 'center' }}>Opens the size checker with these measurements filled in.</p>
             </div>
           </div>
 
