@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { AIRLINES, airlineSlug, getAirlineBaggage, carryOnStrictnessColor, BAGGAGE_RULES_REVIEW_DATE, type Airline } from '@/lib/airlines';
+import { AIRLINES, airlineSlug, getAirlineBaggage, carryOnStrictness, BAGGAGE_RULES_REVIEW_DATE, type Airline } from '@/lib/airlines';
 
 function volume(a: Airline) {
   const b = getAirlineBaggage(a).carryOn;
@@ -191,7 +191,8 @@ export function AirlinesClient() {
           {rows.map((a) => {
             const baggage = getAirlineBaggage(a);
             const on = fav.includes(a.code);
-            const carryOnColor = carryOnStrictnessColor(a);
+            const strictness = carryOnStrictness(a);
+            const carryOnNote = strictness === 'roomier' ? 'Roomier' : strictness === 'tighter' ? 'Tighter' : '';
             return (
               <div key={a.code} className="card-hover" style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -221,7 +222,14 @@ export function AirlinesClient() {
                         {ROW_ICONS[row.key]}
                       </svg>
                       <span style={{ flex: 'none', fontSize: 12, color: '#57677c', whiteSpace: 'nowrap' }}>{row.label}</span>
-                      <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, color: row.key === 'carryon' ? carryOnColor : undefined, fontVariantNumeric: 'tabular-nums', textAlign: 'right' }}>{row.value}</span>
+                      <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'baseline', gap: 7, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                        {row.key === 'carryon' && carryOnNote && (
+                          <span style={{ flex: 'none', fontSize: 10.5, fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase', color: '#57677c', background: '#eef2f7', borderRadius: 999, padding: '2px 7px' }}>
+                            {carryOnNote}
+                          </span>
+                        )}
+                        <span style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums', textAlign: 'right' }}>{row.value}</span>
+                      </span>
                     </div>
                   ))}
                 </div>

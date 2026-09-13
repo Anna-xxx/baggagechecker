@@ -859,17 +859,21 @@ export function airlineLogoSources(code: string, website: string, width: number,
 const CARRYON_BASELINE = { h: 55, w: 40, d: 23, kg: 10 };
 
 /**
- * Single strictness rule for carry-on values, relative to the common 55×40×23 cm / 10 kg baseline.
- * Combines size and weight into one score so every card colors carry-on the same way.
+ * How this carrier's carry-on allowance compares with the common 55×40×23 cm / 10 kg
+ * baseline, combining size and weight into one score.
+ *
+ * Returns a word rather than a colour on purpose: green and amber belong to the size
+ * checker's verdicts, and next to one, a green allowance reads as "your bag fits" —
+ * which this says nothing about. It describes the carrier, not the reader's bag.
  */
-export function carryOnStrictnessColor(airline: Airline): string {
+export function carryOnStrictness(airline: Airline): 'roomier' | 'standard' | 'tighter' {
   const c = airline.carryOn;
-  if (!c.kg) return '#0f1c2e';
+  if (!c.kg) return 'standard';
   const baseVolume = CARRYON_BASELINE.h * CARRYON_BASELINE.w * CARRYON_BASELINE.d;
   const volumeRatio = (c.h * c.w * c.d) / baseVolume;
   const weightRatio = c.kg / CARRYON_BASELINE.kg;
   const score = (volumeRatio + weightRatio) / 2;
-  if (score > 1.05) return '#15803d';
-  if (score < 0.95) return '#b45309';
-  return '#0f1c2e';
+  if (score > 1.05) return 'roomier';
+  if (score < 0.95) return 'tighter';
+  return 'standard';
 }

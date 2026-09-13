@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { airlineBaggageUrl, getAirlineBaggage, type Airline } from '@/lib/airlines';
+import { airlineBaggageUrl, getAirlineBaggage, BAGGAGE_RULES_REVIEW_DATE, type Airline } from '@/lib/airlines';
 
 type Bag = { w: number; h: number; d: number; kg: number };
 type BagKind = 'carryon' | 'personal' | 'checked';
@@ -195,14 +195,6 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
     note: row.note,
   }));
 
-  const fees = [
-    { label: 'Extra checked bag', value: '$75 – $120' },
-    { label: 'Overweight (23–32 kg)', value: '$100' },
-    { label: 'Overweight (32–45 kg)', value: '$200' },
-    { label: info.total ? `Oversize (over ${len(info.total)})` : 'Oversize (route/fare dependent)', value: '$150' },
-    { label: 'Gate-checked cabin bag', value: '$70' },
-  ];
-
   const faqs = [
     {
       question: `Does ${airline.name} allow free cabin baggage?`,
@@ -385,18 +377,72 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
           {sourceLabel}
         </p>
 
+        {/* The cards above show the standard allowance. For carriers whose fare decides
+            whether a cabin bag is included at all, that alone would mislead. */}
+        {airline.carryOnVariants && airline.carryOnVariants.length > 1 && (
+          <section style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24, marginBottom: 20 }}>
+            <h2 style={{ margin: '0 0 6px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Cabin allowance by fare</h2>
+            <p style={{ margin: '0 0 16px', fontSize: 12.5, lineHeight: 1.65, color: '#57677c' }}>
+              The figures above are the standard allowance. On {airline.name} it changes with the fare or cabin you book.
+            </p>
+            <div style={{ display: 'grid', gap: 10 }}>
+              {airline.carryOnVariants.map((v) => {
+                const excluded = v.allowed === false;
+                return (
+                  <div
+                    key={v.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'baseline',
+                      justifyContent: 'space-between',
+                      gap: 16,
+                      flexWrap: 'wrap',
+                      background: '#f8fafc',
+                      borderLeft: `3px solid ${excluded ? '#c4cedb' : '#c6ebe5'}`,
+                      borderRadius: '0 10px 10px 0',
+                      padding: '12px 15px',
+                    }}
+                  >
+                    <span style={{ fontSize: 12.5, fontWeight: 700, color: '#0f1c2e' }}>{v.label.split(' · ')[0]}</span>
+                    <span style={{ fontSize: 12.5, color: '#57677c', whiteSpace: 'nowrap' }}>
+                      {excluded
+                        ? 'Personal item only — no cabin bag'
+                        : v.w && v.h && v.d
+                          ? `${v.h} × ${v.w} × ${v.d} cm${v.kg ? ` · ${wt(v.kg)}` : ''}`
+                          : v.kg
+                            ? wt(v.kg)
+                            : 'Included'}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 18, marginBottom: 20 }}>
           <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24 }}>
-            <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Excess &amp; Oversize Fees (USD)</h2>
-            <div style={{ background: '#f8fafc', borderRadius: 11, padding: '4px 16px' }}>
-              {fees.map((f) => (
-                <div key={f.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, padding: '12px 0', borderBottom: '1px solid #eef2f6' }}>
-                  <span style={{ fontSize: 12.5, color: '#57677c' }}>{f.label}</span>
-                  <span style={{ fontSize: 12.5, fontWeight: 800, whiteSpace: 'nowrap' }}>{f.value}</span>
-                </div>
-              ))}
+            <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Excess &amp; Oversize Fees</h2>
+            {/* We publish no fee figures because we have none verified. A table of invented
+                numbers identical for every carrier was worse than an honest gap. */}
+            <div style={{ background: '#f8fafc', borderRadius: 11, padding: '16px 18px', display: 'grid', gap: 9, fontSize: 12.5, lineHeight: 1.65, color: '#57677c' }}>
+              <span>{airline.name} sets its own excess, overweight and gate-bag charges, and they change by route, fare and where you pay.</span>
+              <span>We only publish figures we have checked against the carrier, and these are not among them — so the current amounts are on {airline.name}&apos;s own site.</span>
             </div>
-            <p style={{ margin: '14px 0 0', fontSize: 12, lineHeight: 1.65, color: '#7a8798' }}>Fees vary by route and are usually cheaper when paid online before travel than at the airport.</p>
+            <a
+              href={airline.baggageUrl || airline.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 14, border: '1px solid #e4eaf1', background: '#fff', borderRadius: 10, padding: '10px 16px', fontSize: 12.5, fontWeight: 700, color: '#0f1c2e', textDecoration: 'none' }}
+            >
+              Check {airline.name} baggage fees
+              <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14" />
+                <path d="M13 6l6 6-6 6" />
+              </svg>
+            </a>
+            <p style={{ margin: '14px 0 0', fontSize: 12, lineHeight: 1.65, color: '#57677c' }}>Charges are usually lower when paid online before travel than at the airport.</p>
           </div>
           <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24 }}>
             <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Good to Know</h2>
@@ -411,7 +457,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
                 <circle cx="12" cy="12" r="9" />
                 <path d="M12 7v5l3 2" />
               </svg>
-              Baggage rules last updated June 2026
+              Baggage rules last updated {BAGGAGE_RULES_REVIEW_DATE}
             </div>
           </div>
         </section>
