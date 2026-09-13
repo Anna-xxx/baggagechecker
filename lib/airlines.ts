@@ -357,7 +357,7 @@ export const AIRLINES: Airline[] = [
     country: 'Ethiopia',
     website: 'https://www.ethiopianairlines.com',
     baggageUrl: 'https://www.ethiopianairlines.com/information/baggage-information/carry-on-baggage',
-    carryOn: { w: 40, h: 55, d: 20, kg: 7, verified: true },
+    carryOn: { w: 40, h: 55, d: 23, kg: 7, verified: true },
     personal: { rule: 'fitUnderSeat', kg: 3, verified: false },
     checked: { kg: 23, total: 158, eco: 23, biz: 32, bags: 'Usually 2 pieces; route/fare exceptions apply', verified: true, rule: 'linear', note: 'Standard international piece limit is 158 cm. Economy: 23 kg per piece. Cloud Nine: up to 32 kg per piece, with some routes/fare products using different piece counts.' },
     classAllowances: [
@@ -376,7 +376,7 @@ export const AIRLINES: Airline[] = [
       { id: 'personal-only', label: 'Personal item only · no carry-on purchased', kg: 0, allowed: false, verified: true },
       { id: 'carryon', label: 'Carry-on purchased / included · 35 lb', w: 41, h: 61, d: 25, kg: 16, verified: true },
     ],
-    personal: { rule: 'dimensions', w: 36, h: 46, d: 20, kg: 16, verified: true },
+    personal: { rule: 'dimensions', w: 46, h: 36, d: 20, kg: 16, verified: true },
     checked: { kg: 18, total: 157, eco: 18, biz: 23, bags: 'Paid unless included with a bundle/status', verified: true, rule: 'linear', note: 'Frontier standard checked bag: 62 linear inches and 40 lb (18 kg). Certain bundles allow 50 lb (23 kg). Bags over 100 lb are not accepted.' },
     classAllowances: [
       { name: 'Basic', carryOn: 'Personal item included; carry-on optional', checkedBags: 'Optional', weightPerBag: '40 lb / 18 kg standard', verified: true },
@@ -668,25 +668,6 @@ export const AIRLINES: Airline[] = [
     ],
   },
   {
-    name: 'Spirit Airlines',
-    code: 'NK',
-    country: 'United States',
-    website: 'https://www.spirit.com',
-    baggageUrl: 'https://www.spirit.com',
-    carryOn: { w: 46, h: 56, d: 25, kg: 0, verified: true },
-    carryOnVariants: [
-      { id: 'value', label: 'Value · personal item only', kg: 0, allowed: false, verified: true },
-      { id: 'included', label: 'Premium Economy / Spirit First / purchased carry-on', w: 46, h: 56, d: 25, kg: 0, verified: true },
-    ],
-    personal: { rule: 'dimensions', w: 35, h: 45, d: 20, kg: 0, verified: true },
-    checked: { kg: 23, total: 158, eco: 23, biz: 23, bags: 'Value/Premium Economy paid; Spirit First includes 1', verified: true, rule: 'linear', note: 'Spirit standard checked bag: 158 cm total and 50 lb / 23 kg. Spirit First includes one checked bag; other travel options can add checked baggage separately.' },
-    classAllowances: [
-      { name: 'Value', carryOn: 'Personal item included; carry-on paid', checkedBags: 'Paid', weightPerBag: 'Up to 50 lb / 23 kg', verified: true },
-      { name: 'Premium Economy', carryOn: '1 carry-on + personal item', checkedBags: 'Paid', weightPerBag: 'Up to 50 lb / 23 kg', verified: true },
-      { name: 'Spirit First', carryOn: '1 carry-on + personal item', checkedBags: '1 bag included', weightPerBag: 'Up to 50 lb / 23 kg', verified: true },
-    ],
-  },
-  {
     name: 'TAP Air Portugal',
     code: 'TP',
     country: 'Portugal',
@@ -743,7 +724,7 @@ export const AIRLINES: Airline[] = [
     country: 'Uzbekistan',
     website: 'https://www.uzairways.com',
     baggageUrl: 'https://www.uzairways.com/en/press-center/news/uzbekistan-airways-hand-baggage-regulations',
-    carryOn: { w: 35, h: 55, d: 25, kg: 8, verified: true, linearCm: 115 },
+    carryOn: { w: 45, h: 56, d: 25, kg: 8, verified: true, linearCm: 115 },
     carryOnVariants: [
       { id: 'economy', label: 'Economy · 8 kg', w: 35, h: 55, d: 25, kg: 8, linearCm: 115, verified: true },
       { id: 'business', label: 'Business · 10 kg', w: 35, h: 55, d: 25, kg: 10, linearCm: 115, verified: true },

@@ -142,3 +142,42 @@ input[type='text']:focus {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+/* Shared responsive grids. Every multi-column layout starts as one column and
+   widens at these two breakpoints, so pages don't each invent their own and
+   silently stay multi-column on a phone. */
+.grid-split,
+.grid-pair,
+.grid-trio {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.grid-split {
+  gap: 28px;
+}
+
+.grid-pair {
+  gap: 18px;
+}
+
+.grid-trio {
+  gap: 20px;
+}
+
+@media (min-width: 620px) {
+  .grid-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 820px) {
+  .grid-split {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 48px;
+  }
+
+  .grid-trio {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

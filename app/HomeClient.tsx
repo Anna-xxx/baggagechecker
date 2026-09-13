@@ -54,12 +54,6 @@ const HERO_TITLE: Record<BagType, string> = {
   checked: 'Enter Your Checked Bag Dimensions',
 };
 
-const FIT_CAPTION: Record<BagType, string> = {
-  personal: 'Fits most airline personal item limits',
-  carryon: 'Fits most airline cabin sizers',
-  checked: 'Fits most airline checked bag limits',
-};
-
 const STEPS = [
   'Place your luggage upright on a flat surface.',
   'Use a tape measure to measure from the ground to the top handle (height).',
@@ -120,7 +114,7 @@ export function HomeClient() {
       <Header />
 
       <section id="home" style={{ background: '#f7f8f9', padding: '56px 24px 64px' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 48, alignItems: 'center' }}>
+        <div className="grid-split" style={{ maxWidth: 1200, margin: '0 auto', alignItems: 'center' }}>
           <div>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#e3f5f2', color: '#0f766e', border: '1px solid #c6ebe5', borderRadius: 999, padding: '6px 12px', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fbbf47' }} /> Airline Luggage Sizes
@@ -181,7 +175,7 @@ export function HomeClient() {
                     <div style={{ position: 'absolute', left: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />
                     <div style={{ position: 'absolute', right: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />
                     <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 12, fontWeight: 700, color: BAG_STYLE[type].ink, whiteSpace: 'nowrap' }}>
-                      {conv(width)}×{conv(height)}×{conv(depth)}
+                      {conv(width)}×{conv(height)}
                     </span>
                   </div>
                   <div style={{ position: 'absolute', left: '18%', bottom: -8, width: 10, height: 10, borderRadius: '50%', background: '#475569', zIndex: 2 }} />
@@ -195,7 +189,10 @@ export function HomeClient() {
                   <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 12, fontWeight: 700, color: BAG_STYLE[type].ink, whiteSpace: 'nowrap' }}>{conv(depth)}</span>
                 </div>
               </div>
-              <p style={{ margin: '0 0 16px', fontSize: 12.5, fontWeight: 700, color: '#b45309', textAlign: 'center' }}>{FIT_CAPTION[type]}</p>
+              {/* Echoes the input rather than judging it — Home never decides whether a bag fits. */}
+              <p style={{ margin: '0 0 16px', fontSize: 12.5, fontWeight: 700, color: '#57677c', textAlign: 'center' }}>
+                {conv(width)} × {conv(height)} × {conv(depth)} {unit} · {weightKg} kg
+              </p>
 
               <Link
                 href={sizeCheckerHref}
@@ -231,7 +228,7 @@ export function HomeClient() {
       </section>
 
       <section style={{ padding: '48px 24px', background: '#fff' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 20 }}>
+        <div className="grid-trio" style={{ maxWidth: 1200, margin: '0 auto' }}>
           {NAV_CARDS.map((card) => (
             <Link key={card.title} href={card.href} className="card-hover" style={{ display: 'block', border: '1px solid #edf0f3', borderRadius: 14, padding: 22, textDecoration: 'none', color: 'inherit' }}>
               <span style={{ display: 'flex', width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center', background: card.bg, marginBottom: 20 }}>

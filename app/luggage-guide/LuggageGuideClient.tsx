@@ -162,7 +162,7 @@ export function LuggageGuideClient() {
               {metric ? 'cm / kg' : 'in / lb'}
             </button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
+          <div className="grid-pair">
             {CLASSES.map((c) => (
               <div key={c.title} style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 22 }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
