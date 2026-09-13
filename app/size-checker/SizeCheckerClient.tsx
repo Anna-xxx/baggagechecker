@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, type PersonalItemRule, type CarryOnVariant } from '@/lib/airlines';
+import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, DEFAULT_BAG, type PersonalItemRule, type CarryOnVariant } from '@/lib/airlines';
 
 type Limits = { H: number; W: number; D: number; KG: number; maxSingleKg?: number; allowed?: boolean; rule?: PersonalItemRule; checkedRule?: 'linear' | 'dimensions'; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none'; verified?: boolean };
 type BagType = 'carryon' | 'personal' | 'checked';
@@ -252,16 +252,19 @@ export function SizeCheckerClient() {
   const paramType = searchParams.get('type');
   const initialType: BagType = VALID_TYPES.includes(paramType as BagType) ? (paramType as BagType) : 'carryon';
   const paramKg = Number(searchParams.get('kg')) || 0;
+  // A handoff from Home carries w/h/d/kg — seed inputs from them and land straight on results.
+  // No such params (a normal direct visit) leaves the form empty, unchanged from before.
+  const hasHandoffParams = Boolean(searchParams.get('w') || searchParams.get('h') || searchParams.get('d') || searchParams.get('kg'));
 
   const [metric, setMetric] = useState(searchParams.get('unit') !== 'in');
-  const [W, setW] = useState(() => Number(searchParams.get('w')) || 40);
-  const [H, setH] = useState(() => Number(searchParams.get('h')) || 55);
-  const [D, setD] = useState(() => Number(searchParams.get('d')) || 20);
-  const [KG, setKG] = useState(() => (initialType !== 'checked' && paramKg ? paramKg : 10));
+  const [W, setW] = useState(() => Number(searchParams.get('w')) || DEFAULT_BAG.w);
+  const [H, setH] = useState(() => Number(searchParams.get('h')) || DEFAULT_BAG.h);
+  const [D, setD] = useState(() => Number(searchParams.get('d')) || DEFAULT_BAG.d);
+  const [KG, setKG] = useState(() => (initialType !== 'checked' && paramKg ? paramKg : DEFAULT_BAG.kg));
   const [KGC, setKGC] = useState(() => (initialType === 'checked' && paramKg ? paramKg : 20));
   const [type, setType] = useState<BagType>(initialType);
-  const [sel, setSel] = useState<string[]>([]);
-  const [checked, setChecked] = useState(false);
+  const [sel, setSel] = useState<string[]>(() => (hasHandoffParams ? AIRLINES.map((a) => a.name) : []));
+  const [checked, setChecked] = useState(hasHandoffParams);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [checkedVariantByCode, setCheckedVariantByCode] = useState<Record<string, string>>({});
@@ -654,11 +657,14 @@ export function SizeCheckerClient() {
 
         if (type === 'carryon' && L.manualCheck && AIRCRAFT_SIZE_VARIANTS[a.code]) {
           const variants = AIRCRAFT_SIZE_VARIANTS[a.code];
-          const total = W + H + D;
           const combinedCap = L.weightRule === 'combinedWithPersonal';
+          // Each variant's own w/h/d already define its physical sizer-frame box; some airlines
+          // (ANA, JAL) additionally publish a "cm total" figure that doesn't actually add up with
+          // their own box max (55+40+25=120, not 115) — the box, not that total, is what's checked
+          // at the gate, so only the three dimensions and weight gate the fit here.
           const evaluated = variants.map((v) => ({
             ...v,
-            fits: W <= v.w && H <= v.h && D <= v.d && total <= v.linearCm && (!v.kg || (combinedCap ? KG < v.kg : KG <= v.kg)),
+            fits: W <= v.w && H <= v.h && D <= v.d && (!v.kg || (combinedCap ? KG < v.kg : KG <= v.kg)),
           }));
           const passing = evaluated.filter((v) => v.fits);
           const failing = evaluated.filter((v) => !v.fits);
