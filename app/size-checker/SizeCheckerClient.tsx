@@ -247,6 +247,17 @@ function clamp(v: number, lo: number, hi: number) {
 
 const VALID_TYPES: BagType[] = ['carryon', 'personal', 'checked'];
 
+// Answer-first ordering: what fits, what might, what doesn't — not an alphabetical directory.
+const VERDICT_ORDER = ['Fits', 'Fits on most flights', 'Check weight', 'Needs manual check', 'Not included', 'Too large'] as const;
+const VERDICT_GROUP_LABEL: Record<string, string> = {
+  Fits: 'Fits',
+  'Fits on most flights': 'Depends on your aircraft',
+  'Check weight': 'Fits — check combined weight',
+  'Needs manual check': 'Needs manual check',
+  'Not included': 'Not included',
+  'Too large': 'Too large',
+};
+
 export function SizeCheckerClient() {
   const searchParams = useSearchParams();
   const paramType = searchParams.get('type');
@@ -314,14 +325,21 @@ export function SizeCheckerClient() {
 
   const chosen = AIRLINES.filter((a) => sel.includes(a.name));
 
+  // A route/fare/class always has *some* value even before the user picks one, so default to
+  // the first option — the chip row lets them switch, but a real verdict is never blocked on
+  // a choice they haven't made yet.
   const selectedCheckedVariant = (code: string) => {
-    const id = checkedVariantByCode[code];
-    return CHECKED_VARIANTS[code]?.find((v) => v.id === id);
+    const variants = CHECKED_VARIANTS[code];
+    if (!variants?.length) return undefined;
+    const id = checkedVariantByCode[code] ?? variants[0].id;
+    return variants.find((v) => v.id === id) ?? variants[0];
   };
 
   const selectedCarryOnVariant = (a: Airline) => {
-    const id = carryOnVariantByCode[a.code];
-    return a.carryOnVariants?.find((v) => v.id === id);
+    const variants = a.carryOnVariants;
+    if (!variants?.length) return undefined;
+    const id = carryOnVariantByCode[a.code] ?? variants[0].id;
+    return variants.find((v) => v.id === id) ?? variants[0];
   };
 
   const carryOnVariantLimits = (a: Airline): Limits => {
@@ -581,63 +599,119 @@ export function SizeCheckerClient() {
     });
   };
 
+  // Rows where no fixed limit exists to check against (route/fare/aircraft-dependent, or a bag
+  // type the airline doesn't offer) still show the same four fields as every other row, just
+  // with a neutral, non-comparing mark — the explanation goes in the note below, never in place
+  // of the grid.
+  const pillShortLabel = (label: string) => {
+    const parts = label.split(' · ');
+    return parts.length > 1 ? parts.slice(0, -1).join(' · ') : label;
+  };
+
+  const neutralChecks = (mark: '–' | '?') => {
+    const fields: { key: DimKey; label: string }[] = [
+      { key: 'W', label: 'Width' },
+      { key: 'H', label: 'Height' },
+      { key: 'D', label: 'Depth' },
+      { key: weightKey, label: 'Weight' },
+    ];
+    return fields.map(({ key, label }) => ({
+      key,
+      label,
+      detail: `${toDisp(base[key], key)} ${key === 'KG' || key === 'KGC' ? wU : lenU}`,
+      mark,
+      color: '#8494a8',
+      over: false,
+      excess: '',
+    }));
+  };
+
+  const aircraftChecks = (variants: AircraftSizeVariant[], combinedCap: boolean) => {
+    const dims: { key: 'W' | 'H' | 'D'; label: string; mine: number; axis: 'w' | 'h' | 'd' }[] = [
+      { key: 'W', label: 'Width', mine: W, axis: 'w' },
+      { key: 'H', label: 'Height', mine: H, axis: 'h' },
+      { key: 'D', label: 'Depth', mine: D, axis: 'd' },
+    ];
+    const dimChecks = dims.map((d) => {
+      const limits = variants.map((v) => v[d.axis]);
+      const oks = limits.map((lim) => d.mine <= lim);
+      const allOk = oks.every(Boolean);
+      const noneOk = oks.every((o) => !o);
+      const uniform = limits.every((l) => l === limits[0]);
+      const limitText = uniform ? `${toDisp(limits[0], d.key)} ${lenU}` : `${limits.map((l) => toDisp(l, d.key)).join('–')} ${lenU}`;
+      return {
+        key: d.key as DimKey,
+        label: d.label,
+        detail: `${toDisp(d.mine, d.key)} ${lenU}`,
+        mark: allOk ? '✓' : noneOk ? '✗' : '!',
+        color: allOk ? '#15803d' : noneOk ? '#b91c1c' : '#b45309',
+        over: noneOk,
+        excess: allOk ? '' : `max ${limitText}${uniform ? '' : ' depending on aircraft'}`,
+      };
+    });
+    const weightLimits = variants.map((v) => v.kg);
+    const weightOks = variants.map((v) => !v.kg || (combinedCap ? KG < v.kg : KG <= v.kg));
+    const wAllOk = weightOks.every(Boolean);
+    const wNoneOk = weightOks.every((o) => !o);
+    const uniformW = weightLimits.every((l) => l === weightLimits[0]);
+    const weightCheck = {
+      key: 'KG' as DimKey,
+      label: 'Weight',
+      detail: `${toDisp(KG, 'KG')} ${wU}`,
+      mark: wAllOk ? '✓' : wNoneOk ? '✗' : '!',
+      color: wAllOk ? '#15803d' : wNoneOk ? '#b91c1c' : '#b45309',
+      over: wNoneOk,
+      excess: wAllOk ? '' : `max ${uniformW ? `${toDisp(weightLimits[0], 'KG')} ${wU}` : weightLimits.map((l) => `${toDisp(l, 'KG')} ${wU}`).join('–')}${uniformW ? '' : ' depending on aircraft'}`,
+    };
+    return [...dimChecks, weightCheck];
+  };
+
   const results = checked
     ? chosen.map((a) => {
         const L = type === 'checked' ? checkedVariantLimits(a) : type === 'carryon' ? carryOnVariantLimits(a) : a.limits[type];
-        const requiredVariants = type === 'checked' ? CHECKED_VARIANTS[a.code] : undefined;
         const selectedVariant = type === 'checked' ? selectedCheckedVariant(a.code) : undefined;
-        const requiredCarryOnVariants = type === 'carryon' ? a.carryOnVariants : undefined;
         const selectedCarryOn = type === 'carryon' ? selectedCarryOnVariant(a) : undefined;
 
-        if (type === 'checked' && requiredVariants?.length && !selectedVariant) {
-          return {
-            airline: a,
-            checks: [],
-            limit: 'Choose route / allowance',
-            verdict: 'Check airline',
-            color: '#b45309',
-            bg: '#fdf8ee',
-            showAdvice: true,
-            advice: `Choose the route or checked-baggage allowance for ${a.name} above before checking this bag.`,
-          };
-        }
-
-        if (type === 'carryon' && requiredCarryOnVariants?.length && !selectedCarryOn) {
-          return {
-            airline: a,
-            checks: [],
-            limit: 'Choose fare / route / class',
-            verdict: 'Check airline',
-            color: '#b45309',
-            bg: '#fdf8ee',
-            showAdvice: true,
-            advice: `Choose the fare, route or cabin class for ${a.name} above before checking this bag.`,
-          };
-        }
+        // A fare/route/class picker lives inside this airline's own card — defaulted to its
+        // first option above, so switching it here just recomputes this row, live.
+        const picker =
+          type === 'carryon' && (a.carryOnVariants?.length ?? 0) > 1 && selectedCarryOn
+            ? {
+                options: a.carryOnVariants!.map((v) => ({ id: v.id, label: pillShortLabel(v.label), selected: v.id === selectedCarryOn.id })),
+                onSelect: (id: string) => setCarryOnVariantByCode((prev) => ({ ...prev, [a.code]: id })),
+              }
+            : type === 'checked' && (CHECKED_VARIANTS[a.code]?.length ?? 0) > 1 && selectedVariant
+              ? {
+                  options: CHECKED_VARIANTS[a.code]!.map((v) => ({ id: v.id, label: v.label.replace(' · allowance', '').replace(' allowance', ''), selected: v.id === selectedVariant.id })),
+                  onSelect: (id: string) => setCheckedVariantByCode((prev) => ({ ...prev, [a.code]: id })),
+                }
+              : undefined;
 
         if (type === 'carryon' && selectedCarryOn && L.allowed === false) {
           return {
             airline: a,
-            checks: [],
+            checks: neutralChecks('–'),
             limit: selectedCarryOn.label,
-            verdict: 'Not included',
-            color: '#b45309',
-            bg: '#fdf8ee',
+            verdict: 'Not included' as const,
+            color: '#57677c',
+            bg: '#eef2f7',
             showAdvice: true,
             advice: L.note ?? `A standard overhead carry-on bag is not included with this ${a.name} option. Use the Personal item checker for the included underseat bag or add a carry-on if the airline offers that option.`,
+            picker,
           };
         }
 
         if (type === 'personal' && L.rule === 'notSeparate') {
           return {
             airline: a,
-            checks: [],
+            checks: neutralChecks('–'),
             limit: '',
-            verdict: 'Not included',
-            color: '#b45309',
-            bg: '#fdf8ee',
+            verdict: 'Not included' as const,
+            color: '#57677c',
+            bg: '#eef2f7',
             showAdvice: true,
             advice: `${a.name} does not offer a separate personal item — everything must fit in your one cabin bag.`,
+            picker,
           };
         }
 
@@ -645,13 +719,15 @@ export function SizeCheckerClient() {
           const ruleText = L.rule === 'fitUnderSeat' ? 'Must fit under seat' : 'Not published';
           return {
             airline: a,
-            checks: [],
+            checks: neutralChecks('?'),
             limit: ruleText,
-            verdict: 'Check airline',
-            color: '#b45309',
-            bg: '#fdf8ee',
+            verdict: 'Needs manual check' as const,
+            color: '#57677c',
+            bg: '#eef2f7',
             showAdvice: true,
             advice: `${a.name} does not publish a fixed three-dimension personal-item limit that this checker can validate automatically. Check the airline rule for your fare before travel.`,
+            website: websiteFor(a.code),
+            picker,
           };
         }
 
@@ -668,68 +744,76 @@ export function SizeCheckerClient() {
           }));
           const passing = evaluated.filter((v) => v.fits);
           const failing = evaluated.filter((v) => !v.fits);
+          const checks = aircraftChecks(variants, combinedCap);
 
           if (failing.length === 0) {
             return {
               airline: a,
-              checks: [],
+              checks,
               limit: `Fits both: ${variants.map((v) => v.label).join(' and ')}`,
-              verdict: 'Fits',
+              verdict: 'Fits' as const,
               color: '#15803d',
               bg: '#dcfce7',
               showAdvice: false,
               advice: '',
+              picker,
             };
           }
 
           if (passing.length === 0) {
             return {
               airline: a,
-              checks: [],
+              checks,
               limit: 'Too large for any aircraft size',
-              verdict: 'Too large',
+              verdict: 'Too large' as const,
               color: '#b91c1c',
               bg: '#fee2e2',
               showAdvice: true,
               advice: failing.map((v) => `On ${v.label} — max ${v.h} × ${v.w} × ${v.d} cm, ${v.kg} kg`).join(' · '),
+              picker,
             };
           }
 
           return {
             airline: a,
-            checks: [],
+            checks,
             limit: `Depends on aircraft: ${passing.length}/${variants.length} sizes fit`,
-            verdict: 'Fits on most flights',
+            verdict: 'Fits on most flights' as const,
             color: '#b45309',
             bg: '#fdf8ee',
             showAdvice: true,
             advice: [...passing.map((v) => `On ${v.label} — fits`), ...failing.map((v) => `On ${v.label} — ${v.h} × ${v.w} × ${v.d} cm, too large`)].join(' · '),
+            picker,
           };
         }
 
         if (type === 'carryon' && L.manualCheck) {
           return {
             airline: a,
-            checks: [],
+            checks: neutralChecks('?'),
             limit: 'Carry-on rule varies by route or aircraft',
-            verdict: 'Check airline',
-            color: '#b45309',
-            bg: '#fdf8ee',
+            verdict: 'Needs manual check' as const,
+            color: '#57677c',
+            bg: '#eef2f7',
             showAdvice: true,
             advice: L.note ?? `${a.name} has route- or aircraft-dependent carry-on rules. Check the operating flight before travel.`,
+            website: websiteFor(a.code),
+            picker,
           };
         }
 
         if (type === 'checked' && L.manualCheck) {
           return {
             airline: a,
-            checks: [],
+            checks: neutralChecks('?'),
             limit: 'Checked baggage rule varies by route or fare',
-            verdict: 'Check airline',
-            color: '#b45309',
-            bg: '#fdf8ee',
+            verdict: 'Needs manual check' as const,
+            color: '#57677c',
+            bg: '#eef2f7',
             showAdvice: true,
             advice: L.note ?? `${a.name} has route- or fare-dependent checked baggage rules. Check your booked itinerary before travel.`,
+            website: websiteFor(a.code),
+            picker,
           };
         }
 
@@ -737,6 +821,7 @@ export function SizeCheckerClient() {
         const failed = checks.filter((c) => c.over);
         const manualChecks = checks.filter((c) => 'manual' in c && c.manual);
         const needsWeightCheck = failed.length === 0 && manualChecks.length > 0;
+        const finalVerdict: 'Too large' | 'Check weight' | 'Fits' = failed.length > 0 ? 'Too large' : needsWeightCheck ? 'Check weight' : 'Fits';
         const limit =
           type === 'carryon' && hasActiveLinearLimit(L)
             ? L.linearOnly
@@ -756,7 +841,7 @@ export function SizeCheckerClient() {
           airline: a,
           checks,
           limit,
-          verdict: failed.length > 0 ? 'Too large' : needsWeightCheck ? 'Check weight' : 'Fits',
+          verdict: finalVerdict,
           color: failed.length > 0 ? '#b91c1c' : needsWeightCheck ? '#b45309' : '#15803d',
           bg: failed.length > 0 ? '#fee2e2' : needsWeightCheck ? '#fdf8ee' : '#dcfce7',
           showAdvice: failed.length > 0 || needsWeightCheck,
@@ -766,6 +851,7 @@ export function SizeCheckerClient() {
               : needsWeightCheck
                 ? `${a.name} publishes ${L.KG} kg as a combined cabin-baggage limit. Add the weight of your other cabin items before treating this as a pass.`
                 : '',
+          picker,
         };
       })
     : [];
@@ -774,12 +860,10 @@ export function SizeCheckerClient() {
   const tooLargeCount = results.filter((r) => r.verdict === 'Too large').length;
   const notIncludedCount = results.filter((r) => r.verdict === 'Not included').length;
   const dependsCount = results.filter((r) => r.verdict === 'Fits on most flights').length;
-  const manualCount = results.filter((r) => r.verdict === 'Check airline' || r.verdict === 'Check weight').length;
+  const manualCount = results.filter((r) => r.verdict === 'Needs manual check' || r.verdict === 'Check weight').length;
   const allFit = results.length > 0 && fitCount === results.length;
   const noneFit = results.length > 0 && tooLargeCount === results.length;
-  const checkedOptionsReady = type !== 'checked' || chosen.every((a) => !CHECKED_VARIANTS[a.code]?.length || Boolean(selectedCheckedVariant(a.code)));
-  const carryOnOptionsReady = type !== 'carryon' || chosen.every((a) => !a.carryOnVariants?.length || Boolean(selectedCarryOnVariant(a)));
-  const canCheck = sel.length > 0 && checkedOptionsReady && carryOnOptionsReady;
+  const canCheck = sel.length > 0;
 
   const toggleAirline = (name: string) => {
     const on = sel.includes(name);
@@ -866,6 +950,11 @@ export function SizeCheckerClient() {
   const summaryBg = allFit ? '#e6f6ee' : noneFit ? '#fdecec' : '#fdf8ee';
   const summaryBorder = allFit ? '#c6ead4' : noneFit ? '#f6d5d5' : '#f3ebdb';
   const bagLabel = `Your bag: ${toDisp(W, 'W')} × ${toDisp(H, 'H')} × ${toDisp(D, 'D')} ${lenU}, ${toDisp(type === 'checked' ? KGC : KG, 'KG')} ${wU}`;
+
+  const resultGroups = VERDICT_ORDER.map((verdict) => ({
+    verdict,
+    items: results.filter((r) => r.verdict === verdict).sort((a, b) => a.airline.name.localeCompare(b.airline.name)),
+  })).filter((g) => g.items.length > 0);
 
   const submit = () => {
     if (canCheck) setChecked(true);
@@ -1060,103 +1149,9 @@ export function SizeCheckerClient() {
             </div>
           )}
 
-          {(() => {
-            const pillShortLabel = (label: string) => {
-              const parts = label.split(' · ');
-              return parts.length > 1 ? parts.slice(0, -1).join(' · ') : label;
-            };
-
-            const variantSizeText = (v: {
-              w?: number; h?: number; d?: number; kg?: number; total?: number;
-              linearCm?: number; linearOnly?: boolean; allowed?: boolean; manualCheck?: boolean; rule?: 'linear' | 'dimensions';
-            }) => {
-              if (v.allowed === false) return 'Personal item only — no separate carry-on';
-              const total = v.total ?? v.linearCm;
-              if (v.manualCheck && v.w == null && !total) return 'Route / fare dependent — check airline';
-              const linearOnly = v.linearOnly || v.rule === 'linear';
-              if (linearOnly && total) return `≤ ${total} cm total${v.kg ? ` · ${v.kg} kg` : ''}`;
-              if (v.w != null && v.h != null && v.d != null) {
-                const extra = total ? ` · ≤ ${total} cm total` : '';
-                return `${v.w} × ${v.h} × ${v.d} cm${extra}${v.kg ? ` · ${v.kg} kg` : ''}`;
-              }
-              return v.kg ? `${v.kg} kg` : '';
-            };
-
-            const pickers =
-              type === 'carryon'
-                ? chosen
-                    .filter((a) => a.carryOnVariants?.length)
-                    .map((a) => {
-                      const selected = a.carryOnVariants?.find((v) => v.id === carryOnVariantByCode[a.code]);
-                      return {
-                        code: a.code,
-                        name: a.name,
-                        axis: 'Fare / route / class',
-                        selectedSize: selected ? variantSizeText(selected) : null,
-                        options: (a.carryOnVariants ?? []).map((v) => ({ id: v.id, label: pillShortLabel(v.label), selected: carryOnVariantByCode[a.code] === v.id })),
-                      };
-                    })
-                : type === 'checked'
-                ? chosen
-                    .filter((a) => CHECKED_VARIANTS[a.code]?.length)
-                    .map((a) => {
-                      const selected = CHECKED_VARIANTS[a.code]?.find((v) => v.id === checkedVariantByCode[a.code]);
-                      return {
-                        code: a.code,
-                        name: a.name,
-                        axis: 'Route / allowance',
-                        selectedSize: selected ? variantSizeText(selected) : null,
-                        options: (CHECKED_VARIANTS[a.code] ?? []).map((v) => ({ id: v.id, label: v.label.replace(' · allowance', '').replace(' allowance', ''), selected: checkedVariantByCode[a.code] === v.id })),
-                      };
-                    })
-                : [];
-
-            if (pickers.length === 0) return null;
-
-            return (
-              <div style={{ display: 'grid', gap: 10, marginBottom: 16 }}>
-                {pickers.map((p) => (
-                  <div key={p.code} style={{ border: '1px solid #edf0f3', borderRadius: 11, padding: '11px 13px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 12.5, fontWeight: 700 }}>{p.name}</span>
-                      <span style={{ fontSize: 11.5, color: '#57677c' }}>{p.axis}</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap', marginLeft: 'auto' }}>
-                        {p.options.map((v) => (
-                          <button
-                            key={v.id}
-                            onClick={() => {
-                              if (type === 'carryon') {
-                                setCarryOnVariantByCode((prev) => ({ ...prev, [p.code]: v.id }));
-                              } else {
-                                setCheckedVariantByCode((prev) => ({ ...prev, [p.code]: v.id }));
-                              }
-                              setChecked(false);
-                            }}
-                            style={{
-                              border: `1px solid ${v.selected ? '#0f766e' : '#e4eaf1'}`,
-                              background: v.selected ? '#0f766e' : '#fff',
-                              color: v.selected ? '#fff' : '#57677c',
-                              borderRadius: 999,
-                              padding: '6px 13px',
-                              fontFamily: 'inherit',
-                              fontSize: 11.5,
-                              fontWeight: 700,
-                              cursor: 'pointer',
-                            }}
-                          >
-                            {v.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    {p.selectedSize && (
-                      <div style={{ marginTop: 8, fontSize: 11.5, color: '#0f766e', fontWeight: 700 }}>→ {p.selectedSize}</div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
+          {/* Fare/route/class variants are picked per-airline inside its own result card in Step 3,
+              not in a separate matrix here — most airlines don't have variants, so a shared table
+              was mostly empty white space. */}
 
           <div style={{ position: 'relative' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, border: `1px solid ${open ? '#14b8a6' : '#e4eaf1'}`, borderRadius: 10, padding: '11px 14px', background: '#fff' }}>
@@ -1216,7 +1211,7 @@ export function SizeCheckerClient() {
             disabled={!canCheck}
             style={{ width: '100%', marginTop: 22, padding: 15, border: 'none', borderRadius: 10, background: canCheck ? '#fbbf47' : '#eef2f7', color: canCheck ? '#3a2a05' : '#a9b4c2', fontFamily: 'inherit', fontSize: 15, fontWeight: 700, cursor: canCheck ? 'pointer' : 'not-allowed' }}
           >
-            {canCheck ? 'Check my bag' : sel.length === 0 ? 'Select an airline first' : type === 'carryon' ? 'Choose fare / route / class' : 'Choose route / allowance'}
+            {canCheck ? 'Check my bag' : 'Select an airline first'}
           </button>
         </section>
 
@@ -1235,31 +1230,79 @@ export function SizeCheckerClient() {
                 <span style={{ fontSize: 12.5, color: '#57677c', marginLeft: 'auto' }}>{bagLabel}</span>
               </div>
 
-              <div style={{ display: 'grid', gap: 14 }}>
-                {results.map((r) => (
-                  <div key={r.airline.name} style={{ border: '1px solid #edf0f3', borderRadius: 12, overflow: 'hidden' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', background: '#f8fafc', padding: '13px 16px' }}>
-                      <AirlineLogo code={r.airline.code} website={websiteFor(r.airline.code)} width={34} height={26} radius={7} fontSize={10} />
-                      <span style={{ fontSize: 14, fontWeight: 800 }}>{r.airline.name}</span>
-                      {r.limit && <span style={{ fontSize: 12, color: '#7a8798' }}>{r.limit}</span>}
-                      <span style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 800, color: r.color, background: r.bg, borderRadius: 999, padding: '6px 13px', whiteSpace: 'nowrap' }}>{r.verdict}</span>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,150px),1fr))' }}>
-                      {r.checks.map((c) => (
-                        <div key={c.key} style={{ padding: '13px 16px', borderTop: '1px solid #f0f2f5', borderRight: '1px solid #f0f2f5' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 11.5, color: '#8494a8', marginBottom: 5 }}>
-                            <span style={{ fontSize: 11, fontWeight: 800, color: c.color }}>{c.mark}</span>
-                            {c.label}
-                          </div>
-                          {c.detail && <div style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{c.detail}</div>}
-                          {c.over && <div style={{ fontSize: 11, fontWeight: 700, color: '#b91c1c', marginTop: 3, whiteSpace: 'nowrap' }}>{c.excess}</div>}
-                        </div>
-                      ))}
-                    </div>
-                    {r.showAdvice && <p style={{ margin: 0, padding: '13px 16px', borderTop: '1px solid #f0f2f5', fontSize: 12, lineHeight: 1.65, color: '#57677c' }}>{r.advice}</p>}
+              {resultGroups.map((g) => (
+                <div key={g.verdict} style={{ marginBottom: 22 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: g.items[0].color, flex: 'none' }} />
+                    <span style={{ fontSize: 12.5, fontWeight: 800, color: g.items[0].color }}>
+                      {VERDICT_GROUP_LABEL[g.verdict]} — {g.items.length}
+                    </span>
                   </div>
-                ))}
-              </div>
+                  <div style={{ display: 'grid', gap: 14 }}>
+                    {g.items.map((r) => (
+                      <div key={r.airline.name} style={{ border: '1px solid #edf0f3', borderRadius: 12, overflow: 'hidden' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', background: '#f8fafc', padding: '13px 16px' }}>
+                          <AirlineLogo code={r.airline.code} website={websiteFor(r.airline.code)} width={34} height={26} radius={7} fontSize={10} />
+                          <span style={{ fontSize: 14, fontWeight: 800 }}>{r.airline.name}</span>
+                          {r.limit && <span style={{ fontSize: 12, color: '#7a8798' }}>{r.limit}</span>}
+                          <span style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 800, color: r.color, background: r.bg, borderRadius: 999, padding: '6px 13px', whiteSpace: 'nowrap' }}>{r.verdict}</span>
+                        </div>
+
+                        {r.picker && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap', padding: '10px 16px', borderTop: '1px solid #f0f2f5', background: '#fff' }}>
+                            <span style={{ fontSize: 11, color: '#8494a8', marginRight: 2 }}>{type === 'carryon' ? 'Fare / route / class:' : 'Route / allowance:'}</span>
+                            {r.picker.options.map((v) => (
+                              <button
+                                key={v.id}
+                                onClick={() => r.picker!.onSelect(v.id)}
+                                style={{
+                                  border: `1px solid ${v.selected ? '#0f766e' : '#e4eaf1'}`,
+                                  background: v.selected ? '#0f766e' : '#fff',
+                                  color: v.selected ? '#fff' : '#57677c',
+                                  borderRadius: 999,
+                                  padding: '5px 11px',
+                                  fontFamily: 'inherit',
+                                  fontSize: 11,
+                                  fontWeight: 700,
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                {v.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,150px),1fr))' }}>
+                          {r.checks.map((c) => (
+                            <div key={c.key} style={{ padding: '13px 16px', borderTop: '1px solid #f0f2f5', borderRight: '1px solid #f0f2f5' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 11.5, color: '#8494a8', marginBottom: 5 }}>
+                                <span style={{ fontSize: 11, fontWeight: 800, color: c.color }}>{c.mark}</span>
+                                {c.label}
+                              </div>
+                              {c.detail && <div style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{c.detail}</div>}
+                              {c.over && <div style={{ fontSize: 11, fontWeight: 700, color: '#b91c1c', marginTop: 3, whiteSpace: 'nowrap' }}>{c.excess}</div>}
+                            </div>
+                          ))}
+                        </div>
+                        {r.showAdvice && (
+                          <p style={{ margin: 0, padding: '13px 16px', borderTop: '1px solid #f0f2f5', fontSize: 12, lineHeight: 1.65, color: '#57677c' }}>
+                            {r.advice}
+                            {'website' in r && r.website && (
+                              <>
+                                {' '}
+                                <a href={r.website} target="_blank" rel="noopener noreferrer" style={{ color: '#0f766e', fontWeight: 700 }}>
+                                  Check on {r.airline.name}&apos;s site →
+                                </a>
+                              </>
+                            )}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <div style={{ background: '#f8fafc', borderRadius: 12, padding: '44px 24px', textAlign: 'center' }}>
