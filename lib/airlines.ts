@@ -1,3 +1,11 @@
+// Single source of truth for "when was this data last checked" copy, shown on Home, the
+// Airline Directory (header note + every card) and the shared Footer disclaimer.
+export const BAGGAGE_RULES_REVIEW_DATE = 'September 2026';
+
+// Single default bag used to seed both Home's mini checker and the full Size Checker, so a
+// visitor moving between the two never sees the numbers silently change underneath them.
+export const DEFAULT_BAG = { w: 40, h: 55, d: 23, kg: 10 };
+
 export type PersonalItemRule = 'dimensions' | 'linear' | 'either' | 'fitUnderSeat' | 'notSeparate' | 'unknown';
 
 export type BagLimit = {

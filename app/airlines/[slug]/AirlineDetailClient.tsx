@@ -199,7 +199,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
     { label: 'Extra checked bag', value: '$75 – $120' },
     { label: 'Overweight (23–32 kg)', value: '$100' },
     { label: 'Overweight (32–45 kg)', value: '$200' },
-    { label: 'Oversize (over ' + len(info.total) + ')', value: '$150' },
+    { label: info.total ? `Oversize (over ${len(info.total)})` : 'Oversize (route/fare dependent)', value: '$150' },
     { label: 'Gate-checked cabin bag', value: '$70' },
   ];
 
@@ -387,7 +387,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
 
         <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 18, marginBottom: 20 }}>
           <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24 }}>
-            <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Excess &amp; Oversize Fees</h2>
+            <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Excess &amp; Oversize Fees (USD)</h2>
             <div style={{ background: '#f8fafc', borderRadius: 11, padding: '4px 16px' }}>
               {fees.map((f) => (
                 <div key={f.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, padding: '12px 0', borderBottom: '1px solid #eef2f6' }}>

@@ -43,7 +43,7 @@ const CLASSES: LuggageClass[] = [
   cls('Personal item', 'Any trip', 'Under the seat', 30, 40, 15, 'A handbag, laptop bag or small backpack. Almost never weighed, but it has to fit under the seat in front of you.', '#e7effc', '#d5e3fb', '#93b4ef', '#1b4694', true),
   cls('Cabin bag', '1–3 days', 'Overhead bin', 40, 55, 23, 'The standard carry-on size accepted by most airlines. Budget carriers cut this down, so check before you fly.', '#cff5ec', '#b8efe1', '#5eddc4', '#0b5f56'),
   cls('Medium suitcase', '1–2 weeks', 'Checked', 45, 67, 27, 'The most common checked bag. Comfortably inside the 158 cm total limit and usually under 23 kg when packed.', '#fdf1dc', '#f8e3bd', '#e9b969', '#7a5406', false, true),
-  cls('Large suitcase', '2+ weeks', 'Checked', 52, 78, 32, 'Close to the 158 cm total limit. Easy to exceed the weight allowance before you run out of space.', '#fdecec', '#fbdada', '#f0a9a9', '#8d2f2f', false, true),
+  cls('Large suitcase', '2+ weeks', 'Checked', 51, 76, 30, 'Close to the 158 cm total limit (157 cm). Easy to exceed the weight allowance before you run out of space.', '#fdecec', '#fbdada', '#f0a9a9', '#8d2f2f', false, true),
 ];
 
 const K = 1.55;
@@ -59,15 +59,6 @@ const FEES = [
 const STEPS = [
   {
     n: 1,
-    title: 'Measure Length (Longest Side)',
-    text: 'Place your suitcase on a flat surface. Identify the longest side of your luggage and measure from end to end using your measuring tape. This is typically the side where the luggage opens.',
-    noteLabel: 'Pro Tip:',
-    note: 'Always measure at the widest point, including any protruding parts like wheels or external pockets.',
-    noteBg: '#fdf8ee',
-    noteBorder: '#e0a11a',
-  },
-  {
-    n: 2,
     title: 'Measure Width',
     text: 'Turn your luggage to face you and measure from one side to the other at the widest point. Include any side pockets, zippers, or external features in your measurement.',
     noteLabel: 'Remember:',
@@ -76,13 +67,22 @@ const STEPS = [
     noteBorder: '#2563eb',
   },
   {
-    n: 3,
-    title: 'Measure Height (Depth)',
+    n: 2,
+    title: 'Measure Height',
     text: 'Measure from the bottom (including wheels) to the top (including the handle when fully extended). This is the most critical measurement as it often determines if your bag fits in overhead compartments.',
     noteLabel: 'Important:',
     note: 'Include wheels and fully extended handles in your height measurement — airlines measure the total external dimensions.',
     noteBg: '#fdecec',
     noteBorder: '#dc4c4c',
+  },
+  {
+    n: 3,
+    title: 'Measure Depth',
+    text: 'Place your suitcase on a flat surface and measure from front to back at the deepest point, including wheels and any external pockets. This is the dimension most often left out, and the one that gets bags rejected at the sizer.',
+    noteLabel: 'Pro Tip:',
+    note: 'Always measure at the widest point, including any protruding parts like wheels or external pockets.',
+    noteBg: '#fdf8ee',
+    noteBorder: '#e0a11a',
   },
   {
     n: 4,
@@ -162,7 +162,7 @@ export function LuggageGuideClient() {
               {metric ? 'cm / kg' : 'in / lb'}
             </button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,280px),1fr))', gap: 18 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
             {CLASSES.map((c) => (
               <div key={c.title} style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 22 }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
@@ -384,7 +384,7 @@ export function LuggageGuideClient() {
             </p>
             <div style={{ background: '#f8fafc', borderRadius: 11, padding: 24, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
               <div style={{ position: 'relative', width: 190, height: 150, border: '5px solid #cbd5e1', borderRadius: 10, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: 12 }}>
-                <span style={{ position: 'absolute', left: 12, top: 10, fontSize: 10.5, fontWeight: 800, letterSpacing: '.05em', textTransform: 'uppercase', color: '#a9b4c2' }}>Sizer</span>
+                <span style={{ position: 'absolute', left: 12, top: 10, fontSize: 12, fontWeight: 800, letterSpacing: '.05em', textTransform: 'uppercase', color: '#57677c' }}>Sizer</span>
                 <div style={{ position: 'relative', width: 86, height: 104 }}>
                   <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', width: '38%', height: 16, border: '4px solid #94a3b8', borderBottom: 'none', borderRadius: '9px 9px 0 0' }} />
                   <div style={{ position: 'absolute', inset: 0, background: '#cff5ec', border: '2px solid #5eddc4', borderRadius: 10 }} />
@@ -401,8 +401,8 @@ export function LuggageGuideClient() {
           </div>
 
           <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24 }}>
-            <h2 style={{ margin: '0 0 10px', fontSize: 17, fontWeight: 800, letterSpacing: '-.02em' }}>Excess &amp; oversize fees</h2>
-            <p style={{ margin: '0 0 18px', fontSize: 13, lineHeight: 1.75, color: '#57677c' }}>Typical ranges across major carriers. Paying online before departure is almost always cheaper than at the airport.</p>
+            <h2 style={{ margin: '0 0 10px', fontSize: 17, fontWeight: 800, letterSpacing: '-.02em' }}>Excess &amp; oversize fees (USD)</h2>
+            <p style={{ margin: '0 0 18px', fontSize: 13, lineHeight: 1.75, color: '#57677c' }}>Typical ranges across major carriers, in US dollars. Paying online before departure is almost always cheaper than at the airport.</p>
             <div style={{ background: '#f8fafc', borderRadius: 11, padding: '4px 16px' }}>
               {FEES.map((f) => (
                 <div key={f.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, padding: '13px 0', borderBottom: '1px solid #eef2f6' }}>

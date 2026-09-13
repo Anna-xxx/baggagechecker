@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
-import { AIRLINES, airlineSlug, getAirlineBaggage, carryOnStrictnessColor, type Airline } from '@/lib/airlines';
+import { AIRLINES, airlineSlug, getAirlineBaggage, carryOnStrictnessColor, BAGGAGE_RULES_REVIEW_DATE, type Airline } from '@/lib/airlines';
 
 function volume(a: Airline) {
   const b = getAirlineBaggage(a).carryOn;
@@ -31,7 +31,7 @@ function personalItemSize(a: Airline): string {
 
 function checkedEconomySize(a: Airline): string {
   const checked = getAirlineBaggage(a).checked;
-  if (checked.manualCheck && !checked.total && !checked.eco) return 'Route / fare dependent';
+  if (checked.manualCheck && (!checked.total || !checked.eco)) return 'Route / fare dependent';
   return `${checked.total} cm total · ${checked.eco} kg`;
 }
 
@@ -78,6 +78,11 @@ export function AirlinesClient() {
 
   const countries = useMemo(() => ['All countries'].concat(Array.from(new Set(AIRLINES.map((a) => a.country))).sort()), []);
 
+  const mostRestrictive = useMemo(
+    () => [...AIRLINES].sort((a, b) => volume(a) - volume(b) || getAirlineBaggage(a).carryOn.kg - getAirlineBaggage(b).carryOn.kg)[0],
+    []
+  );
+
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
     let filtered = AIRLINES.filter(
@@ -120,7 +125,7 @@ export function AirlinesClient() {
                 <path d="M2 13l20-7-7 20-3-8z" />
               </svg>
               <div>
-                <div style={{ fontSize: 19, fontWeight: 800, letterSpacing: '-.02em' }}>{AIRLINES.length}+</div>
+                <div style={{ fontSize: 19, fontWeight: 800, letterSpacing: '-.02em' }}>{AIRLINES.length}</div>
                 <div style={{ fontSize: 11.5, color: '#8494a8' }}>Airlines covered</div>
               </div>
             </div>
@@ -130,13 +135,13 @@ export function AirlinesClient() {
                 <path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18-2.5-2.6-2.5-15.4 0-18z" />
               </svg>
               <div>
-                <div style={{ fontSize: 19, fontWeight: 800, letterSpacing: '-.02em' }}>{countries.length - 1}+</div>
+                <div style={{ fontSize: 19, fontWeight: 800, letterSpacing: '-.02em' }}>{countries.length - 1}</div>
                 <div style={{ fontSize: 11.5, color: '#8494a8' }}>Countries</div>
               </div>
             </div>
             <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 12, padding: '16px 18px' }}>
               <div style={{ fontSize: 11.5, color: '#8494a8', marginBottom: 4 }}>Most restrictive</div>
-              <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: '-.01em' }}>Ryanair</div>
+              <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: '-.01em' }}>{mostRestrictive.name}</div>
             </div>
           </div>
 
@@ -171,8 +176,8 @@ export function AirlinesClient() {
               <option value="generous">Sort by: Most generous</option>
             </select>
           </div>
-          <p style={{ margin: '12px 0 0', textAlign: 'center', fontSize: 11.5, lineHeight: 1.6, color: '#8494a8' }}>
-            Personal-item sizes are the typical under-seat allowance for each carrier. Baggage rules reviewed September 2026 — always confirm on the airline&apos;s own site before flying.
+          <p style={{ margin: '12px 0 0', textAlign: 'center', fontSize: 12, lineHeight: 1.6, color: '#57677c' }}>
+            Personal-item sizes are the typical under-seat allowance for each carrier. Baggage rules reviewed {BAGGAGE_RULES_REVIEW_DATE} — always confirm on the airline&apos;s own site before flying.
           </p>
         </div>
       </section>
@@ -221,7 +226,7 @@ export function AirlinesClient() {
                   ))}
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 7, fontSize: 10.5, lineHeight: 1.5, color: '#a9b4c2' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 7, fontSize: 12, lineHeight: 1.5, color: '#57677c' }}>
                   <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} style={{ flex: 'none', marginTop: 1 }}>
                     <circle cx="12" cy="12" r="9" />
                     <path d="M12 8v5M12 16h.01" strokeLinecap="round" />
@@ -229,12 +234,12 @@ export function AirlinesClient() {
                   Standard limits for economy tickets. Fare type and route can change the allowance.
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, color: '#a9b4c2' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#57677c' }}>
                   <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
                     <circle cx="12" cy="12" r="9" />
                     <path d="M12 7v5l3 2" />
                   </svg>
-                  Updated September 2026
+                  Updated {BAGGAGE_RULES_REVIEW_DATE}
                 </div>
 
                 <Link href={`/airlines/${airlineSlug(a.name)}`} className="cta-link" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fbbf47', color: '#3a2a05', borderRadius: 9, padding: 11, fontSize: 13, fontWeight: 700, textDecoration: 'none', marginTop: 'auto' }}>

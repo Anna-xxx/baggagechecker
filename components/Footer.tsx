@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import Link from 'next/link';
 import { LogoMark } from './Logo';
+import { BAGGAGE_RULES_REVIEW_DATE } from '@/lib/airlines';
 
 export type FooterLink = { label: string; href: string };
 export type FooterColumn = { title: string; links: FooterLink[] };
@@ -20,7 +21,7 @@ const DEFAULT_SITE_LINKS: FooterLink[] = [
   { label: 'Contact', href: '/' },
 ];
 
-const DEFAULT_DISCLAIMER = 'Baggage rules reviewed September 2026. Airlines can change allowances at any time — confirm on the carrier’s own site before you fly.';
+const DEFAULT_DISCLAIMER = `Baggage rules reviewed ${BAGGAGE_RULES_REVIEW_DATE}. Airlines can change allowances at any time — confirm on the carrier’s own site before you fly.`;
 
 export function Footer({
   maxWidth = 1340,
