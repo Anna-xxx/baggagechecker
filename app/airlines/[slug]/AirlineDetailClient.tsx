@@ -6,7 +6,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
 import { BagDiagram, type BagType } from '@/components/BagDiagram';
-import { airlineBaggageUrl, getAirlineBaggage, BAGGAGE_RULES_REVIEW_DATE, type Airline } from '@/lib/airlines';
+import { AIRLINES, airlineSlug, airlineBaggageUrl, getAirlineBaggage, BAGGAGE_RULES_REVIEW_DATE, type Airline } from '@/lib/airlines';
 
 type Bag = { w: number; h: number; d: number; kg: number };
 export function AirlineDetailClient({ airline }: { airline: Airline }) {
@@ -143,6 +143,15 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
     weight: row.weightPerBag,
     note: row.note,
   }));
+
+
+  // Carrier pages used to be reachable only from the directory, which left each of them
+  // with a single inbound link. Same-country carriers first — that is the comparison a
+  // traveller actually makes — then others, so every page sits in a web rather than a spoke.
+  const related = [
+    ...AIRLINES.filter((a) => a.country === airline.country && a.code !== airline.code),
+    ...AIRLINES.filter((a) => a.country !== airline.country && a.code !== airline.code),
+  ].slice(0, 6);
 
   const faqs = [
     {
@@ -518,6 +527,34 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
               </div>
             );
           })}
+        </section>
+
+        <section style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24, marginBottom: 20 }}>
+          <h2 style={{ margin: '0 0 4px', fontSize: 16, fontWeight: 800, letterSpacing: '-.015em' }}>Compare with other airlines</h2>
+          <p style={{ margin: '0 0 16px', fontSize: 12.5, color: '#8494a8' }}>
+            Baggage limits differ sharply between carriers — these are the ones travellers most often weigh against {airline.name}.
+          </p>
+          <div className="grid-trio">
+            {related.map((a) => (
+              <Link
+                key={a.code}
+                href={`/airlines/${airlineSlug(a.name)}`}
+                className="card-hover"
+                style={{ display: 'flex', alignItems: 'center', gap: 11, border: '1px solid #edf0f3', borderRadius: 12, padding: '12px 14px', textDecoration: 'none', color: 'inherit' }}
+              >
+                <AirlineLogo code={a.code} width={34} height={34} radius={9} fontSize={11} />
+                <span style={{ minWidth: 0 }}>
+                  <span style={{ display: 'block', fontSize: 13, fontWeight: 800 }}>{a.name}</span>
+                  <span style={{ display: 'block', fontSize: 11.5, color: '#8494a8' }}>{a.country}</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+          <p style={{ margin: '16px 0 0', fontSize: 12.5 }}>
+            <Link href="/airlines" style={{ color: '#0f766e', fontWeight: 700 }}>
+              See all {AIRLINES.length} airlines →
+            </Link>
+          </p>
         </section>
       </main>
 

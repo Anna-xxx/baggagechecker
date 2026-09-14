@@ -9,6 +9,18 @@ export const metadata: Metadata = {
     'The terms for using BaggageChecker: what the baggage figures are, how current they are, and why the airline you fly always has the final word.',
   robots: { index: true, follow: true },
   alternates: { canonical: `${SITE_URL}/terms` },
+  openGraph: { type: 'website', siteName: 'BaggageChecker', title: 'Terms of Service | BaggageChecker', description: 'The terms for using BaggageChecker, and why the airline you fly always has the final word on your baggage.' },
+};
+
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${SITE_URL}/terms`,
+  url: `${SITE_URL}/terms`,
+  name: 'Terms of Service',
+  description: 'The terms for using BaggageChecker, and why the airline you fly always has the final word on your baggage.',
+  isPartOf: { '@type': 'WebSite', name: 'BaggageChecker', url: SITE_URL },
 };
 
 const link = { color: '#0f766e', fontWeight: 600 };
@@ -19,6 +31,8 @@ export default function TermsPage() {
       title="Terms of Service"
       intro="BaggageChecker is free to use and asks nothing of you. These terms exist mainly to be honest about one thing: baggage rules are set by airlines and they change, so the figures here are a guide and not a guarantee."
     >
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <LegalSection title="What this site is">
         <p style={{ margin: 0 }}>
           A reference tool that collects published baggage allowances — personal item, carry-on and checked — and lets you

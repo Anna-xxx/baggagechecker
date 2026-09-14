@@ -13,7 +13,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const airline = findAirlineBySlug(slug);
   if (!airline) return {};
 
-  const title = `${airline.name} Baggage Size & Weight Limits | BaggageChecker`;
+  // No brand suffix: Google appends the site name anyway, and 22 of 39 carrier names
+  // pushed the combined title past the ~60 characters it will actually show.
+  const title = `${airline.name} Baggage Size & Weight Limits`;
   const description = `${airline.name} carry-on and checked baggage limits: maximum width, height, depth, total dimensions and weight allowances. Check your bag before you fly.`;
   const url = `${SITE_URL}/airlines/${slug}`;
 

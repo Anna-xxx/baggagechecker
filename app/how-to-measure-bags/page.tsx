@@ -3,8 +3,8 @@ import type { Metadata } from 'next';
 import { HowToMeasureClient } from './HowToMeasureClient';
 
 export const metadata: Metadata = {
-  title: 'How to Measure Bag Dimensions: Complete Guide | BaggageChecker',
-  description: 'Learn how to measure your luggage dimensions accurately at home. Step-by-step guide to length, width, height and weight so your bag meets airline carry-on requirements.',
+  title: 'How to Measure Luggage Dimensions Correctly',
+  description: 'Measure your luggage the way airlines do — wheels and handles included — so the numbers you check against carry-on limits are the ones staff will read.',
   robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
   alternates: { canonical: `${SITE_URL}/how-to-measure-bags` },
   openGraph: {

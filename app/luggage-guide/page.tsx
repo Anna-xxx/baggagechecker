@@ -3,8 +3,8 @@ import type { Metadata } from 'next';
 import { LuggageGuideClient } from './LuggageGuideClient';
 
 export const metadata: Metadata = {
-  title: 'Luggage Guide: Cabin, Medium & Large Bag Sizes | BaggageChecker',
-  description: 'Standard luggage sizes explained: cabin, medium and large suitcase dimensions in cm and inches, airline carry-on limits, airport sizer frames and excess baggage fees.',
+  title: 'Luggage Guide: Cabin, Medium and Large Bag Sizes',
+  description: 'Standard suitcase sizes in cm and inches, what airlines allow in the cabin and the hold, airport sizer frames and what excess baggage costs.',
   keywords: ['luggage sizes', 'suitcase dimensions', 'cabin bag size', 'medium suitcase', 'large suitcase', 'airline carry-on limits'],
   robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
   alternates: { canonical: `${SITE_URL}/luggage-guide` },

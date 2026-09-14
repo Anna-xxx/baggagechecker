@@ -8,6 +8,18 @@ export const metadata: Metadata = {
     'What BaggageChecker does and does not collect. No accounts, no cookies, no tracking — the measurements you enter stay in your browser and are never sent to us.',
   robots: { index: true, follow: true },
   alternates: { canonical: `${SITE_URL}/privacy-policy` },
+  openGraph: { type: 'website', siteName: 'BaggageChecker', title: 'Privacy Policy | BaggageChecker', description: 'What BaggageChecker collects — nothing — and the one thing that happens automatically when any page loads.' },
+};
+
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${SITE_URL}/privacy-policy`,
+  url: `${SITE_URL}/privacy-policy`,
+  name: 'Privacy Policy',
+  description: 'What BaggageChecker collects — nothing — and the one thing that happens automatically when any page loads.',
+  isPartOf: { '@type': 'WebSite', name: 'BaggageChecker', url: SITE_URL },
 };
 
 const link = { color: '#0f766e', fontWeight: 600 };
@@ -18,6 +30,8 @@ export default function PrivacyPolicyPage() {
       title="Privacy Policy"
       intro="BaggageChecker is a free reference tool. There is nothing to sign up for, nothing to log in to, and no form to fill in — so there is nothing for us to collect about you. This page says so in full, and explains the one thing that happens automatically whenever any website loads."
     >
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <LegalSection title="What we collect">
         <p style={{ margin: '0 0 14px' }}>
           Nothing. We do not ask for your name or email address, we set no cookies, we run no analytics, we carry no

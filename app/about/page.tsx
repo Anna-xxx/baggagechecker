@@ -5,9 +5,9 @@ import { AIRLINES, BAGGAGE_RULES_REVIEW_DATE } from '@/lib/airlines';
 import { LegalPage, LegalSection, LegalList } from '@/components/LegalPage';
 
 export const metadata: Metadata = {
-  title: 'About BaggageChecker: Where Our Airline Baggage Data Comes From',
+  title: 'About BaggageChecker: Where Our Data Comes From',
   description:
-    'How BaggageChecker sources and checks airline baggage allowances: every carry-on, personal item and checked limit is taken from the carrier’s own published policy, not from aggregators, and reviewed on a fixed schedule.',
+    'How BaggageChecker sources and checks airline baggage limits: every figure is read from the carrier’s own published policy, never from aggregators.',
   robots: { index: true, follow: true },
   alternates: { canonical: `${SITE_URL}/about` },
   openGraph: {
