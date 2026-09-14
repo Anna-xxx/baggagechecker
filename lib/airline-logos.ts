@@ -1,6 +1,5 @@
-// Airline marks served from this site, never hotlinked: the file name for each carrier
-// that has one. Carriers absent here fall back to the coloured monogram in AirlineLogo,
-// which today is QR, TG, VS, VA, W6.
+// Airline marks served from this site, never hotlinked: the file name for each carrier.
+// Every carrier has a file.
 export const AIRLINE_LOGO_FILES: Record<string, string> = {
   '6E': '6E.svg',
   'AA': 'AA.png',
@@ -28,12 +27,17 @@ export const AIRLINE_LOGO_FILES: Record<string, string> = {
   'NH': 'NH.png',
   'OS': 'OS.png',
   'QF': 'QF.svg',
+  'QR': 'QR.png',
   'SK': 'SK.svg',
   'SN': 'SN.png',
   'SQ': 'SQ.svg',
+  'TG': 'TG.png',
   'TK': 'TK.svg',
   'TP': 'TP.svg',
   'U2': 'U2.png',
+  'VA': 'VA.png',
+  'VS': 'VS.png',
   'VY': 'VY.png',
+  'W6': 'W6.png',
   'WN': 'WN.svg',
 };

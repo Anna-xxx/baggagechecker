@@ -7,9 +7,9 @@
  * two companies with no part in this site just to draw one small square.
  *
  * The logos are now served from this site's own /logos folder instead, so the page stays
- * first-party and nothing is requested from another company. The five carriers with no file
- * fall back to a monogram in that carrier's livery colours, which is also what shows if an
- * image ever fails to load — it sits behind the image rather than beside it.
+ * first-party and nothing is requested from another company. All 39 carriers have a file; the
+ * monogram in that carrier's livery colours stays as the fallback, shown behind the image if
+ * one ever fails to load or if a carrier is added before its logo is.
  */
 
 import { AIRLINE_LOGO_FILES } from '@/lib/airline-logos';
