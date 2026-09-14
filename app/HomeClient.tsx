@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { BagDiagram, type BagType } from '@/components/BagDiagram';
-import { DEFAULT_BAG, BAGGAGE_RULES_REVIEW_DATE } from '@/lib/airlines';
+import { AIRLINES, DEFAULT_BAG, BAGGAGE_RULES_REVIEW_DATE } from '@/lib/airlines';
 
 const TYPE_TABS: { key: BagType; title: string; icon: React.ReactNode }[] = [
   {
@@ -53,6 +53,14 @@ const STEPS = [
   'Measure the width from side to side.',
   'Measure the depth from front to back, including wheels and handles.',
   'Compare all three measurements to your airline limits.',
+];
+
+// What the left of the hero promises, opposite the input card. Each line is a claim
+// the site actually keeps, so none of them can be padded out without changing the product.
+const HERO_POINTS = [
+  'Limits taken from each carrier’s own published policy',
+  'Route, fare and aircraft variants shown separately, not averaged',
+  'Free, no account, nothing to install',
 ];
 
 const WHAT_WE_CHECK = [
@@ -105,12 +113,25 @@ export function HomeClient() {
         <div className="grid-split" style={{ maxWidth: 1200, margin: '0 auto', alignItems: 'start' }}>
           <div>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#e3f5f2', color: '#0f766e', border: '1px solid #c6ebe5', borderRadius: 999, padding: '6px 12px', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fbbf47' }} /> Airline Luggage Sizes
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fbbf47' }} /> {AIRLINES.length} airlines · reviewed {BAGGAGE_RULES_REVIEW_DATE}
             </span>
             <h1 style={{ margin: '18px 0 14px', fontSize: 48, lineHeight: 1.08, fontWeight: 800, letterSpacing: '-.03em', maxWidth: '11ch' }}>Will your bag fit?</h1>
             <p style={{ margin: '0 0 24px', fontSize: 16, lineHeight: 1.6, color: '#57677c', maxWidth: '48ch' }}>
               Set your bag&apos;s width, height, depth and weight, then check it against every airline we cover — personal item, carry-on and checked baggage.
             </p>
+            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 13, maxWidth: '48ch' }}>
+              {HERO_POINTS.map((point) => (
+                <li key={point} style={{ display: 'flex', alignItems: 'flex-start', gap: 11, fontSize: 14, lineHeight: 1.55, color: '#3d4759' }}>
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" style={{ flex: 'none', marginTop: 2 }}>
+                    <path d="M4 12.5l5.5 5.5L20 6.5" />
+                  </svg>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
             <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 22 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
                 <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800, letterSpacing: '-.01em' }}>{HERO_TITLE[type]}</h2>
@@ -178,14 +199,22 @@ export function HomeClient() {
                 className="btn-primary"
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: 13, background: '#fbbf47', color: '#3a2a05', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 800, textDecoration: 'none' }}
               >
-                Check Baggage Size
+                Check against {AIRLINES.length} airlines
+                <span aria-hidden="true" style={{ marginLeft: 8 }}>→</span>
               </Link>
+              {/* Says what the button does before it is pressed: nothing is judged here. */}
+              <p style={{ margin: '12px 0 0', fontSize: 11.5, color: '#8494a8', textAlign: 'center' }}>
+                Opens the size checker with these measurements filled in.
+              </p>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div>
-            <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 26 }}>
-              <h2 style={{ margin: '0 0 4px', fontSize: 17, fontWeight: 800, letterSpacing: '-.01em' }}>What we check</h2>
+      <section style={{ background: '#fff', padding: '48px 24px 0' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 26 }}>
+            <h2 style={{ margin: '0 0 4px', fontSize: 17, fontWeight: 800, letterSpacing: '-.01em' }}>What we check</h2>
               <p style={{ margin: '0 0 18px', fontSize: 12.5, color: '#8494a8' }}>Every airline allowance splits into three, checked in this order:</p>
               <div style={{ display: 'grid', gap: 14 }}>
                 {WHAT_WE_CHECK.map((w, i) => (
@@ -201,7 +230,6 @@ export function HomeClient() {
               <p style={{ margin: '18px 0 0', paddingTop: 16, borderTop: '1px solid #f0f2f5', fontSize: 11.5, lineHeight: 1.6, color: '#8494a8' }}>
                 Standard published limits for economy tickets, reviewed {BAGGAGE_RULES_REVIEW_DATE}. Fare type, route and aircraft can change the allowance — the checker shows those variants per airline.
               </p>
-            </div>
           </div>
         </div>
       </section>
