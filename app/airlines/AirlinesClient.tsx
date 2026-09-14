@@ -141,7 +141,7 @@ export function AirlinesClient() {
           </div>
 
           <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 12, padding: 12, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,190px),1fr))', gap: 10 }}>
-            <div style={{ gridColumn: 'span 2', display: 'flex', alignItems: 'center', gap: 10, border: '1px solid #edf0f3', borderRadius: 9, padding: '10px 13px', minWidth: 0 }}>
+            <div className="filter-search" style={{ gridColumn: 'span 2', display: 'flex', alignItems: 'center', gap: 10, border: '1px solid #edf0f3', borderRadius: 9, padding: '10px 13px', minWidth: 0 }}>
               <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a9b4c2" strokeWidth={2} strokeLinecap="round">
                 <circle cx="11" cy="11" r="6.5" />
                 <path d="M16 16l5 5" />

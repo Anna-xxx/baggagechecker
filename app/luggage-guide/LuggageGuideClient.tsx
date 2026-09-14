@@ -197,7 +197,8 @@ export function LuggageGuideClient() {
           <Link
             href="/airlines"
             className="cta-link"
-            style={{ flex: 'none', display: 'inline-flex', alignItems: 'center', gap: 9, background: '#fbbf47', color: '#3a2a05', borderRadius: 10, padding: '13px 20px', fontSize: 13, fontWeight: 800, textDecoration: 'none', whiteSpace: 'nowrap' }}
+            // nowrap plus a six-word label is wider than a 320px screen; the label may wrap there.
+            style={{ flex: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9, maxWidth: '100%', background: '#fbbf47', color: '#3a2a05', borderRadius: 10, padding: '13px 20px', fontSize: 13, fontWeight: 800, textDecoration: 'none', textAlign: 'center' }}
           >
             View All Airlines &amp; Baggage Policies
             <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3a2a05" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">

@@ -90,7 +90,7 @@ export default function SizeCheckerPage() {
         </Suspense>
 
         <section style={{ maxWidth: 1000, margin: '0 auto', padding: 'clamp(44px,6vw,72px) 0px 0' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 36, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 36, alignItems: 'start' }}>
             <div>
               <h2 style={{ margin: '0 0 18px', fontSize: 'clamp(21px,2.6vw,26px)', fontWeight: 800, letterSpacing: '-.025em', lineHeight: 1.22 }}>Why Airlines Have Different Luggage Rules</h2>
               <p style={{ margin: '0 0 14px', fontSize: 13.5, lineHeight: 1.8, color: '#57677c' }}>
@@ -127,7 +127,7 @@ export default function SizeCheckerPage() {
           <p style={{ margin: '0 0 28px', textAlign: 'center', maxWidth: 620, marginLeft: 'auto', marginRight: 'auto', fontSize: 13, lineHeight: 1.7, color: '#57677c' }}>
             Airlines split what you travel with into three allowances. Each has its own size and weight limit, and the one you exceed decides what you pay.
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))', gap: 20 }}>
             {[
               {
                 tint: '#e7effc',
@@ -206,7 +206,7 @@ export default function SizeCheckerPage() {
 
         <section id="howto" style={{ maxWidth: 1000, margin: '0 auto', padding: 'clamp(44px,6vw,72px) 0px 0' }}>
           <h2 style={{ margin: '0 0 28px', textAlign: 'center', fontSize: 'clamp(21px,2.6vw,26px)', fontWeight: 800, letterSpacing: '-.025em' }}>How to Use Our Carry-On Size Checker</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,250px),1fr))', gap: 20 }}>
             {HOWTO.map((h) => (
               <div key={h.n} style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: '28px 22px', textAlign: 'center' }}>
                 <span style={{ display: 'inline-flex', width: 36, height: 36, borderRadius: '50%', alignItems: 'center', justifyContent: 'center', background: h.bg, color: h.color, fontSize: 14, fontWeight: 800, marginBottom: 16 }}>{h.n}</span>
@@ -219,7 +219,7 @@ export default function SizeCheckerPage() {
 
         <section style={{ maxWidth: 1000, margin: '0 auto', padding: 'clamp(44px,6vw,72px) 0px clamp(48px,6vw,72px)' }}>
           <h2 style={{ margin: '0 0 28px', textAlign: 'center', fontSize: 'clamp(21px,2.6vw,26px)', fontWeight: 800, letterSpacing: '-.025em' }}>Pro Tips for Checking Suitcase Size Online</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,280px),1fr))', gap: 20 }}>
             <div style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: '26px 26px 28px' }}>
               <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 14 }}>
                 <circle cx="12" cy="12" r="9" />

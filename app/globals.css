@@ -181,6 +181,70 @@ input[type='text']:focus {
   .type-choice .type-hint {
     display: none !important;
   }
+
+  /* Match Home's input card on a phone, which is the reference for this layout: the
+     same compact type sizes, and the two section labels dropped because the tiles and
+     the drawing already say what they are on a screen this narrow. "Personal item" and
+     "Checked bag" have to sit on one line — broken across two they read as a fault. */
+  /* The card sits one padding level deeper than Home's, which is why its tiles came out
+     15px narrower and the labels broke in half. Trimming the two paddings gives the tiles
+     Home's width, so the type size can stay the same as Home's rather than shrink. */
+  #checker {
+    padding: 14px !important;
+  }
+
+  .checker-inner {
+    padding: 12px !important;
+  }
+
+  .type-choice .type-title {
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+  }
+
+  /* In a column tile the text wrapper shrinks to its content and takes the label with it. */
+  .type-choice > button > span:last-child {
+    width: 100% !important;
+  }
+
+  .step-sublabel {
+    display: none !important;
+  }
+
+  .field-label {
+    font-size: 12px !important;
+    gap: 8px !important;
+  }
+
+  .field-value-compact {
+    font-size: 12px !important;
+  }
+}
+
+/* On the narrowest phones still in use (360px and below) the three tiles leave about
+   65px each, which "Personal item" cannot hold at the size above. Tightening the gap
+   and the label buys the line back rather than letting it break in half. */
+@media (max-width: 380px) {
+  .type-choice {
+    gap: 6px !important;
+  }
+
+  .type-choice > button {
+    padding: 10px 3px !important;
+  }
+
+  .type-choice .type-title {
+    font-size: 10px !important;
+  }
+}
+
+/* The search field asks for two columns. Once the filter grid collapses to one, that
+   second column is conjured out of nothing and hangs off the side of the page; spanning
+   the whole row instead is the same thing when there is only one column. */
+@media (max-width: 619px) {
+  .filter-search {
+    grid-column: 1 / -1 !important;
+  }
 }
 
 /* Shared responsive grids. Every multi-column layout starts as one column and

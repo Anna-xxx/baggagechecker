@@ -955,7 +955,7 @@ export function SizeCheckerClient() {
     <>
         {/* Step 1: dimensions + type toggle */}
         <section id="checker" style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 24, marginBottom: 26 }}>
-          <div style={{ border: '1px solid #f0f2f5', borderRadius: 12, padding: 'clamp(18px,2.5vw,26px)' }}>
+          <div className="checker-inner" style={{ border: '1px solid #f0f2f5', borderRadius: 12, padding: 'clamp(18px,2.5vw,26px)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap', marginBottom: 22 }}>
               <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 10, fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>
                 <span style={{ flex: 'none', display: 'flex', width: 24, height: 24, borderRadius: '50%', background: '#e3f5f2', color: '#0f766e', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800 }}>1</span>
@@ -975,7 +975,7 @@ export function SizeCheckerClient() {
             </div>
 
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#57677c', marginBottom: 10 }}>What are you checking?</div>
+              <div className="step-sublabel" style={{ fontSize: 13, fontWeight: 700, color: '#57677c', marginBottom: 10 }}>What are you checking?</div>
               <div className="type-choice" style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                 {TYPE_DEFS.map((t) => {
                   const on = type === t.key;
@@ -990,7 +990,7 @@ export function SizeCheckerClient() {
                     >
                       <BagTypeIcon type={t.key} size={30} />
                       <span style={{ flex: 1, minWidth: 0 }}>
-                        <span style={{ display: 'block', fontSize: 13.5, fontWeight: 800, color: on ? '#0f766e' : '#0f1c2e' }}>{t.title}</span>
+                        <span className="type-title" style={{ display: 'block', fontSize: 13.5, fontWeight: 800, color: on ? '#0f766e' : '#0f1c2e' }}>{t.title}</span>
                         <span className="type-hint" style={{ display: 'block', marginTop: 3, fontSize: 11.5, lineHeight: 1.5, color: '#8494a8' }}>{t.hint}</span>
                       </span>
                     </button>
@@ -1005,7 +1005,7 @@ export function SizeCheckerClient() {
                 return (
                   <div key={def.key}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 12 }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9, fontSize: 14, fontWeight: 600 }}>
+                      <span className="field-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 9, fontSize: 14, fontWeight: 600 }}>
                         <DimensionIcon axis={def.axis} />
                         {def.label}
                       </span>
@@ -1033,7 +1033,7 @@ export function SizeCheckerClient() {
             </div>
 
             <div style={{ marginTop: 26, background: '#f8fafc', borderRadius: 12, padding: '20px 22px 26px' }}>
-              <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 16 }}>Visual Representation</div>
+              <div className="step-sublabel" style={{ fontSize: 14, fontWeight: 700, marginBottom: 16 }}>Visual Representation</div>
               <BagDiagram type={type} w={W} h={H} d={D} widthLabel={widthLabel} heightLabel={heightLabel} depthLabel={`${depthValue} ${lenU}`} />
             </div>
           </div>
