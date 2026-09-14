@@ -15,10 +15,10 @@ const DEFAULT_RESOURCE_LINKS: FooterLink[] = [
 ];
 
 const DEFAULT_SITE_LINKS: FooterLink[] = [
-  { label: 'About', href: '/' },
+  { label: 'About', href: '/about' },
   { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Terms of Service', href: '/terms' },
-  { label: 'Contact', href: '/' },
+  { label: 'Contact', href: '/about' },
 ];
 
 const DEFAULT_DISCLAIMER = `Baggage rules reviewed ${BAGGAGE_RULES_REVIEW_DATE}. Airlines can change allowances at any time — confirm on the carrier’s own site before you fly.`;
