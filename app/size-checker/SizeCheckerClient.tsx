@@ -510,7 +510,10 @@ export function SizeCheckerClient() {
       const d = (v: number) => `${toDisp(v, axis)} ${unit}`;
       const combinedWeight = type === 'carryon' && axis === 'KG' && L.weightRule === 'combinedWithPersonal';
       const pureCombinedCap = combinedWeight && !L.maxSingleKg && Boolean(L.KG);
-      const ok = pureCombinedCap ? mine < max : mine <= max;
+      // A bag at exactly the cap is not over it. Where the cap is shared with the personal
+      // item the row still reads as an advisory ("!"), which is what tells the traveller to
+      // add their other cabin items — saying "over its 12 kg allowance" at 12 kg is simply false.
+      const ok = mine <= max;
       return {
         key: f.key,
         label: combinedWeight ? 'Total cabin weight' : f.label,
@@ -591,7 +594,7 @@ export function SizeCheckerClient() {
       };
     });
     const weightLimits = variants.map((v) => v.kg);
-    const weightOks = variants.map((v) => !v.kg || (combinedCap ? KG < v.kg : KG <= v.kg));
+    const weightOks = variants.map((v) => !v.kg || KG <= v.kg);
     const wAllOk = weightOks.every(Boolean);
     const wNoneOk = weightOks.every((o) => !o);
     const uniformW = weightLimits.every((l) => l === weightLimits[0]);
@@ -681,11 +684,31 @@ export function SizeCheckerClient() {
           // at the gate, so only the three dimensions and weight gate the fit here.
           const evaluated = variants.map((v) => ({
             ...v,
-            fits: W <= v.w && H <= v.h && D <= v.d && (!v.kg || (combinedCap ? KG < v.kg : KG <= v.kg)),
+            sizeFits: W <= v.w && H <= v.h && D <= v.d,
+            weightFits: !v.kg || KG <= v.kg,
+            fits: W <= v.w && H <= v.h && D <= v.d && (!v.kg || KG <= v.kg),
           }));
           const passing = evaluated.filter((v) => v.fits);
           const failing = evaluated.filter((v) => !v.fits);
           const checks = aircraftChecks(variants, combinedCap);
+
+          // A bag that clears a cabin's box and misses only its weight cap is not too large for
+          // the aircraft — the aisle it will not fit down is the scales. Reporting size here sent
+          // the traveller to buy a smaller case for a problem a removed jumper would solve.
+          if (passing.length === 0 && evaluated.some((v) => v.sizeFits)) {
+            const cap = Math.max(...evaluated.filter((v) => v.sizeFits).map((v) => v.kg || 0));
+            return {
+              airline: a,
+              checks,
+              limit: `Fits the cabin, over ${cap} kg`,
+              verdict: 'Too heavy' as const,
+              color: '#b91c1c',
+              bg: '#fee2e2',
+              showAdvice: true,
+              advice: `The bag is within the size limits for ${a.name}, but over its ${cap} kg cabin allowance. Move items into your personal item or a checked bag, or pay for the extra weight.`,
+              picker,
+            };
+          }
 
           if (failing.length === 0) {
             return {
