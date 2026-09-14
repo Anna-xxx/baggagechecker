@@ -6,11 +6,13 @@
  * they looked pixelated, and every visitor's browser had to announce its IP address to
  * two companies with no part in this site just to draw one small square.
  *
- * So the mark is drawn here instead — the carrier's IATA code in that carrier's own
- * livery colours. It is sharp at any size, costs no request, and keeps the page entirely
- * first-party. The colours approximate each airline's well-known brand palette; they
- * identify the carrier at a glance and are decorative, not a reproduction of its logo.
+ * The logos are now served from this site's own /logos folder instead, so the page stays
+ * first-party and nothing is requested from another company. The five carriers with no file
+ * fall back to a monogram in that carrier's livery colours, which is also what shows if an
+ * image ever fails to load — it sits behind the image rather than beside it.
  */
+
+import { AIRLINE_LOGO_FILES } from '@/lib/airline-logos';
 
 type Ink = { bg: string; ink: string };
 
@@ -90,15 +92,19 @@ export function AirlineLogo({
   fontSize?: number;
 }) {
   const { bg, ink } = inkFor(code);
+  const file = AIRLINE_LOGO_FILES[code];
   return (
     <span
       aria-hidden="true"
       style={{
         flex: 'none',
+        position: 'relative',
         width,
         height,
         borderRadius: radius,
-        background: bg,
+        // A logo needs a neutral ground; the livery tint is for the monogram behind it.
+        background: file ? '#fff' : bg,
+        border: file ? '1px solid #edf0f3' : 'none',
         color: ink,
         display: 'flex',
         alignItems: 'center',
@@ -106,9 +112,20 @@ export function AirlineLogo({
         fontSize: Math.max(fontSize, Math.round(Math.min(width, height) * 0.42)),
         fontWeight: 800,
         letterSpacing: '.02em',
+        overflow: 'hidden',
       }}
     >
-      {code}
+      {!file && code}
+      {file && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={`/logos/${file}`}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          style={{ width: '100%', height: '100%', objectFit: 'contain', padding: Math.max(3, Math.round(Math.min(width, height) * 0.12)), boxSizing: 'border-box' }}
+        />
+      )}
     </span>
   );
 }
