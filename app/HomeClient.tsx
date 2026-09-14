@@ -174,7 +174,7 @@ export function HomeClient() {
                 className="btn-primary"
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: 13, background: '#fbbf47', color: '#3a2a05', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 800, textDecoration: 'none' }}
               >
-                Check against {AIRLINES.length} airlines
+                Check my bag
                 <span aria-hidden="true" style={{ marginLeft: 8 }}>→</span>
               </Link>
               {/* Says what the button does before it is pressed: nothing is judged here. */}

@@ -16,8 +16,8 @@ const DEFAULT_RESOURCE_LINKS: FooterLink[] = [
 
 const DEFAULT_SITE_LINKS: FooterLink[] = [
   { label: 'About', href: '/' },
-  { label: 'Privacy Policy', href: '/' },
-  { label: 'Terms of Service', href: '/' },
+  { label: 'Privacy Policy', href: '/privacy-policy' },
+  { label: 'Terms of Service', href: '/terms' },
   { label: 'Contact', href: '/' },
 ];
 

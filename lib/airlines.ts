@@ -841,21 +841,6 @@ export function airlineBaggageUrl(code: string, fallbackWebsite: string): string
   return AIRLINES.find((a) => a.code === code)?.baggageUrl ?? fallbackWebsite;
 }
 
-export function airlineDomain(website: string): string {
-  return website.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '');
-}
-
-/**
- * Public logo sources, tried in order. Google's favicon service (keyed by the airline's own domain) is
- * used first — favicons are designed to stay legible at small square sizes, unlike a full wordmark.
- * pics.avs.io's wordmark banner (keyed by IATA code) is the fallback for domains with no usable favicon.
- * AirlineLogo falls back to a plain text badge if both fail to load.
- */
-export function airlineLogoSources(code: string, website: string, width: number, height: number): string[] {
-  const size = Math.max(width, height) * 2;
-  return [`https://www.google.com/s2/favicons?domain=${airlineDomain(website)}&sz=${size}`, `https://pics.avs.io/${width * 2}/${height * 2}/${code}.png`];
-}
-
 const CARRYON_BASELINE = { h: 55, w: 40, d: 23, kg: 10 };
 
 /**

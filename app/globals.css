@@ -131,15 +131,55 @@ input[type='text']:focus {
   color: #0d9488;
 }
 
+/* One column on a phone: two columns of ~170px could not hold a slider and a number
+   box side by side, which is what made the checker unusable on a narrow screen. */
 .checker-fields {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 22px 40px;
+}
+
+@media (min-width: 620px) {
+  .checker-fields {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (min-width: 820px) {
   .checker-fields {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* On a phone the checker's input row takes the shape Home already uses: the value
+   reads on the right of the label and the slider gets the full width, instead of
+   sharing it with a number box. The overrides need !important only because the
+   elements they touch carry inline styles. */
+.field-value-compact {
+  display: none;
+}
+
+@media (max-width: 619px) {
+  .field-value-compact {
+    display: inline;
+  }
+
+  .field-number,
+  .field-hint-icon {
+    display: none !important;
+  }
+
+  .type-choice > button {
+    flex: 1 1 0 !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 6px !important;
+    padding: 11px 6px !important;
+  }
+
+  .type-choice .type-hint {
+    display: none !important;
   }
 }
 

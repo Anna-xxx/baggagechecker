@@ -1,57 +1,65 @@
-'use client';
+/**
+ * The mark beside an airline's name.
+ *
+ * This used to hotlink Google's favicon service with pics.avs.io as a fallback. Both
+ * were a poor trade: the favicons are 16-64px source images stretched to 48px or more,
+ * which is why they looked pixelated, and every visitor's browser had to announce its
+ * IP address to two companies that have nothing to do with this site just to draw a
+ * 48-pixel square. The monogram below is drawn from the carrier's own IATA code, so it
+ * is sharp at any size, costs no request, and keeps the page entirely first-party.
+ */
 
-import { useState } from 'react';
-import { airlineLogoSources } from '@/lib/airlines';
+// Deterministic so a carrier keeps the same colour on every page and across deploys.
+const PALETTE = [
+  { bg: '#e3f5f2', ink: '#0f766e' },
+  { bg: '#e7effc', ink: '#2563eb' },
+  { bg: '#fdf1dc', ink: '#a2700a' },
+  { bg: '#fdecec', ink: '#c23b3b' },
+  { bg: '#f1ebfd', ink: '#6d3fc4' },
+  { bg: '#e8f6ea', ink: '#2f7a3d' },
+];
+
+function paletteFor(code: string) {
+  let sum = 0;
+  for (let i = 0; i < code.length; i++) sum += code.charCodeAt(i);
+  return PALETTE[sum % PALETTE.length];
+}
 
 export function AirlineLogo({
   code,
-  website,
   width,
   height,
   radius = 8,
   fontSize = 10,
 }: {
   code: string;
-  website: string;
+  /** Kept in the signature so call sites read the same; the mark no longer fetches anything. */
+  website?: string;
   width: number;
   height: number;
   radius?: number;
   fontSize?: number;
 }) {
-  const sources = airlineLogoSources(code, website, width, height);
-  const [sourceIndex, setSourceIndex] = useState(0);
-  const failed = sourceIndex >= sources.length;
-
+  const { bg, ink } = paletteFor(code);
   return (
     <span
+      aria-hidden="true"
       style={{
         flex: 'none',
-        position: 'relative',
         width,
         height,
-        border: '1px solid #edf0f3',
         borderRadius: radius,
-        background: '#f8fafc',
-        overflow: 'hidden',
+        background: bg,
+        color: ink,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize,
+        fontSize: Math.max(fontSize, Math.round(Math.min(width, height) * 0.42)),
         fontWeight: 800,
-        color: '#57677c',
+        letterSpacing: '.02em',
       }}
     >
       {code}
-      {!failed && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={sources[sourceIndex]}
-          src={sources[sourceIndex]}
-          alt={`${code} logo`}
-          onError={() => setSourceIndex((i) => i + 1)}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', background: '#fff' }}
-        />
-      )}
     </span>
   );
 }

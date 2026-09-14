@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/Header';
@@ -179,7 +179,9 @@ function websiteFor(code: string): string {
   return ALL_AIRLINES.find((a) => a.code === code)?.website ?? '';
 }
 
-const MAX_AIRLINES = AIRLINES.length;
+// A readable comparison, not a directory dump: seven cards is what fits on one screen
+// without scrolling past the answer.
+const MAX_AIRLINES = 7;
 
 type DimKey = 'W' | 'H' | 'D' | 'KG' | 'KGC';
 
@@ -210,18 +212,6 @@ const VALID_TYPES: BagType[] = ['carryon', 'personal', 'checked'];
 
 // Answer-first ordering: what fits, what might, what doesn't — not an alphabetical directory.
 const VERDICT_ORDER = ['Fits', 'Fits on most flights', 'Check weight', 'Needs manual check', 'Not included', 'Too heavy', 'Too large'] as const;
-const VERDICT_GROUP_LABEL: Record<string, string> = {
-  Fits: 'Fits',
-  'Fits on most flights': 'Depends on your aircraft',
-  'Check weight': 'Fits — check combined weight',
-  'Needs manual check': 'Needs manual check',
-  'Not included': 'Not included',
-  // Separate from "Too large" because the two have different remedies: repack smaller
-  // versus take weight out. A correctly sized bag reported as too large reads as a bug.
-  'Too heavy': 'Right size, over the weight limit',
-  'Too large': 'Too large',
-};
-
 export function SizeCheckerClient() {
   const searchParams = useSearchParams();
   const paramType = searchParams.get('type');
@@ -238,7 +228,9 @@ export function SizeCheckerClient() {
   const [KG, setKG] = useState(() => (initialType !== 'checked' && paramKg ? paramKg : DEFAULT_BAG.kg));
   const [KGC, setKGC] = useState(() => (initialType === 'checked' && paramKg ? paramKg : 20));
   const [type, setType] = useState<BagType>(initialType);
-  const [sel, setSel] = useState<string[]>(() => (hasHandoffParams ? AIRLINES.map((a) => a.name) : []));
+  // A handoff from Home lands straight on results, so it pre-picks a starting set rather
+  // than an empty one — capped like any other selection, since the reader can swap any of them.
+  const [sel, setSel] = useState<string[]>(() => (hasHandoffParams ? AIRLINES.slice(0, MAX_AIRLINES).map((a) => a.name) : []));
   const [checked, setChecked] = useState(hasHandoffParams);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
@@ -920,10 +912,25 @@ export function SizeCheckerClient() {
   const summaryBorder = allFit ? '#c6ead4' : noneFit ? '#f6d5d5' : '#f3ebdb';
   const bagLabel = `Your bag: ${toDisp(W, 'W')} × ${toDisp(H, 'H')} × ${toDisp(D, 'D')} ${lenU}, ${toDisp(type === 'checked' ? KGC : KG, 'KG')} ${wU}`;
 
-  const resultGroups = VERDICT_ORDER.map((verdict) => ({
-    verdict,
-    items: results.filter((r) => r.verdict === verdict).sort((a, b) => a.airline.name.localeCompare(b.airline.name)),
-  })).filter((g) => g.items.length > 0);
+  // Answer-first order, fixed when the check runs. It deliberately ignores the fare
+  // pickers: switching a fare changes that card's verdict in place instead of throwing
+  // it into another part of the list, out from under the reader.
+  const orderInputs = `${checked}|${sel.join(',')}|${type}|${W}|${H}|${D}|${KG}|${KGC}`;
+  const displayOrder = useMemo(
+    () =>
+      VERDICT_ORDER.flatMap((verdict) =>
+        results
+          .filter((r) => r.verdict === verdict)
+          .map((r) => r.airline.name)
+          .sort((a, b) => a.localeCompare(b)),
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [orderInputs],
+  );
+
+  const orderedResults = displayOrder
+    .map((name) => results.find((r) => r.airline.name === name))
+    .filter((r): r is (typeof results)[number] => Boolean(r));
 
   const submit = () => {
     if (canCheck) setChecked(true);
@@ -967,7 +974,7 @@ export function SizeCheckerClient() {
 
             <div style={{ marginBottom: 24 }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#57677c', marginBottom: 10 }}>What are you checking?</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+              <div className="type-choice" style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                 {TYPE_DEFS.map((t) => {
                   const on = type === t.key;
                   return (
@@ -982,7 +989,7 @@ export function SizeCheckerClient() {
                       <BagTypeIcon type={t.key} size={30} />
                       <span style={{ flex: 1, minWidth: 0 }}>
                         <span style={{ display: 'block', fontSize: 13.5, fontWeight: 800, color: on ? '#0f766e' : '#0f1c2e' }}>{t.title}</span>
-                        <span style={{ display: 'block', marginTop: 3, fontSize: 11.5, lineHeight: 1.5, color: '#8494a8' }}>{t.hint}</span>
+                        <span className="type-hint" style={{ display: 'block', marginTop: 3, fontSize: 11.5, lineHeight: 1.5, color: '#8494a8' }}>{t.hint}</span>
                       </span>
                     </button>
                   );
@@ -1000,7 +1007,10 @@ export function SizeCheckerClient() {
                         <DimensionIcon axis={def.axis} />
                         {def.label}
                       </span>
-                      <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#b7c1cd" strokeWidth={1.8} strokeLinecap="round">
+                      <span className="field-value-compact" style={{ fontSize: 13, fontWeight: 700, color: '#7a8798', fontVariantNumeric: 'tabular-nums' }}>
+                        {value} {def.key === 'KG' || def.key === 'KGC' ? wU : lenU}
+                      </span>
+                      <svg aria-hidden="true" className="field-hint-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#b7c1cd" strokeWidth={1.8} strokeLinecap="round">
                         <circle cx="12" cy="12" r="9" />
                         <path d="M12 11v5M12 8h.01" />
                       </svg>
@@ -1009,6 +1019,7 @@ export function SizeCheckerClient() {
                       <input type="range" min={toDisp(def.min, def.key)} max={toDisp(def.max, def.key)} value={value} onChange={handleFieldChange(def)} style={{ flex: 1, minWidth: 0 }} />
                       <input
                         type="number"
+                        className="field-number"
                         value={value}
                         onChange={handleFieldChange(def)}
                         style={{ flex: 'none', width: 78, border: '1px solid #e4eaf1', borderRadius: 9, padding: 10, textAlign: 'center', fontFamily: 'inherit', fontSize: 14, fontWeight: 600, color: '#0f1c2e', background: '#fff', fontVariantNumeric: 'tabular-nums' }}
@@ -1136,16 +1147,8 @@ export function SizeCheckerClient() {
                 <span style={{ fontSize: 12.5, color: '#57677c', marginLeft: 'auto' }}>{bagLabel}</span>
               </div>
 
-              {resultGroups.map((g) => (
-                <div key={g.verdict} style={{ marginBottom: 22 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: g.items[0].color, flex: 'none' }} />
-                    <span style={{ fontSize: 12.5, fontWeight: 800, color: g.items[0].color }}>
-                      {VERDICT_GROUP_LABEL[g.verdict]} — {g.items.length}
-                    </span>
-                  </div>
-                  <div style={{ display: 'grid', gap: 14 }}>
-                    {g.items.map((r) => (
+              <div style={{ display: 'grid', gap: 14 }}>
+                {orderedResults.map((r) => (
                       <div key={r.airline.name} style={{ border: '1px solid #edf0f3', borderRadius: 12, overflow: 'hidden' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', background: '#f8fafc', padding: '13px 16px' }}>
                           <AirlineLogo code={r.airline.code} website={websiteFor(r.airline.code)} width={34} height={26} radius={7} fontSize={10} />
@@ -1205,10 +1208,8 @@ export function SizeCheckerClient() {
                           </p>
                         )}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           ) : (
             <div style={{ background: '#f8fafc', borderRadius: 12, padding: '44px 24px', textAlign: 'center' }}>
