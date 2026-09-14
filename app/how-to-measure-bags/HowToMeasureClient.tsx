@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { AIRLINES } from '@/lib/airlines';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
@@ -283,7 +284,7 @@ export function HowToMeasureClient() {
         {/* CTA */}
         <section style={{ background: '#fdf8ee', border: '1px solid #f3ebdb', borderRadius: 14, padding: 'clamp(30px,4vw,44px) 28px', textAlign: 'center', marginBottom: 38 }}>
           <h2 style={{ margin: '0 0 12px', fontSize: 'clamp(19px,2.4vw,23px)', fontWeight: 800, letterSpacing: '-.025em' }}>Test Your Measurements Against Airlines</h2>
-          <p style={{ margin: '0 auto 22px', maxWidth: 560, fontSize: 13.5, lineHeight: 1.75, color: '#57677c' }}>Now that you know how to measure your bag dimensions, use our free tool to check if your luggage meets the requirements of over 200 airlines worldwide.</p>
+          <p style={{ margin: '0 auto 22px', maxWidth: 560, fontSize: 13.5, lineHeight: 1.75, color: '#57677c' }}>Now that you know how to measure your bag dimensions, use our free tool to check if your luggage meets the requirements of {AIRLINES.length} airlines worldwide.</p>
           <Link
             href="/size-checker"
             className="cta-link"

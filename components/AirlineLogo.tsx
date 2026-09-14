@@ -7,9 +7,9 @@
  * two companies with no part in this site just to draw one small square.
  *
  * The logos are now served from this site's own /logos folder instead, so the page stays
- * first-party and nothing is requested from another company. All 39 carriers have a file; the
- * monogram in that carrier's livery colours stays as the fallback, shown behind the image if
- * one ever fails to load or if a carrier is added before its logo is.
+ * first-party and nothing is requested from another company. Carriers added since that batch
+ * have no file yet; the monogram in that carrier's livery colours is the fallback, shown when
+ * a logo is missing or fails to load.
  */
 
 import { AIRLINE_LOGO_FILES } from '@/lib/airline-logos';
@@ -20,6 +20,8 @@ const BRAND: Record<string, Ink> = {
   AC: { bg: '#fdecec', ink: '#c8102e' }, // Air Canada
   AF: { bg: '#e7effc', ink: '#002157' }, // Air France
   AI: { bg: '#fdecec', ink: '#b0142d' }, // Air India
+  NZ: { bg: '#e0f3f4', ink: '#006a72' }, // Air New Zealand
+  AS: { bg: '#e7effc', ink: '#01426a' }, // Alaska Airlines
   AZ: { bg: '#e8f0fb', ink: '#00307d' }, // ITA Airways
   NH: { bg: '#e7effc', ink: '#13448f' }, // All Nippon Airways
   AA: { bg: '#eef2f7', ink: '#0078d2' }, // American Airlines
@@ -49,6 +51,7 @@ const BRAND: Record<string, Ink> = {
   FR: { bg: '#e8f0fb', ink: '#073590' }, // Ryanair
   SK: { bg: '#e8f0fb', ink: '#003d7d' }, // SAS
   SQ: { bg: '#fdf3da', ink: '#8a6a00' }, // Singapore Airlines
+  NK: { bg: '#fdf8d8', ink: '#8a7a00' }, // Spirit Airlines
   WN: { bg: '#e8f0fb', ink: '#304cb2' }, // Southwest
   TP: { bg: '#e8f6ea', ink: '#00703c' }, // TAP Air Portugal
   TG: { bg: '#f3e8fb', ink: '#5c2d91' }, // Thai Airways

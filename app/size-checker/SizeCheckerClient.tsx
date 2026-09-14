@@ -895,7 +895,10 @@ export function SizeCheckerClient() {
   };
 
   const q = query.trim().toLowerCase();
-  const options = AIRLINES.filter((a) => !q || a.name.toLowerCase().includes(q) || a.code.toLowerCase().includes(q)).slice(0, 40);
+  // Every carrier the placeholder counts has to be reachable by scrolling. This used to be
+  // capped at 40, so the last carriers alphabetically could only be found by searching while
+  // the field above them advertised the full list.
+  const options = AIRLINES.filter((a) => !q || a.name.toLowerCase().includes(q) || a.code.toLowerCase().includes(q));
   const noMatches = q.length > 0 && options.length === 0;
   const showList = open && sel.length < MAX_AIRLINES;
 
@@ -1194,9 +1197,11 @@ export function SizeCheckerClient() {
                           </div>
                         )}
 
-                        {/* Always four columns. auto-fit dropped to three between 620 and ~750px, which put
-                            weight on a line of its own — the same break the phone layout had. */}
-                        <div className="checks-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}>
+                        {/* One column per measurement, at every width: the checks are a single
+                            comparison and belong on one line. auto-fit was wrong twice over — it
+                            dropped to three columns between 620 and ~750px, and a checked bag,
+                            which has only two checks, was left filling half the card. */}
+                        <div className="checks-row" style={{ display: 'grid', gridTemplateColumns: `repeat(${r.checks.length}, minmax(0, 1fr))` }}>
                           {r.checks.map((c) => (
                             <div key={c.key} className="checks-cell" style={{ padding: '13px 16px', borderTop: '1px solid #f0f2f5', borderRight: '1px solid #f0f2f5' }}>
                               <div className="checks-head" style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 11.5, color: '#8494a8', marginBottom: 5 }}>

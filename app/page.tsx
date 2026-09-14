@@ -1,10 +1,11 @@
 import { SITE_URL } from '@/lib/site';
+import { AIRLINES } from '@/lib/airlines';
 import type { Metadata } from 'next';
 import { HomeClient } from './HomeClient';
 
 export const metadata: Metadata = {
   title: 'BaggageChecker – Check Airline Luggage Size Limits Instantly',
-  description: 'Check if your luggage meets airline carry-on and checked bag size limits. Compare baggage policies for 100+ airlines worldwide and avoid excess fees.',
+  description: `Check if your luggage meets airline carry-on and checked bag size limits. Compare baggage policies for ${AIRLINES.length} airlines worldwide and avoid excess fees.`,
   keywords: ['luggage size checker', 'airline baggage sizes', 'carry-on limits', 'checked baggage allowance', 'baggage fees'],
   robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
   alternates: { canonical: `${SITE_URL}/` },
@@ -13,12 +14,12 @@ export const metadata: Metadata = {
     siteName: 'BaggageChecker',
     url: `${SITE_URL}/`,
     title: 'BaggageChecker – Check Airline Luggage Size Limits Instantly',
-    description: 'Compare baggage policies for 100+ airlines and check your bag before you fly.',
+    description: `Compare baggage policies for ${AIRLINES.length} airlines and check your bag before you fly.`,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'BaggageChecker – Airline Luggage Size Limits',
-    description: 'Compare baggage policies for 100+ airlines and check your bag before you fly.',
+    description: `Compare baggage policies for ${AIRLINES.length} airlines and check your bag before you fly.`,
   },
 };
 
