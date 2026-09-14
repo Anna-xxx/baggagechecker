@@ -32,6 +32,7 @@ const BRAND: Record<string, Ink> = {
   U2: { bg: '#fff0e4', ink: '#ff6600' }, // easyJet
   EK: { bg: '#fdecec', ink: '#d71921' }, // Emirates
   ET: { bg: '#e8f6ea', ink: '#2f7a3d' }, // Ethiopian
+  EY: { bg: '#fdf3da', ink: '#8a6a1a' }, // Etihad
   F9: { bg: '#e8f6ea', ink: '#1d7a3e' }, // Frontier
   GA: { bg: '#e3f2fb', ink: '#00609c' }, // Garuda Indonesia
   HU: { bg: '#fdecec', ink: '#c0122c' }, // Hainan
@@ -39,6 +40,7 @@ const BRAND: Record<string, Ink> = {
   '6E': { bg: '#e8f0fb', ink: '#012169' }, // IndiGo
   JL: { bg: '#fdecec', ink: '#c8102e' }, // Japan Airlines
   B6: { bg: '#e8f0fb', ink: '#003876' }, // JetBlue
+  KE: { bg: '#e3f2fb', ink: '#0b3d8c' }, // Korean Air
   KL: { bg: '#e3f2fb', ink: '#00a1de' }, // KLM
   LH: { bg: '#fdf3da', ink: '#05164d' }, // Lufthansa
   MH: { bg: '#e3f5f2', ink: '#00664f' }, // Malaysia Airlines
@@ -51,6 +53,7 @@ const BRAND: Record<string, Ink> = {
   TP: { bg: '#e8f6ea', ink: '#00703c' }, // TAP Air Portugal
   TG: { bg: '#f3e8fb', ink: '#5c2d91' }, // Thai Airways
   TK: { bg: '#fdecec', ink: '#c70a0c' }, // Turkish Airlines
+  UA: { bg: '#e8f0fb', ink: '#002244' }, // United Airlines
   HY: { bg: '#e3f2fb', ink: '#0071bc' }, // Uzbekistan Airways
   VS: { bg: '#fdecec', ink: '#e10a0a' }, // Virgin Atlantic
   VA: { bg: '#fdecec', ink: '#d8232a' }, // Virgin Australia
