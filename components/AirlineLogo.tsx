@@ -41,6 +41,7 @@ const BRAND: Record<string, Ink> = {
   B6: { bg: '#e8f0fb', ink: '#003876' }, // JetBlue
   KE: { bg: '#e3f2fb', ink: '#0b3d8c' }, // Korean Air
   KL: { bg: '#e3f2fb', ink: '#00a1de' }, // KLM
+  LA: { bg: '#e8e6fb', ink: '#2b0a8c' }, // LATAM
   LH: { bg: '#fdf3da', ink: '#05164d' }, // Lufthansa
   MH: { bg: '#e3f5f2', ink: '#00664f' }, // Malaysia Airlines
   QF: { bg: '#fdecec', ink: '#e40000' }, // Qantas

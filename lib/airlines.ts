@@ -521,6 +521,16 @@ export const AIRLINES: Airline[] = [
     checked: { kg: 23, total: 158, eco: 23, biz: 0, bags: 'Route and cabin dependent', verified: true, rule: 'linear', note: 'Economy pieces are limited to 158 cm in total dimensions and 23 kg. The number of free pieces depends on the route, cabin and SKYPASS status; premium cabins allow more and heavier bags.' },
   },
   {
+    name: 'LATAM Airlines',
+    code: 'LA',
+    country: 'Chile',
+    website: 'https://www.latamairlines.com',
+    baggageUrl: 'https://www.latamairlines.com/us/en/experience/prepare-your-trip/baggage/carry-on',
+    carryOn: { w: 35, h: 55, d: 25, kg: 12, verified: true, weightRule: 'combinedWithPersonal', note: 'LATAM publishes 12 kg for Economy cabin baggage and 16 kg for Premium Economy and Premium Business. The figure covers what you take into the cabin, so count the personal item against it as well.' },
+    personal: { rule: 'dimensions', w: 35, h: 45, d: 20, kg: 0, verified: true },
+    checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Basic fares include none; otherwise route and fare dependent', verified: true, rule: 'linear', manualCheck: true, note: 'What a LATAM fare includes in the hold depends on the route and the fare, and Basic fares include nothing. Two caps apply throughout: 300 cm in total dimensions per piece, and 45 kg per piece \u2014 dropping to 32 kg on flights to, from or via Argentina, Aruba, Cuba, Europe, Oceania, South Africa or Venezuela.' },
+  },
+  {
     name: 'Lufthansa',
     code: 'LH',
     country: 'Germany',
