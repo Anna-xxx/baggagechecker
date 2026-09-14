@@ -1,0 +1,16 @@
+{
+  // Cloudflare's Workers build flow reads the deploy settings from here rather than
+  // from the dashboard, so this file is what tells it which folder to publish.
+  "name": "baggagechecker",
+  "compatibility_date": "2026-09-14",
+
+  // No "main" entry: this site is a folder of files with no server code behind it,
+  // and requests for static assets are unmetered on every plan, free included.
+  "assets": {
+    "directory": "./out",
+
+    // next build writes 404.html; without this a missing URL would return a bare,
+    // unstyled error instead of the site's own not-found page.
+    "not_found_handling": "404-page"
+  }
+}
