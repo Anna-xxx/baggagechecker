@@ -244,13 +244,16 @@ function clamp(v: number, lo: number, hi: number) {
 const VALID_TYPES: BagType[] = ['carryon', 'personal', 'checked'];
 
 // Answer-first ordering: what fits, what might, what doesn't — not an alphabetical directory.
-const VERDICT_ORDER = ['Fits', 'Fits on most flights', 'Check weight', 'Needs manual check', 'Not included', 'Too large'] as const;
+const VERDICT_ORDER = ['Fits', 'Fits on most flights', 'Check weight', 'Needs manual check', 'Not included', 'Too heavy', 'Too large'] as const;
 const VERDICT_GROUP_LABEL: Record<string, string> = {
   Fits: 'Fits',
   'Fits on most flights': 'Depends on your aircraft',
   'Check weight': 'Fits — check combined weight',
   'Needs manual check': 'Needs manual check',
   'Not included': 'Not included',
+  // Separate from "Too large" because the two have different remedies: repack smaller
+  // versus take weight out. A correctly sized bag reported as too large reads as a bug.
+  'Too heavy': 'Right size, over the weight limit',
   'Too large': 'Too large',
 };
 
@@ -318,11 +321,17 @@ export function SizeCheckerClient() {
     return variants.find((v) => v.id === id) ?? variants[0];
   };
 
+  // Eleven carriers list their cheapest fare first, and on those fares no cabin bag is
+  // included at all. Defaulting to variants[0] therefore answered "not included" for a
+  // third of the directory before the traveller had said anything about their ticket —
+  // technically true of that one fare, but wrong for the ticket most people hold. Default
+  // to the first fare that actually carries a cabin bag; the chip row still offers the rest.
   const selectedCarryOnVariant = (a: Airline) => {
     const variants = a.carryOnVariants;
     if (!variants?.length) return undefined;
-    const id = carryOnVariantByCode[a.code] ?? variants[0].id;
-    return variants.find((v) => v.id === id) ?? variants[0];
+    const fallback = variants.find((v) => v.allowed !== false) ?? variants[0];
+    const id = carryOnVariantByCode[a.code] ?? fallback.id;
+    return variants.find((v) => v.id === id) ?? fallback;
   };
 
   const carryOnVariantLimits = (a: Airline): Limits => {
@@ -804,7 +813,11 @@ export function SizeCheckerClient() {
         const failed = checks.filter((c) => c.over);
         const manualChecks = checks.filter((c) => 'manual' in c && c.manual);
         const needsWeightCheck = failed.length === 0 && manualChecks.length > 0;
-        const finalVerdict: 'Too large' | 'Check weight' | 'Fits' = failed.length > 0 ? 'Too large' : needsWeightCheck ? 'Check weight' : 'Fits';
+        // A bag that clears every dimension and only misses the weight cap is not "too large":
+        // the fix is to take something out, not to buy a smaller case.
+        const overWeightOnly = failed.length > 0 && failed.every((c) => c.key === weightKey);
+        const finalVerdict: 'Too large' | 'Too heavy' | 'Check weight' | 'Fits' =
+          failed.length > 0 ? (overWeightOnly ? 'Too heavy' : 'Too large') : needsWeightCheck ? 'Check weight' : 'Fits';
         const limit =
           type === 'carryon' && hasActiveLinearLimit(L)
             ? L.linearOnly
@@ -829,7 +842,9 @@ export function SizeCheckerClient() {
           bg: failed.length > 0 ? '#fee2e2' : needsWeightCheck ? '#fdf8ee' : '#dcfce7',
           showAdvice: failed.length > 0 || needsWeightCheck,
           advice:
-            failed.length > 0
+            overWeightOnly
+              ? `The bag is within the size limits for ${a.name}, but over its ${L.KG} kg cabin allowance. Move items into your personal item or a checked bag, or pay for the extra weight.`
+              : failed.length > 0
               ? `Over the limit on ${failed.map((c) => c.label.toLowerCase()).join(' and ')}. You would need to check this bag into the hold, or repack into a smaller case.`
               : needsWeightCheck
                 ? `${a.name} publishes ${L.KG} kg as a combined cabin-baggage limit. Add the weight of your other cabin items before treating this as a pass.`
@@ -841,11 +856,12 @@ export function SizeCheckerClient() {
 
   const fitCount = results.filter((r) => r.verdict === 'Fits').length;
   const tooLargeCount = results.filter((r) => r.verdict === 'Too large').length;
+  const tooHeavyCount = results.filter((r) => r.verdict === 'Too heavy').length;
   const notIncludedCount = results.filter((r) => r.verdict === 'Not included').length;
   const dependsCount = results.filter((r) => r.verdict === 'Fits on most flights').length;
   const manualCount = results.filter((r) => r.verdict === 'Needs manual check' || r.verdict === 'Check weight').length;
   const allFit = results.length > 0 && fitCount === results.length;
-  const noneFit = results.length > 0 && tooLargeCount === results.length;
+  const noneFit = results.length > 0 && tooLargeCount + tooHeavyCount === results.length;
   const canCheck = sel.length > 0;
 
   const toggleAirline = (name: string) => {
@@ -916,13 +932,18 @@ export function SizeCheckerClient() {
       ? 'Your bag fits this airline'
       : `Your bag fits all ${results.length} airlines`
     : noneFit
-      ? results.length === 1
-        ? 'Your bag is too large for this airline'
-        : `Your bag is too large for all ${results.length} airlines`
-      : manualCount || notIncludedCount || dependsCount
+      ? tooLargeCount === 0
+        ? results.length === 1
+          ? 'Your bag fits, but is over this airline’s weight limit'
+          : `Your bag fits all ${results.length} airlines on size, but is over every weight limit`
+        : results.length === 1
+          ? 'Your bag is too large for this airline'
+          : `Your bag is too large for all ${results.length} airlines`
+      : manualCount || notIncludedCount || dependsCount || tooHeavyCount
         ? [
             fitCount ? `${fitCount} fit` : '',
             dependsCount ? `${dependsCount} depend${dependsCount === 1 ? 's' : ''} on your aircraft` : '',
+            tooHeavyCount ? `${tooHeavyCount} over the weight limit` : '',
             tooLargeCount ? `${tooLargeCount} too large` : '',
             notIncludedCount ? `${notIncludedCount} not included` : '',
             manualCount ? `${manualCount} need${manualCount === 1 ? 's' : ''} a manual check` : '',
