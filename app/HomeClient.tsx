@@ -241,15 +241,6 @@ export function HomeClient() {
         </div>
       </section>
 
-      <section style={{ background: '#f7f8f9', padding: '48px 24px 56px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 26, textAlign: 'center' }}>
-          <p style={{ margin: '0 0 16px', fontSize: 15, fontWeight: 700 }}>If your flight is delayed or cancelled, you could get $250–$600 compensation — check eligibility here.</p>
-          <Link href="/size-checker" style={{ display: 'inline-block', padding: '11px 24px', background: '#fbbf47', color: '#3a2a05', borderRadius: 9, fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>
-            Check eligibility
-          </Link>
-        </div>
-      </section>
-
       <section style={{ background: '#fff', padding: '56px 24px 0' }}>
         <div style={{ maxWidth: 820, margin: '0 auto' }}>
           <h2 style={{ margin: '0 0 14px', textAlign: 'center', fontSize: 24, fontWeight: 800, letterSpacing: '-.02em' }}>Understanding Luggage Size Requirements</h2>
