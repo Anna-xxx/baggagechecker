@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { SizeCheckerClient } from './SizeCheckerClient';
@@ -8,11 +9,11 @@ export const metadata: Metadata = {
     'Free luggage size checker: enter your bag width, height, depth and weight, pick your airlines and see instantly whether it fits carry-on, personal item or checked baggage limits.',
   keywords: ['luggage size checker', 'compare luggage sizes', 'airline baggage comparison', 'cabin bag size limits', 'suitcase dimensions checker'],
   robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
-  alternates: { canonical: 'https://sizemybag.com/size-checker' },
+  alternates: { canonical: `${SITE_URL}/size-checker` },
   openGraph: {
     type: 'website',
     siteName: 'BaggageChecker',
-    url: 'https://sizemybag.com/size-checker',
+    url: `${SITE_URL}/size-checker`,
     title: 'Luggage Size Checker – Will Your Bag Fit?',
     description: 'Check one suitcase against multiple airline baggage policies side by side.',
   },
@@ -29,7 +30,7 @@ const jsonLd = {
     {
       '@type': 'WebApplication',
       name: 'Luggage Size Comparison Tool',
-      url: 'https://sizemybag.com/size-checker',
+      url: `${SITE_URL}/size-checker`,
       applicationCategory: 'TravelApplication',
       operatingSystem: 'Web',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -38,8 +39,8 @@ const jsonLd = {
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://sizemybag.com/' },
-        { '@type': 'ListItem', position: 2, name: 'Luggage Size Checker', item: 'https://sizemybag.com/size-checker' },
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: 'Luggage Size Checker', item: `${SITE_URL}/size-checker` },
       ],
     },
     {

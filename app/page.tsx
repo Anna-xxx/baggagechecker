@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { HomeClient } from './HomeClient';
 
@@ -6,11 +7,11 @@ export const metadata: Metadata = {
   description: 'Check if your luggage meets airline carry-on and checked bag size limits. Compare baggage policies for 100+ airlines worldwide and avoid excess fees.',
   keywords: ['luggage size checker', 'airline baggage sizes', 'carry-on limits', 'checked baggage allowance', 'baggage fees'],
   robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
-  alternates: { canonical: 'https://sizemybag.com/' },
+  alternates: { canonical: `${SITE_URL}/` },
   openGraph: {
     type: 'website',
     siteName: 'BaggageChecker',
-    url: 'https://sizemybag.com/',
+    url: `${SITE_URL}/`,
     title: 'BaggageChecker – Check Airline Luggage Size Limits Instantly',
     description: 'Compare baggage policies for 100+ airlines and check your bag before you fly.',
   },
@@ -27,17 +28,17 @@ const jsonLd = {
     {
       '@type': 'WebSite',
       name: 'BaggageChecker',
-      url: 'https://sizemybag.com/',
+      url: `${SITE_URL}/`,
       potentialAction: {
         '@type': 'SearchAction',
-        target: 'https://sizemybag.com/results?airline={search_term_string}',
+        target: `${SITE_URL}/results?airline={search_term_string}`,
         'query-input': 'required name=search_term_string',
       },
     },
     {
       '@type': 'WebApplication',
       name: 'BaggageChecker Luggage Size Checker',
-      url: 'https://sizemybag.com/',
+      url: `${SITE_URL}/`,
       applicationCategory: 'TravelApplication',
       operatingSystem: 'Web',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },

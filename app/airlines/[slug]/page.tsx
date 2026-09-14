@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { AIRLINES, airlineSlug, findAirlineBySlug } from '@/lib/airlines';
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const title = `${airline.name} Baggage Size & Weight Limits | BaggageChecker`;
   const description = `${airline.name} carry-on and checked baggage limits: maximum width, height, depth, total dimensions and weight allowances. Check your bag before you fly.`;
-  const url = `https://sizemybag.com/airlines/${slug}`;
+  const url = `${SITE_URL}/airlines/${slug}`;
 
   return {
     title,
@@ -44,9 +45,9 @@ export default async function AirlineDetailPage({ params }: { params: Promise<{ 
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://sizemybag.com/' },
-          { '@type': 'ListItem', position: 2, name: 'Airlines', item: 'https://sizemybag.com/airlines' },
-          { '@type': 'ListItem', position: 3, name: airline.name, item: `https://sizemybag.com/airlines/${slug}` },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+          { '@type': 'ListItem', position: 2, name: 'Airlines', item: `${SITE_URL}/airlines` },
+          { '@type': 'ListItem', position: 3, name: airline.name, item: `${SITE_URL}/airlines/${slug}` },
         ],
       },
       {

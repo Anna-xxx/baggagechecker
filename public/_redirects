@@ -1,0 +1,3 @@
+# Cloudflare Pages reads this file and answers the redirect at the edge,
+# replacing the redirects() rule that only works with a running Next.js server.
+/luggage-sizes /luggage-guide 301

@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { HowToMeasureClient } from './HowToMeasureClient';
 
@@ -5,7 +6,7 @@ export const metadata: Metadata = {
   title: 'How to Measure Bag Dimensions: Complete Guide | BaggageChecker',
   description: 'Learn how to measure your luggage dimensions accurately at home. Step-by-step guide to length, width, height and weight so your bag meets airline carry-on requirements.',
   robots: { index: true, follow: true, googleBot: { 'max-image-preview': 'large' } },
-  alternates: { canonical: 'https://sizemybag.com/how-to-measure-bags' },
+  alternates: { canonical: `${SITE_URL}/how-to-measure-bags` },
   openGraph: {
     type: 'article',
     siteName: 'BaggageChecker',
@@ -31,8 +32,8 @@ const jsonLd = {
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://sizemybag.com/' },
-        { '@type': 'ListItem', position: 2, name: 'How to Measure Bags', item: 'https://sizemybag.com/how-to-measure-bags' },
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: 'How to Measure Bags', item: `${SITE_URL}/how-to-measure-bags` },
       ],
     },
     {

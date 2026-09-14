@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/site';
 import type { Metadata, Viewport } from 'next';
 import { IBM_Plex_Mono, Public_Sans } from 'next/font/google';
 import './globals.css';
@@ -17,7 +18,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://sizemybag.com'),
+  metadataBase: new URL(SITE_URL),
 };
 
 export const viewport: Viewport = {
