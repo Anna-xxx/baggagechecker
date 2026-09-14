@@ -526,8 +526,8 @@ export const AIRLINES: Airline[] = [
     country: 'South Korea',
     website: 'https://www.koreanair.com',
     baggageUrl: 'https://www.koreanair.com/contents/plan-your-travel/baggage/carry-on-baggage?hl=en',
-    carryOn: { w: 40, h: 55, d: 20, kg: 10, verified: true, linearCm: 115, weightRule: 'combinedWithPersonal' },
-    personal: { rule: 'unknown', kg: 0, verified: false },
+    carryOn: { w: 40, h: 55, d: 20, kg: 10, verified: true, linearCm: 115, weightRule: 'combinedWithPersonal', note: 'Korean Air states the cabin bag as 55 \u00d7 40 \u00d7 20 cm or 115 cm in total \u2014 the same box either way \u2014 and the 10 kg covers the cabin bag and the personal item together.' },
+    personal: { rule: 'dimensions', w: 30, h: 40, d: 15, kg: 0, verified: true },
     checked: { kg: 23, total: 158, eco: 23, biz: 0, bags: 'Route and cabin dependent', verified: true, rule: 'linear', note: 'Economy pieces are limited to 158 cm in total dimensions and 23 kg. The number of free pieces depends on the route, cabin and SKYPASS status; premium cabins allow more and heavier bags.' },
   },
   {
@@ -746,7 +746,7 @@ export const AIRLINES: Airline[] = [
     baggageUrl: 'https://www.united.com/en/us/fly/baggage/carry-on-bags.html',
     carryOn: { w: 35, h: 56, d: 22, kg: 0, verified: true, note: 'United publishes no weight limit for cabin baggage — the bag has to fit the sizer and the overhead bin.' },
     personal: { rule: 'dimensions', w: 25, h: 43, d: 22, kg: 0, verified: true },
-    checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Fare, route and status dependent', verified: false, rule: 'linear', manualCheck: true, note: 'We could not read United\u2019s checked-baggage limits from their own page, so none are published here rather than guessed. Check the size and weight for your route on united.com before you fly.' },
+    checked: { kg: 23, total: 157, w: 52, h: 76, d: 30, eco: 23, biz: 32, bags: 'Fare, route and status dependent', verified: true, rule: 'linear', note: 'A checked bag may be up to 76 \u00d7 52 \u00d7 30 cm (30 \u00d7 20 \u00d7 12 in) or 62 in in total, handles and wheels included. Economy and Premium Economy allow 23 kg per bag; Business, First and Polaris allow 32 kg. MileagePlus Premier status also raises the limit to 32 kg, and where cabin and status differ United applies the higher of the two. Basic Economy has its own allowance.' },
   },
   {
     name: 'Uzbekistan Airways',
