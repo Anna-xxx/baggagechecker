@@ -1112,11 +1112,16 @@ export function SizeCheckerClient() {
                       style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 11, border: 'none', borderBottom: '1px solid #f4f6f8', background: on ? '#f4faf9' : '#fff', padding: '11px 14px', fontFamily: 'inherit', textAlign: 'left', cursor: 'pointer' }}
                     >
                       <AirlineLogo code={a.code} website={websiteFor(a.code)} width={32} height={24} radius={6} fontSize={9} />
-                      <span style={{ flex: 1, minWidth: 0, fontSize: 13.5, fontWeight: 700, color: '#0f1c2e' }}>{a.name}</span>
-                      <span style={{ fontSize: 11.5, color: '#8494a8', whiteSpace: 'nowrap' }}>
-                        {type === 'carryon' && a.carryOnVariants?.length ? 'Fare / route / class dependent' : formatLimit(L)}
+                      {/* The name and its allowance share a row that becomes two lines on a phone.
+                          Side by side in that width the allowance, which cannot wrap, was drawn
+                          straight over a name that had broken into three lines. */}
+                      <span className="pick-text" style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 11 }}>
+                        <span className="pick-name" style={{ flex: 1, minWidth: 0, fontSize: 13.5, fontWeight: 700, color: '#0f1c2e' }}>{a.name}</span>
+                        <span className="pick-limit" style={{ flex: 'none', fontSize: 11.5, color: '#8494a8', whiteSpace: 'nowrap' }}>
+                          {type === 'carryon' && a.carryOnVariants?.length ? 'Fare / route / class dependent' : formatLimit(L)}
+                        </span>
                       </span>
-                      <span style={{ fontSize: 12, fontWeight: 800, color: '#14b8a6', width: 12, textAlign: 'center' }}>{on ? '✓' : ''}</span>
+                      <span style={{ flex: 'none', fontSize: 12, fontWeight: 800, color: '#14b8a6', width: 12, textAlign: 'center' }}>{on ? '✓' : ''}</span>
                     </button>
                   );
                 })}
@@ -1152,11 +1157,16 @@ export function SizeCheckerClient() {
               <div style={{ display: 'grid', gap: 14 }}>
                 {orderedResults.map((r) => (
                       <div key={r.airline.name} style={{ border: '1px solid #edf0f3', borderRadius: 12, overflow: 'hidden' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', background: '#f8fafc', padding: '13px 16px' }}>
-                          <AirlineLogo code={r.airline.code} website={websiteFor(r.airline.code)} width={34} height={26} radius={7} fontSize={10} />
-                          <span style={{ fontSize: 14, fontWeight: 800 }}>{r.airline.name}</span>
-                          {r.limit && <span style={{ fontSize: 12, color: '#7a8798' }}>{r.limit}</span>}
-                          <span style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 800, color: r.color, background: r.bg, borderRadius: 999, padding: '6px 13px', whiteSpace: 'nowrap' }}>{r.verdict}</span>
+                        {/* The verdict is the answer to the question, so it stays on the airline's own
+                            line rather than wrapping under it; the allowance, which is supporting
+                            detail, is the part that drops to a second line when the width runs out. */}
+                        <div style={{ background: '#f8fafc', padding: '13px 16px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <AirlineLogo code={r.airline.code} website={websiteFor(r.airline.code)} width={34} height={26} radius={7} fontSize={10} />
+                            <span className="result-airline" style={{ fontSize: 14, fontWeight: 800, minWidth: 0, overflowWrap: 'anywhere' }}>{r.airline.name}</span>
+                            <span className="result-verdict" style={{ flex: 'none', marginLeft: 'auto', fontSize: 12, fontWeight: 800, color: r.color, background: r.bg, borderRadius: 999, padding: '6px 13px', whiteSpace: 'nowrap' }}>{r.verdict}</span>
+                          </div>
+                          {r.limit && <div className="result-limit" style={{ fontSize: 12, color: '#7a8798', marginTop: 5, paddingLeft: 46 }}>{r.limit}</div>}
                         </div>
 
                         {r.picker && (
@@ -1184,15 +1194,17 @@ export function SizeCheckerClient() {
                           </div>
                         )}
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,150px),1fr))' }}>
+                        {/* Always four columns. auto-fit dropped to three between 620 and ~750px, which put
+                            weight on a line of its own — the same break the phone layout had. */}
+                        <div className="checks-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}>
                           {r.checks.map((c) => (
-                            <div key={c.key} style={{ padding: '13px 16px', borderTop: '1px solid #f0f2f5', borderRight: '1px solid #f0f2f5' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 11.5, color: '#8494a8', marginBottom: 5 }}>
+                            <div key={c.key} className="checks-cell" style={{ padding: '13px 16px', borderTop: '1px solid #f0f2f5', borderRight: '1px solid #f0f2f5' }}>
+                              <div className="checks-head" style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 11.5, color: '#8494a8', marginBottom: 5 }}>
                                 <span style={{ fontSize: 11, fontWeight: 800, color: c.color }}>{c.mark}</span>
                                 {c.label}
                               </div>
-                              {c.detail && <div style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{c.detail}</div>}
-                              {c.over && <div style={{ fontSize: 11, fontWeight: 700, color: '#b91c1c', marginTop: 3, whiteSpace: 'nowrap' }}>{c.excess}</div>}
+                              {c.detail && <div className="checks-value" style={{ fontSize: 12.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{c.detail}</div>}
+                              {c.over && <div className="checks-over" style={{ fontSize: 11, fontWeight: 700, color: '#b91c1c', marginTop: 3, whiteSpace: 'nowrap' }}>{c.excess}</div>}
                             </div>
                           ))}
                         </div>

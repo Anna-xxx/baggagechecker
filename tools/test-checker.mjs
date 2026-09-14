@@ -1,5 +1,6 @@
 import { chromium } from 'playwright-core';
 
+const PORT = process.env.PORT || '8086';
 const BAG = { w: 40, h: 55, d: 23, kg: 10 };
 const TYPES = ['personal', 'carryon', 'checked'];
 
@@ -14,7 +15,7 @@ for (const type of TYPES) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 1200 } });
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e)));
-  const url = `http://127.0.0.1:8086/size-checker.html?w=${BAG.w}&h=${BAG.h}&d=${BAG.d}&kg=${BAG.kg}&unit=metric&type=${type}`;
+  const url = `http://127.0.0.1:${PORT}/size-checker.html?w=${BAG.w}&h=${BAG.h}&d=${BAG.d}&kg=${BAG.kg}&unit=metric&type=${type}`;
   await page.goto(url, { waitUntil: 'load' });
   await page.waitForTimeout(1200);
 

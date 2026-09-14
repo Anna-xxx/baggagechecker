@@ -247,6 +247,76 @@ input[type='text']:focus {
   }
 }
 
+/* The four measurements belong side by side: read across, a bag's width, height, depth
+   and weight are one comparison. Stacked one per row — which is what auto-fit did once
+   the card was under 300px — the reader has to scroll to see whether it passed. Four
+   columns are kept on a phone and the type is scaled to fit instead. */
+@media (max-width: 619px) {
+  #result {
+    padding: 14px !important;
+  }
+
+  .checks-cell {
+    padding: 10px 6px !important;
+    min-width: 0;
+  }
+
+  .checks-head {
+    gap: 4px !important;
+    font-size: 10.5px !important;
+    margin-bottom: 3px !important;
+  }
+
+  .checks-value {
+    font-size: 11.5px !important;
+    /* "No weight limit" cannot hold one line in a quarter of a phone. */
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
+  .checks-over {
+    font-size: 10px !important;
+    white-space: normal !important;
+  }
+
+  /* A phone has to hold the carrier's name and the verdict on one line. The longest
+     pair ("Turkish Airlines" / "Needs manual check") needs both of them a size down,
+     and the allowance underneath loses its indent to get its own line back. */
+  .result-airline {
+    font-size: 13px !important;
+  }
+
+  .result-verdict {
+    font-size: 11px !important;
+    padding: 5px 10px !important;
+  }
+
+  .result-limit {
+    padding-left: 0 !important;
+    font-size: 11.5px !important;
+  }
+
+  /* A row of the airline list gives the name the full width and puts the allowance
+     under it, instead of the two fighting over the same 200px. */
+  .pick-text {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+  }
+
+  .pick-name {
+    flex: none !important;
+    width: 100% !important;
+    font-size: 13px !important;
+  }
+
+  .pick-limit {
+    max-width: 100%;
+    font-size: 11px !important;
+    white-space: normal !important;
+  }
+}
+
 /* Shared responsive grids. Every multi-column layout starts as one column and
    widens at these two breakpoints, so pages don't each invent their own and
    silently stay multi-column on a phone. */
