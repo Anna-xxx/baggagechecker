@@ -366,16 +366,6 @@ export const AIRLINES: Airline[] = [
     ],
   },
   {
-    name: 'Etihad Airways',
-    code: 'EY',
-    country: 'United Arab Emirates',
-    website: 'https://www.etihad.com',
-    baggageUrl: 'https://www.etihad.com/en/fly-etihad/baggage/cabin-bags',
-    carryOn: { w: 36, h: 56, d: 23, kg: 7, verified: true },
-    personal: { rule: 'unknown', kg: 0, verified: false },
-    checked: { kg: 0, total: 0, eco: 0, biz: 0, bags: 'Basic fare includes none; otherwise route, fare and status dependent', verified: true, rule: 'linear', manualCheck: true, note: 'Etihad publishes no single free allowance: the Basic fare includes no checked baggage, and what other fares include depends on route, cabin and status. Two limits do apply everywhere — no single piece over 32 kg, and nothing longer than 300 cm in total dimensions.' },
-  },
-  {
     name: 'Frontier Airlines',
     code: 'F9',
     country: 'United States',

@@ -32,7 +32,6 @@ const BRAND: Record<string, Ink> = {
   U2: { bg: '#fff0e4', ink: '#ff6600' }, // easyJet
   EK: { bg: '#fdecec', ink: '#d71921' }, // Emirates
   ET: { bg: '#e8f6ea', ink: '#2f7a3d' }, // Ethiopian
-  EY: { bg: '#fdf3da', ink: '#8a6a1a' }, // Etihad
   F9: { bg: '#e8f6ea', ink: '#1d7a3e' }, // Frontier
   GA: { bg: '#e3f2fb', ink: '#00609c' }, // Garuda Indonesia
   HU: { bg: '#fdecec', ink: '#c0122c' }, // Hainan
