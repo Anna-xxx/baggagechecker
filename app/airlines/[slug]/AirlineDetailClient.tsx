@@ -5,63 +5,12 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
+import { BagDiagram, type BagType } from '@/components/BagDiagram';
 import { airlineBaggageUrl, getAirlineBaggage, BAGGAGE_RULES_REVIEW_DATE, type Airline } from '@/lib/airlines';
 
 type Bag = { w: number; h: number; d: number; kg: number };
-type BagKind = 'carryon' | 'personal' | 'checked';
-
-const BAG_STYLE: Record<BagKind, { fill: string; sideFill: string; stroke: string; ink: string; radius: number; soft: boolean; hard: boolean; ribs: boolean; straps: boolean }> = {
-  carryon: { fill: '#cff5ec', sideFill: '#b8efe1', stroke: '#5eddc4', ink: '#0b5f56', radius: 10, soft: false, hard: true, ribs: true, straps: false },
-  personal: { fill: '#e7effc', sideFill: '#d5e3fb', stroke: '#93b4ef', ink: '#1b4694', radius: 16, soft: true, hard: false, ribs: false, straps: false },
-  checked: { fill: '#fdf1dc', sideFill: '#f8e3bd', stroke: '#e9b969', ink: '#7a5406', radius: 10, soft: false, hard: true, ribs: false, straps: true },
-};
-
-function draw(b: Bag, kind: BagKind, metric: boolean) {
-  const K = 1.5;
-  return {
-    ...BAG_STYLE[kind],
-    drawW: Math.round(b.w * K),
-    drawH: Math.round(b.h * K),
-    drawD: Math.max(20, Math.round(b.d * K)),
-    faceLabel: `${metric ? b.w : Math.round(b.w / 2.54)} × ${metric ? b.h : Math.round(b.h / 2.54)}`,
-    depthValue: metric ? b.d : Math.round(b.d / 2.54),
-  };
-}
-
-function BagIllustration({ b, kind, metric }: { b: Bag; kind: BagKind; metric: boolean }) {
-  const s = draw(b, kind, metric);
-  return (
-    <div style={{ background: '#f8fafc', borderRadius: 11, padding: '20px 16px 16px', marginBottom: 12, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 16, minHeight: 150 }}>
-      <div style={{ position: 'relative', width: s.drawW, height: s.drawH }}>
-        {s.hard && <div style={{ position: 'absolute', left: '50%', top: -15, transform: 'translateX(-50%)', width: '36%', height: 18, border: '5px solid #94a3b8', borderBottom: 'none', borderRadius: '10px 10px 0 0' }} />}
-        {s.soft && <div style={{ position: 'absolute', left: '50%', top: -17, transform: 'translateX(-50%)', width: '56%', height: 20, border: '4px solid #94a3b8', borderBottom: 'none', borderRadius: '999px 999px 0 0' }} />}
-        <div style={{ position: 'absolute', inset: 0, background: s.fill, border: `2px solid ${s.stroke}`, borderRadius: s.radius }} />
-        {s.ribs && <div style={{ position: 'absolute', left: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />}
-        {s.ribs && <div style={{ position: 'absolute', right: '24%', top: 0, bottom: 0, width: 2, background: 'rgba(15,28,46,.10)' }} />}
-        {s.soft && <div style={{ position: 'absolute', left: '16%', right: '16%', bottom: '14%', height: '28%', border: '2px solid rgba(15,28,46,.14)', borderRadius: 8 }} />}
-        {s.straps && <div style={{ position: 'absolute', left: 0, right: 0, top: '22%', height: 7, background: 'rgba(15,28,46,.13)' }} />}
-        {s.straps && <div style={{ position: 'absolute', left: 0, right: 0, bottom: '22%', height: 7, background: 'rgba(15,28,46,.13)' }} />}
-        {s.straps && <div style={{ position: 'absolute', left: -1, bottom: -1, width: 18, height: 18, borderLeft: `4px solid ${s.stroke}`, borderBottom: `4px solid ${s.stroke}`, borderRadius: '0 0 0 10px' }} />}
-        {s.straps && <div style={{ position: 'absolute', right: -1, bottom: -1, width: 18, height: 18, borderRight: `4px solid ${s.stroke}`, borderBottom: `4px solid ${s.stroke}`, borderRadius: '0 0 10px 0' }} />}
-        {s.straps && <div style={{ position: 'absolute', left: 'calc(50% + 20px)', top: -13, width: 20, height: 13, border: `1.5px solid ${s.stroke}`, borderRadius: 3, background: '#fff' }} />}
-        {s.hard && <div style={{ position: 'absolute', left: '18%', bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
-        {s.hard && <div style={{ position: 'absolute', right: '18%', bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
-        {kind !== 'checked' && <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: s.ink, whiteSpace: 'nowrap' }}>{s.faceLabel}</span>}
-      </div>
-      <div style={{ position: 'relative', width: s.drawD, height: s.drawH }}>
-        {s.hard && <div style={{ position: 'absolute', left: '50%', top: -15, transform: 'translateX(-50%)', width: 5, height: 18, borderRadius: 3, background: '#94a3b8' }} />}
-        <div style={{ position: 'absolute', inset: 0, background: s.sideFill, border: `2px solid ${s.stroke}`, borderRadius: s.radius }} />
-        {s.hard && <div style={{ position: 'absolute', left: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
-        {s.hard && <div style={{ position: 'absolute', right: 2, bottom: -8, width: 11, height: 11, borderRadius: '50%', background: '#475569' }} />}
-        {kind !== 'checked' && <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 10, fontWeight: 700, color: s.ink, whiteSpace: 'nowrap' }}>{s.depthValue}</span>}
-      </div>
-    </div>
-  );
-}
-
 export function AirlineDetailClient({ airline }: { airline: Airline }) {
   const [metric, setMetric] = useState(true);
-  const [fav, setFav] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
 
   const baggage = getAirlineBaggage(airline);
@@ -159,7 +108,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
       iconColor: '#2563eb',
       what: 'Goes under the seat in front of you',
       bag: personalBag,
-      kind: 'personal' as BagKind,
+      kind: 'personal' as BagType,
       rows: personalRows,
       note: 'A handbag, laptop bag or small backpack that fits under the seat in front of you.',
     },
@@ -170,7 +119,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
       iconColor: '#0f766e',
       what: 'Goes in the overhead bin',
       bag: cabin,
-      kind: 'carryon' as BagKind,
+      kind: 'carryon' as BagType,
       rows: carryOnRows,
       note: cabin.note ?? 'One cabin bag per passenger. Measured with wheels and handles included.',
     },
@@ -181,7 +130,7 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
       iconColor: '#b98107',
       what: 'Handed over at the check-in desk',
       bag: { w: 45, h: 67, d: 27, kg: info.eco },
-      kind: 'checked' as BagKind,
+      kind: 'checked' as BagType,
       rows: checkedRows,
       note: info.note ?? 'Allowance depends on your fare and route. Check your booking for the included number of bags.',
     },
@@ -279,16 +228,6 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
               </svg>
               {metric ? 'cm / kg' : 'in / lb'}
             </button>
-            <button
-              onClick={() => setFav((f) => !f)}
-              className="btn-outline"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, border: '1px solid #e4eaf1', background: '#fff', borderRadius: 10, padding: '9px 14px', fontFamily: 'inherit', fontSize: 12.5, fontWeight: 700, color: '#0f1c2e', cursor: 'pointer', whiteSpace: 'nowrap' }}
-            >
-              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill={fav ? '#ef6a5a' : 'none'} stroke={fav ? '#ef6a5a' : '#8494a8'} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 20s-7-4.4-7-9.2A4 4 0 0 1 12 8a4 4 0 0 1 7 2.8C19 15.6 12 20 12 20z" />
-              </svg>
-              {fav ? 'Saved' : 'Add to Favorites'}
-            </button>
             <a
               href={airlineBaggageUrl(airline.code, airline.website)}
               target="_blank"
@@ -324,12 +263,25 @@ export function AirlineDetailClient({ airline }: { airline: Airline }) {
                   <span style={{ display: 'block', marginTop: 3, fontSize: 12, lineHeight: 1.5, color: '#7a8798' }}>{a.what}</span>
                 </span>
               </div>
-              <BagIllustration b={a.bag} kind={a.kind} metric={metric} />
+              <div style={{ background: '#f8fafc', borderRadius: 11, padding: '20px 16px 16px', marginBottom: 12 }}>
+                <BagDiagram
+                  type={a.kind}
+                  w={a.bag.w}
+                  h={a.bag.h}
+                  d={a.bag.d}
+                  widthLabel={len(a.bag.w)}
+                  heightLabel={len(a.bag.h)}
+                  depthLabel={len(a.bag.d)}
+                  minHeight={200}
+                />
+              </div>
               <div style={{ background: '#f8fafc', borderRadius: 11, padding: '4px 16px', marginBottom: 14 }}>
                 {a.rows.map((r) => (
-                  <div key={r.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, padding: '12px 0', borderBottom: '1px solid #eef2f6' }}>
-                    <span style={{ fontSize: 12.5, color: '#57677c' }}>{r.label}</span>
-                    <span style={{ fontSize: 12.5, fontWeight: 800, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{r.value}</span>
+                  <div key={r.label} style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 14, padding: '12px 0', borderBottom: '1px solid #eef2f6' }}>
+                    <span style={{ flex: 'none', fontSize: 12.5, color: '#57677c' }}>{r.label}</span>
+                    {/* Values run from "23 kg" to a full sentence about fare rules, so they wrap
+                        instead of being pinned to one line and pushed outside the card. */}
+                    <span style={{ flex: '1 1 auto', minWidth: 0, fontSize: 12.5, fontWeight: 800, fontVariantNumeric: 'tabular-nums', textAlign: 'right', overflowWrap: 'anywhere' }}>{r.value}</span>
                   </div>
                 ))}
               </div>

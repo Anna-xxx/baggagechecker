@@ -7,6 +7,8 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AirlineLogo } from '@/components/AirlineLogo';
 import { BagDiagram } from '@/components/BagDiagram';
+import { DimensionIcon, type DimensionAxis } from '@/components/DimensionIcon';
+import { BagTypeIcon } from '@/components/BagTypeIcon';
 import { AIRLINES as ALL_AIRLINES, getAirlineBaggage, DEFAULT_BAG, type PersonalItemRule, type CarryOnVariant } from '@/lib/airlines';
 
 type Limits = { H: number; W: number; D: number; KG: number; maxSingleKg?: number; allowed?: boolean; rule?: PersonalItemRule; checkedRule?: 'linear' | 'dimensions'; linearCm?: number; linearOnly?: boolean; manualCheck?: boolean; note?: string; weightRule?: 'perPiece' | 'combinedWithPersonal' | 'none'; verified?: boolean };
@@ -181,47 +183,10 @@ const MAX_AIRLINES = AIRLINES.length;
 
 type DimKey = 'W' | 'H' | 'D' | 'KG' | 'KGC';
 
-const TYPE_DEFS: { key: BagType; title: string; hint: string; iconColor: string; tint: string; icon: React.ReactNode }[] = [
-  {
-    key: 'personal',
-    title: 'Personal item',
-    hint: 'Small bag under the seat',
-    iconColor: '#2563eb',
-    tint: '#e7effc',
-    icon: (
-      <>
-        <path d="M7 9a5 5 0 0 1 10 0v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" />
-        <path d="M10 9V7a2 2 0 0 1 4 0v2" />
-      </>
-    ),
-  },
-  {
-    key: 'carryon',
-    title: 'Carry-on',
-    hint: 'Cabin bag for the overhead bin',
-    iconColor: '#0f766e',
-    tint: '#e3f5f2',
-    icon: (
-      <>
-        <rect x="5" y="7" width="14" height="14" rx="2.5" />
-        <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
-      </>
-    ),
-  },
-  {
-    key: 'checked',
-    title: 'Checked bag',
-    hint: 'Handed over at check-in',
-    iconColor: '#b98107',
-    tint: '#fdf1dc',
-    icon: (
-      <>
-        <rect x="4" y="6" width="16" height="15" rx="2.5" />
-        <path d="M9 6V3.6A.6.6 0 0 1 9.6 3h4.8a.6.6 0 0 1 .6.6V6" />
-        <path d="M9.6 11v6M14.4 11v6" />
-      </>
-    ),
-  },
+const TYPE_DEFS: { key: BagType; title: string; hint: string }[] = [
+  { key: 'personal', title: 'Personal item', hint: 'Small bag under the seat' },
+  { key: 'carryon', title: 'Carry-on', hint: 'Cabin bag for the overhead bin' },
+  { key: 'checked', title: 'Checked bag', hint: 'Handed over at check-in' },
 ];
 
 const STEP1_TITLE: Record<BagType, string> = {
@@ -290,11 +255,11 @@ export function SizeCheckerClient() {
   const lenU = metric ? 'cm' : 'in';
   const wU = metric ? 'kg' : 'lb';
 
-  const FIELD_DEFS: { label: string; key: DimKey; min: number; max: number; iconColor: string; icon: React.ReactNode }[] = [
-    { label: 'Width', key: 'W', min: 10, max: 90, iconColor: '#14b8a6', icon: (<><path d="M3 9h18v6H3z" /><path d="M7 9v3M12 9v3M17 9v3" /></>) },
-    { label: 'Height', key: 'H', min: 10, max: 100, iconColor: '#ef6a5a', icon: (<><path d="M9 3h6v18H9z" /><path d="M9 7h3M9 12h3M9 17h3" /></>) },
-    { label: 'Depth', key: 'D', min: 5, max: 60, iconColor: '#8b5cf6', icon: (<><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" /><path d="M12 21v-9l8-4.5M12 12L4 7.5" /></>) },
-    { label: 'Weight', key: weightKey, min: 1, max: weightMax, iconColor: '#f0a824', icon: (<><path d="M12 4v16M6 20h12" /><path d="M4 9h16l-3 5H7z" /></>) },
+  const FIELD_DEFS: { label: string; key: DimKey; min: number; max: number; axis: DimensionAxis }[] = [
+    { label: 'Width', key: 'W', min: 10, max: 90, axis: 'width' },
+    { label: 'Height', key: 'H', min: 10, max: 100, axis: 'height' },
+    { label: 'Depth', key: 'D', min: 5, max: 60, axis: 'depth' },
+    { label: 'Weight', key: weightKey, min: 1, max: weightMax, axis: 'weight' },
   ];
 
   const handleFieldChange = (def: (typeof FIELD_DEFS)[number]) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1014,11 +979,7 @@ export function SizeCheckerClient() {
                       }}
                       style={{ flex: '1 1 190px', display: 'flex', alignItems: 'flex-start', gap: 11, border: `1px solid ${on ? '#14b8a6' : '#e4eaf1'}`, background: on ? '#f4faf9' : '#fff', borderRadius: 11, padding: '13px 15px', fontFamily: 'inherit', textAlign: 'left', cursor: 'pointer' }}
                     >
-                      <span style={{ flex: 'none', display: 'flex', width: 30, height: 30, borderRadius: 9, background: t.tint, alignItems: 'center', justifyContent: 'center' }}>
-                        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={t.iconColor} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-                          {t.icon}
-                        </svg>
-                      </span>
+                      <BagTypeIcon type={t.key} size={30} />
                       <span style={{ flex: 1, minWidth: 0 }}>
                         <span style={{ display: 'block', fontSize: 13.5, fontWeight: 800, color: on ? '#0f766e' : '#0f1c2e' }}>{t.title}</span>
                         <span style={{ display: 'block', marginTop: 3, fontSize: 11.5, lineHeight: 1.5, color: '#8494a8' }}>{t.hint}</span>
@@ -1036,9 +997,7 @@ export function SizeCheckerClient() {
                   <div key={def.key}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 12 }}>
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9, fontSize: 14, fontWeight: 600 }}>
-                        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={def.iconColor} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-                          {def.icon}
-                        </svg>
+                        <DimensionIcon axis={def.axis} />
                         {def.label}
                       </span>
                       <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#b7c1cd" strokeWidth={1.8} strokeLinecap="round">

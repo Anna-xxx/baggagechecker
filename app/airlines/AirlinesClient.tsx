@@ -74,7 +74,6 @@ export function AirlinesClient() {
   const [country, setCountry] = useState('All countries');
   const [type, setType] = useState<TypeFilter>('All types');
   const [sort, setSort] = useState<Sort>('name');
-  const [fav, setFav] = useState<string[]>([]);
 
   const countries = useMemo(() => ['All countries'].concat(Array.from(new Set(AIRLINES.map((a) => a.country))).sort()), []);
 
@@ -98,10 +97,6 @@ export function AirlinesClient() {
   }, [query, country, type, sort]);
 
   const resultsLabel = `${country === 'All countries' && !query ? 'All airlines' : 'Matching airlines'} (${rows.length})`;
-
-  const toggleFav = (code: string) => {
-    setFav((prev) => (prev.includes(code) ? prev.filter((c) => c !== code) : prev.concat(code)));
-  };
 
   return (
     <div style={{ width: '100%' }}>
@@ -190,7 +185,6 @@ export function AirlinesClient() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(min(100%,300px),1fr))', gap: 18 }}>
           {rows.map((a) => {
             const baggage = getAirlineBaggage(a);
-            const on = fav.includes(a.code);
             const strictness = carryOnStrictness(a);
             const carryOnNote = strictness === 'roomier' ? 'Roomier' : strictness === 'tighter' ? 'Tighter' : '';
             return (
@@ -204,11 +198,6 @@ export function AirlinesClient() {
                       <span>{a.country}</span>
                     </div>
                   </div>
-                  <button onClick={() => toggleFav(a.code)} style={{ flex: 'none', border: 'none', background: 'none', padding: 2, cursor: 'pointer', lineHeight: 0 }}>
-                    <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill={on ? '#ef6a5a' : 'none'} stroke={on ? '#ef6a5a' : '#c3ccd7'} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 20s-7-4.4-7-9.2A4 4 0 0 1 12 8a4 4 0 0 1 7 2.8C19 15.6 12 20 12 20z" />
-                    </svg>
-                  </button>
                 </div>
 
                 <div>

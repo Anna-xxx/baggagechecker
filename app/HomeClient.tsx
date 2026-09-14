@@ -5,40 +5,14 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { BagDiagram, type BagType } from '@/components/BagDiagram';
+import { DimensionIcon, type DimensionAxis } from '@/components/DimensionIcon';
+import { BagTypeIcon } from '@/components/BagTypeIcon';
 import { AIRLINES, DEFAULT_BAG, BAGGAGE_RULES_REVIEW_DATE } from '@/lib/airlines';
 
-const TYPE_TABS: { key: BagType; title: string; icon: React.ReactNode }[] = [
-  {
-    key: 'personal',
-    title: 'Personal Item',
-    icon: (
-      <>
-        <path d="M7 9a5 5 0 0 1 10 0v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" />
-        <path d="M10 9V7a2 2 0 0 1 4 0v2" />
-      </>
-    ),
-  },
-  {
-    key: 'carryon',
-    title: 'Carry-on',
-    icon: (
-      <>
-        <rect x="5" y="7" width="14" height="14" rx="2.5" />
-        <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
-      </>
-    ),
-  },
-  {
-    key: 'checked',
-    title: 'Checked Bag',
-    icon: (
-      <>
-        <rect x="4" y="6" width="16" height="15" rx="2.5" />
-        <path d="M9 6V3.6A.6.6 0 0 1 9.6 3h4.8a.6.6 0 0 1 .6.6V6" />
-        <path d="M9.6 11v6M14.4 11v6" />
-      </>
-    ),
-  },
+const TYPE_TABS: { key: BagType; title: string }[] = [
+  { key: 'personal', title: 'Personal Item' },
+  { key: 'carryon', title: 'Carry-on' },
+  { key: 'checked', title: 'Checked Bag' },
 ];
 
 const HERO_TITLE: Record<BagType, string> = {
@@ -93,11 +67,11 @@ export function HomeClient() {
 
   const conv = (v: number) => (unit === 'cm' ? v : Math.round(v / 2.54));
 
-  const dims = [
-    { label: 'Width', min: 10, max: 90, value: width, display: `${conv(width)} ${unit}`, onChange: setWidth },
-    { label: 'Height', min: 10, max: 100, value: height, display: `${conv(height)} ${unit}`, onChange: setHeight },
-    { label: 'Depth', min: 5, max: 60, value: depth, display: `${conv(depth)} ${unit}`, onChange: setDepth },
-    { label: 'Weight', min: 1, max: 32, value: weightKg, display: `${weightKg} kg`, onChange: setWeightKg },
+  const dims: { label: string; axis: DimensionAxis; min: number; max: number; value: number; display: string; onChange: (v: number) => void }[] = [
+    { label: 'Width', axis: 'width', min: 10, max: 90, value: width, display: `${conv(width)} ${unit}`, onChange: setWidth },
+    { label: 'Height', axis: 'height', min: 10, max: 100, value: height, display: `${conv(height)} ${unit}`, onChange: setHeight },
+    { label: 'Depth', axis: 'depth', min: 5, max: 60, value: depth, display: `${conv(depth)} ${unit}`, onChange: setDepth },
+    { label: 'Weight', axis: 'weight', min: 1, max: 32, value: weightKg, display: `${weightKg} kg`, onChange: setWeightKg },
   ];
 
   // Values in the handoff URL are always metric integers; `unit` and `type` only set the
@@ -156,9 +130,7 @@ export function HomeClient() {
                       onClick={() => setType(t.key)}
                       style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, border: `1px solid ${on ? '#14b8a6' : '#e4eaf1'}`, background: on ? '#f4faf9' : '#fff', borderRadius: 10, padding: '10px 6px', fontFamily: 'inherit', cursor: 'pointer' }}
                     >
-                      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={on ? '#0f766e' : '#7a8798'} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
-                        {t.icon}
-                      </svg>
+                      <BagTypeIcon type={t.key} size={26} />
                       <span style={{ fontSize: 11.5, fontWeight: 700, color: on ? '#0f766e' : '#57677c', textAlign: 'center' }}>{t.title}</span>
                     </button>
                   );
@@ -168,8 +140,11 @@ export function HomeClient() {
               <div className="range-compact" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 14, marginBottom: 18 }}>
                 {dims.map((d) => (
                   <div key={d.label}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 }}>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: '#0f1c2e' }}>{d.label}</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, color: '#0f1c2e' }}>
+                        <DimensionIcon axis={d.axis} size={14} />
+                        {d.label}
+                      </span>
                       <span style={{ fontSize: 12, fontWeight: 700, color: '#7a8798' }}>{d.display}</span>
                     </div>
                     <input type="range" min={d.min} max={d.max} value={d.value} onChange={(e) => d.onChange(Number(e.target.value))} style={{ width: '100%' }} />
