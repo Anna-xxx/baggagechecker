@@ -262,7 +262,7 @@ export default function DraftPage() {
         </section>
 
         <section style={{ padding: '72px 24px 0', background: '#fff' }}>
-          <div style={{ maxWidth: 1180, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1000, margin: '0 auto' }}>
             <h2 style={{ margin: '0 0 10px', textAlign: 'center', fontSize: 'clamp(25px,3.2vw,32px)', fontWeight: 800, letterSpacing: '-.03em' }}>
               Pro Tips for Checking Suitcase Size Online
             </h2>
@@ -270,7 +270,7 @@ export default function DraftPage() {
               The measurements help you predict the result. At the gate, the practical question is whether your packed bag fits the airline’s sizer.
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,500px),1fr))', gap: 22 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,430px),1fr))', gap: 22 }}>
               <div style={{ border: '1px solid #e3e9ef', borderRadius: 16, padding: '28px 30px', background: '#fff' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
                   <span style={{ width: 52, height: 52, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#e1f5f2' }}>
