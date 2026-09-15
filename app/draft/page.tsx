@@ -261,60 +261,60 @@ export default function DraftPage() {
           </div>
         </section>
 
-        <section style={{ padding: '72px 24px 0', background: '#fff' }}>
+        <section style={{ padding: '64px 24px 0', background: '#fff' }}>
           <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-            <h2 style={{ margin: '0 0 10px', textAlign: 'center', fontSize: 'clamp(25px,3.2vw,32px)', fontWeight: 800, letterSpacing: '-.03em' }}>
+            <h2 style={{ margin: '0 0 8px', textAlign: 'center', fontSize: 26, fontWeight: 800, letterSpacing: '-.02em' }}>
               Pro Tips for Checking Suitcase Size Online
             </h2>
-            <p style={{ margin: '0 auto 34px', maxWidth: 760, textAlign: 'center', fontSize: 14, lineHeight: 1.7, color: '#64748b' }}>
+            <p style={{ margin: '0 auto 26px', maxWidth: 650, textAlign: 'center', fontSize: 13, lineHeight: 1.7, color: '#7a8798' }}>
               The measurements help you predict the result. At the gate, the practical question is whether your packed bag fits the airline’s sizer.
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,430px),1fr))', gap: 22 }}>
-              <div style={{ border: '1px solid #e3e9ef', borderRadius: 16, padding: '28px 30px', background: '#fff' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
-                  <span style={{ width: 52, height: 52, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#e1f5f2' }}>
-                    <svg aria-hidden="true" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#0f9488" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+            <div className="grid-pair" style={{ gap: 20 }}>
+              <div style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 22, background: '#fff' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 18 }}>
+                  <span style={{ width: 36, height: 36, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, background: '#e3f5f2' }}>
+                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
                       <path d="M3 17l14-14 4 4L7 21H3z" />
                       <path d="M14 6l4 4M11 9l2 2M8 12l2 2M5 15l2 2" />
                     </svg>
                   </span>
                   <div>
-                    <h3 style={{ margin: '2px 0 6px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>Measure before you get to the airport</h3>
-                    <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: '#57677c' }}>
+                    <h3 style={{ margin: '1px 0 4px', fontSize: 14, fontWeight: 800 }}>Measure before you get to the airport</h3>
+                    <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.6, color: '#7a8798' }}>
                       Measurements are useful because they let you predict the sizer test at home before you reach the gate.
                     </p>
                   </div>
                 </div>
-                <div style={{ display: 'grid', gap: 11 }}>
+                <div style={{ display: 'grid', gap: 10 }}>
                   {MEASURE_STEPS.map((step, i) => (
-                    <div key={step} style={{ display: 'flex', alignItems: 'flex-start', gap: 13 }}>
-                      <span style={{ flex: 'none', width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#d6f3ed', color: '#0f766e', fontSize: 12.5, fontWeight: 800 }}>{i + 1}</span>
-                      <span style={{ paddingTop: 4, fontSize: 13, lineHeight: 1.55, color: '#42526b' }}>{step}</span>
+                    <div key={step} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                      <span style={{ flex: 'none', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#e3f5f2', color: '#0f766e', fontSize: 11, fontWeight: 800 }}>{i + 1}</span>
+                      <span style={{ paddingTop: 2, fontSize: 12.5, lineHeight: 1.55, color: '#3d4759' }}>{step}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div style={{ border: '1px solid #e3e9ef', borderRadius: 16, padding: '28px 30px', background: '#fff' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 22 }}>
-                  <span style={{ width: 52, height: 52, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#e7f7ea' }}>
-                    <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth={2.1} strokeLinecap="round" strokeLinejoin="round">
+              <div style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 22, background: '#fff' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 18 }}>
+                  <span style={{ width: 36, height: 36, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, background: '#e7f7ea' }}>
+                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
                       <rect x="5" y="3" width="14" height="18" rx="1.5" />
                       <path d="M8 6h8v12H8z" />
                     </svg>
                   </span>
                   <div>
-                    <h3 style={{ margin: '2px 0 6px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>Will it fit the airline sizer?</h3>
-                    <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: '#57677c' }}>
+                    <h3 style={{ margin: '1px 0 4px', fontSize: 14, fontWeight: 800 }}>Will it fit the airline sizer?</h3>
+                    <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.6, color: '#7a8798' }}>
                       For carry-on, this is often the practical size test at the gate — not the number printed on the suitcase label.
                     </p>
                   </div>
                 </div>
-                <div style={{ display: 'grid', gap: 12 }}>
+                <div style={{ display: 'grid', gap: 10 }}>
                   {AIRLINE_CHECKS.map((item) => (
-                    <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 13, fontSize: 13, lineHeight: 1.55, color: '#42526b' }}>
-                      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flex: 'none', marginTop: 1 }}>
+                    <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 12.5, lineHeight: 1.55, color: '#3d4759' }}>
+                      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth={2.3} strokeLinecap="round" strokeLinejoin="round" style={{ flex: 'none', marginTop: 1 }}>
                         <path d="M5 12.5l4 4L19 7" />
                       </svg>
                       <span>{item}</span>
@@ -323,26 +323,26 @@ export default function DraftPage() {
                 </div>
               </div>
 
-              <div style={{ border: '1px solid #e3e9ef', borderRadius: 16, padding: '28px 30px', background: '#fff' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 22 }}>
-                  <span style={{ width: 52, height: 52, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#fff3dc' }}>
-                    <svg aria-hidden="true" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#e59a05" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <div style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 22, background: '#fff' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 18 }}>
+                  <span style={{ width: 36, height: 36, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, background: '#fdf1dc' }}>
+                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e08c0b" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 3l9 16H3L12 3z" />
                       <path d="M12 9v4" />
                       <path d="M12 17h.01" />
                     </svg>
                   </span>
                   <div>
-                    <h3 style={{ margin: '2px 0 6px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>Common mistakes to avoid</h3>
-                    <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: '#57677c' }}>
+                    <h3 style={{ margin: '1px 0 4px', fontSize: 14, fontWeight: 800 }}>Common mistakes to avoid</h3>
+                    <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.6, color: '#7a8798' }}>
                       Most problems happen because the packed bag is bulkier than expected or the wrong airline rule was used.
                     </p>
                   </div>
                 </div>
-                <div style={{ display: 'grid', gap: 12 }}>
+                <div style={{ display: 'grid', gap: 10 }}>
                   {COMMON_MISTAKES.map((item) => (
-                    <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 13, fontSize: 13, lineHeight: 1.55, color: '#42526b' }}>
-                      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e59a05" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flex: 'none', marginTop: 1 }}>
+                    <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 12.5, lineHeight: 1.55, color: '#3d4759' }}>
+                      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e08c0b" strokeWidth={2.3} strokeLinecap="round" strokeLinejoin="round" style={{ flex: 'none', marginTop: 1 }}>
                         <path d="M5 12.5l4 4L19 7" />
                       </svg>
                       <span>{item}</span>
@@ -351,25 +351,25 @@ export default function DraftPage() {
                 </div>
               </div>
 
-              <div style={{ border: '1px solid #e3e9ef', borderRadius: 16, padding: '28px 30px', background: '#fff' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 22 }}>
-                  <span style={{ width: 52, height: 52, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#e6f0ff' }}>
-                    <svg aria-hidden="true" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <div style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 22, background: '#fff' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 18 }}>
+                  <span style={{ width: 36, height: 36, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, background: '#e7effc' }}>
+                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
                       <path d="M6 3h9l3 3v15H6z" />
                       <path d="M15 3v4h4M9 11h6M9 15h6" />
                     </svg>
                   </span>
                   <div>
-                    <h3 style={{ margin: '2px 0 6px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>Before you trust the result</h3>
-                    <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: '#57677c' }}>
+                    <h3 style={{ margin: '1px 0 4px', fontSize: 14, fontWeight: 800 }}>Before you trust the result</h3>
+                    <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.6, color: '#7a8798' }}>
                       Airline rules can vary, so double-check a few key details before you travel.
                     </p>
                   </div>
                 </div>
-                <div style={{ display: 'grid', gap: 12 }}>
+                <div style={{ display: 'grid', gap: 10 }}>
                   {FINAL_CHECKS.map((item) => (
-                    <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 13, fontSize: 13, lineHeight: 1.55, color: '#42526b' }}>
-                      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flex: 'none', marginTop: 1 }}>
+                    <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 12.5, lineHeight: 1.55, color: '#3d4759' }}>
+                      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth={2.3} strokeLinecap="round" strokeLinejoin="round" style={{ flex: 'none', marginTop: 1 }}>
                         <path d="M5 12.5l4 4L19 7" />
                       </svg>
                       <span>{item}</span>
