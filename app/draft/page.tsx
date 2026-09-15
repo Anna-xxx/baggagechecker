@@ -167,6 +167,39 @@ export default function DraftPage() {
           </div>
         </section>
 
+        <section style={{ maxWidth: 1000, margin: '0 auto', padding: '64px 24px 0' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 36, alignItems: 'start' }}>
+            <div>
+              <h2 style={{ margin: '0 0 18px', fontSize: 'clamp(21px,2.6vw,26px)', fontWeight: 800, letterSpacing: '-.025em', lineHeight: 1.22 }}>Why Airlines Have Different Luggage Rules</h2>
+              <p style={{ margin: '0 0 14px', fontSize: 13.5, lineHeight: 1.8, color: '#57677c' }}>
+                Each airline sets its own baggage restrictions based on aircraft type, business model, and operational efficiency. Low-cost carriers often have stricter size limits to maximize revenue and streamline boarding.
+              </p>
+              <p style={{ margin: '0 0 14px', fontSize: 13.5, lineHeight: 1.8, color: '#57677c' }}>
+                Overhead compartment sizes vary between aircraft models, and airlines must ensure all passengers&apos; bags fit safely. Weight restrictions help manage fuel costs and aircraft balance.
+              </p>
+              <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.8, color: '#57677c' }}>
+                Using our <a href="#checker">luggage size checker</a> before you travel helps you avoid unexpected fees and delays at check-in.
+              </p>
+            </div>
+            <div className="grid-pair" style={{ gap: 14 }}>
+              {[
+                { color: '#2563eb', title: 'Aircraft Limits', text: 'Overhead space varies by plane model', icon: <path d="M2 13l20-7-7 20-3-8z" /> },
+                { color: '#15803d', title: 'Passenger Safety', text: 'Weight limits ensure safe operations', icon: (<><circle cx="9" cy="8" r="3.2" /><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" /><path d="M16 6.5a3 3 0 0 1 0 5.6M18 20c0-2.4-1-4.2-2.6-5.2" /></>) },
+                { color: '#e0a11a', title: 'Boarding Speed', text: 'Standard sizes speed up the process', icon: (<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2.2" /></>) },
+                { color: '#7c3aed', title: 'Business Model', text: 'Fees help keep base fares low', icon: <path d="M12 3l7 3v5.5c0 4.3-2.9 7.6-7 9.5-4.1-1.9-7-5.2-7-9.5V6z" /> },
+              ].map((card) => (
+                <div key={card.title} style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: '20px 16px', textAlign: 'center' }}>
+                  <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={card.color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 10 }}>
+                    {card.icon}
+                  </svg>
+                  <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 5 }}>{card.title}</div>
+                  <p style={{ margin: 0, fontSize: 11.5, lineHeight: 1.55, color: '#7a8798' }}>{card.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section style={{ padding: '64px 24px 0', background: '#fff' }}>
           <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,360px),1fr))', gap: 34, alignItems: 'start' }}>
             <div>
@@ -196,13 +229,6 @@ export default function DraftPage() {
                   <span>✓ Straps and protruding parts</span>
                   <span>✓ Expanded sections if you will use them</span>
                 </div>
-              </div>
-
-              <div style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 24, background: '#fff' }}>
-                <h3 style={{ margin: '0 0 10px', fontSize: 15, fontWeight: 800 }}>Why airline rules differ</h3>
-                <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.75, color: '#57677c' }}>
-                  Aircraft storage, safety limits, fare structure and operating model all affect baggage rules. That is why the same suitcase can be accepted by one airline and rejected by another — or even have a different allowance on another route with the same carrier.
-                </p>
               </div>
             </div>
           </div>
