@@ -91,20 +91,20 @@ const MEASURE_STEPS = [
 ];
 
 const AIRLINE_CHECKS = [
-  'Maximum height × width × depth',
-  'Maximum weight',
-  'Number of bags or pieces allowed',
-  'Whether a personal item fits under the seat',
-  'Whether a carry-on fits the overhead bin or airport sizer',
+  'For carry-on, the key gate test is whether the packed bag fits fully inside the airline’s baggage sizer',
+  'Wheels, handles, pockets and bulges must stay within the sizer frame',
+  'A soft bag may compress, but don’t rely on forcing an overpacked bag into the sizer',
+  'Personal items may use a smaller sizer or need to fit fully under the seat',
+  'Weight can still be checked separately even when the bag fits the sizer',
 ];
 
 const COMMON_MISTAKES = [
-  'Using the suitcase label size instead of its real external dimensions',
-  'Measuring a soft bag while it is empty',
-  'Mixing centimetres and inches',
-  'Rounding measurements down',
-  'Checking dimensions but not weight',
-  'Assuming every airline uses the same limits',
+  'Assuming a “55 cm” label means the bag will pass every airline sizer',
+  'Testing or measuring a soft bag while it is empty',
+  'Ignoring bulging pockets, wheels or handles that stop the bag fitting',
+  'Forcing an overpacked bag into the sizer',
+  'Checking sizer fit but forgetting the separate weight limit',
+  'Assuming every airline uses the same sizer',
 ];
 
 const FINAL_CHECKS = [
@@ -267,7 +267,7 @@ export default function DraftPage() {
               Pro Tips for Checking Suitcase Size Online
             </h2>
             <p style={{ margin: '0 auto 34px', maxWidth: 760, textAlign: 'center', fontSize: 14, lineHeight: 1.7, color: '#64748b' }}>
-              Measure once, understand what airlines enforce, avoid common mistakes, and verify the rule that applies to your trip.
+              The measurements help you predict the result. At the gate, the practical question is whether your packed bag fits the airline’s sizer.
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,500px),1fr))', gap: 22 }}>
@@ -280,9 +280,9 @@ export default function DraftPage() {
                     </svg>
                   </span>
                   <div>
-                    <h3 style={{ margin: '2px 0 6px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>How to measure correctly</h3>
+                    <h3 style={{ margin: '2px 0 6px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>Measure before you get to the airport</h3>
                     <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: '#57677c' }}>
-                      Measure the bag in the same condition you will travel with it, using its true external dimensions.
+                      Measurements are useful because they let you predict the sizer test at home before you reach the gate.
                     </p>
                   </div>
                 </div>
@@ -300,14 +300,14 @@ export default function DraftPage() {
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 22 }}>
                   <span style={{ width: 52, height: 52, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#e7f7ea' }}>
                     <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth={2.1} strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="9" />
-                      <path d="M8 12.5l2.5 2.5L16 9.5" />
+                      <rect x="5" y="3" width="14" height="18" rx="1.5" />
+                      <path d="M8 6h8v12H8z" />
                     </svg>
                   </span>
                   <div>
-                    <h3 style={{ margin: '2px 0 6px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>What airlines actually check</h3>
+                    <h3 style={{ margin: '2px 0 6px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>Will it fit the airline sizer?</h3>
                     <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: '#57677c' }}>
-                      A bag can pass one rule and fail another, so compare every limit that applies.
+                      For carry-on, this is often the practical size test at the gate — not the number printed on the suitcase label.
                     </p>
                   </div>
                 </div>
@@ -335,7 +335,7 @@ export default function DraftPage() {
                   <div>
                     <h3 style={{ margin: '2px 0 6px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>Common mistakes to avoid</h3>
                     <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: '#57677c' }}>
-                      These are the most frequent errors when checking luggage size online.
+                      Most problems happen because the packed bag is bulkier than expected or the wrong airline rule was used.
                     </p>
                   </div>
                 </div>
