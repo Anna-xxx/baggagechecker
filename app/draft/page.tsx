@@ -7,8 +7,8 @@ import { SizeCheckerClient } from '@/app/size-checker/SizeCheckerClient';
 import { AIRLINES, BAGGAGE_RULES_REVIEW_DATE } from '@/lib/airlines';
 
 export const metadata: Metadata = {
-  title: 'Draft – BaggageChecker Combined Experience',
-  description: 'Internal draft combining the strongest parts of the BaggageChecker home page and luggage size checker.',
+  title: 'Draft – BaggageChecker Home',
+  description: 'Internal draft for the BaggageChecker home page with the baggage checker built into the main experience.',
   robots: { index: false, follow: false },
 };
 
@@ -63,22 +63,22 @@ const HOW_TO = [
     n: '1',
     bg: '#e0edff',
     color: '#2563eb',
-    title: 'Measure Your Luggage',
-    text: 'Use a measuring tape to get exact dimensions of your suitcase including handles, wheels, and any protrusions.',
+    title: 'Measure Your Packed Bag',
+    text: 'Measure the bag as you will travel with it, including wheels, handles, pockets and anything that sticks out.',
   },
   {
     n: '2',
     bg: '#e3f5f2',
     color: '#0f766e',
-    title: 'Enter Dimensions',
-    text: 'Input your luggage measurements into our size checker above. Switch between metric and imperial units as needed.',
+    title: 'Enter Your Bag Details',
+    text: 'Enter the measurements and weight above, then choose the baggage type and airlines you want to compare.',
   },
   {
     n: '3',
     bg: '#dcfce7',
     color: '#15803d',
-    title: 'Get Results',
-    text: 'Instantly see which airlines accept your luggage size and avoid unexpected fees at the airport.',
+    title: 'Compare Airline Results',
+    text: 'See which airline rules your bag meets and where size, weight, fare, route or aircraft restrictions need attention.',
   },
 ];
 
@@ -134,7 +134,7 @@ const FAQS = [
   },
   {
     question: 'Should I still check my airline before flying?',
-    answer: 'Yes. Baggage policies can change, and your ticket may contain a route- or fare-specific allowance. Use the checker for comparison, then confirm the allowance shown by the operating carrier before departure.',
+    answer: 'Yes. Baggage policies can change, and your ticket may contain a route- or fare-specific allowance. Use BaggageChecker for comparison, then confirm the allowance shown by the operating carrier before departure.',
   },
 ];
 
@@ -214,7 +214,7 @@ export default function DraftPage() {
 
         <section style={{ background: '#f7f8f9', padding: '60px 24px 64px', marginTop: 64 }}>
           <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-            <h2 style={{ margin: '0 0 28px', textAlign: 'center', fontSize: 'clamp(23px,3vw,28px)', fontWeight: 800, letterSpacing: '-.025em' }}>How to Use Our Carry-On Size Checker</h2>
+            <h2 style={{ margin: '0 0 28px', textAlign: 'center', fontSize: 'clamp(23px,3vw,28px)', fontWeight: 800, letterSpacing: '-.025em' }}>How to Check Your Carry-On</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,250px),1fr))', gap: 20 }}>
               {HOW_TO.map((item) => (
                 <div key={item.n} style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: '28px 22px', textAlign: 'center' }}>
@@ -238,7 +238,7 @@ export default function DraftPage() {
                 Overhead compartment sizes vary between aircraft models, and airlines must ensure all passengers&apos; bags fit safely. Weight restrictions help manage fuel costs and aircraft balance.
               </p>
               <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.8, color: '#57677c' }}>
-                Using our <a href="#checker">luggage size checker</a> before you travel helps you avoid unexpected fees and delays at check-in.
+                Checking your bag here before you travel helps you spot size or weight problems before you reach the airport.
               </p>
             </div>
 
