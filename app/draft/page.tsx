@@ -137,10 +137,10 @@ export default function DraftPage() {
         <section style={{ padding: '60px 24px 0', background: '#fff' }}>
           <div style={{ maxWidth: 1000, margin: '0 auto' }}>
             <h2 style={{ margin: '0 0 8px', textAlign: 'center', fontSize: 'clamp(23px,3vw,28px)', fontWeight: 800, letterSpacing: '-.025em' }}>
-              What we check
+              The Three Baggage Types, Explained
             </h2>
             <p style={{ margin: '0 auto 28px', maxWidth: 650, textAlign: 'center', fontSize: 13.5, lineHeight: 1.7, color: '#57677c' }}>
-              A single trip can involve three different baggage allowances. We keep them separate because each is measured, charged and enforced differently.
+              Airlines split what you travel with into three allowances. Each has its own size and weight limit, and the one you exceed decides what you pay.
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))', gap: 20 }}>
