@@ -1,0 +1,225 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Suspense } from 'react';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
+import { SizeCheckerClient } from '@/app/size-checker/SizeCheckerClient';
+import { AIRLINES, BAGGAGE_RULES_REVIEW_DATE } from '@/lib/airlines';
+
+export const metadata: Metadata = {
+  title: 'Draft – BaggageChecker Combined Experience',
+  description: 'Internal draft combining the strongest parts of the BaggageChecker home page and luggage size checker.',
+  robots: { index: false, follow: false },
+};
+
+const TRUST_POINTS = [
+  'Limits taken from each carrier’s own published policy',
+  'Route, fare and aircraft variants shown separately, not averaged',
+  'Free, no account, nothing to install',
+];
+
+const BAG_TYPES = [
+  {
+    title: 'Personal item',
+    text: 'The small bag that goes under the seat in front of you — handbag, laptop bag or small backpack. Usually free, but the exact allowance depends on the airline and fare.',
+    tint: '#e7effc',
+    color: '#2563eb',
+  },
+  {
+    title: 'Carry-on',
+    text: 'The cabin bag stored in the overhead bin. Airlines commonly enforce both dimensions and weight, especially on low-cost and regional flights.',
+    tint: '#e3f5f2',
+    color: '#0f766e',
+  },
+  {
+    title: 'Checked baggage',
+    text: 'The suitcase handed over at check-in. Allowances may use weight concept, piece concept or route-specific dimensional limits.',
+    tint: '#fdf1dc',
+    color: '#b98107',
+  },
+];
+
+const MEASURE_STEPS = [
+  'Pack the bag as you plan to travel with it.',
+  'Measure height from the floor to the highest point, including wheels and handles.',
+  'Measure width from side to side at the widest point.',
+  'Measure depth front to back, including external pockets and expandable sections.',
+  'Weigh the packed bag and compare both size and weight with the rule for your airline, route and fare.',
+];
+
+const FAQS = [
+  {
+    question: 'Do airlines include wheels and handles in baggage dimensions?',
+    answer: 'Yes. Measure the bag at its maximum external dimensions, including wheels, handles, feet, pockets and other protruding parts.',
+  },
+  {
+    question: 'Do airlines weigh carry-on luggage?',
+    answer: 'Many do. Enforcement varies by airline, airport and route, so a bag can meet the size limit and still fail the weight allowance.',
+  },
+  {
+    question: 'Why can the same airline show more than one baggage limit?',
+    answer: 'Rules can change by fare, cabin class, route, aircraft and whether the airline uses a weight or piece concept. BaggageChecker keeps meaningful variants separate instead of averaging them into one number.',
+  },
+  {
+    question: 'What happens if my bag is too large or too heavy?',
+    answer: 'The airline may charge an excess or gate-check fee, require the bag to travel in the hold, or ask you to repack it. The exact outcome depends on the carrier and fare.',
+  },
+  {
+    question: 'Should I still check my airline before flying?',
+    answer: 'Yes. Baggage policies can change, and your ticket may contain a route- or fare-specific allowance. Use the checker for comparison, then confirm the allowance shown by the operating carrier before departure.',
+  },
+];
+
+export default function DraftPage() {
+  return (
+    <div style={{ width: '100%', overflowX: 'hidden', background: '#fff' }}>
+      <Header />
+
+      <main>
+        <section style={{ background: '#f7f8f9', padding: '54px 24px 34px' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#e3f5f2', color: '#0f766e', border: '1px solid #c6ebe5', borderRadius: 999, padding: '6px 12px', fontSize: 12, fontWeight: 700 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fbbf47' }} />
+              {AIRLINES.length} airlines · reviewed {BAGGAGE_RULES_REVIEW_DATE}
+            </span>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,440px),1fr))', gap: 40, alignItems: 'end', marginTop: 18 }}>
+              <div>
+                <h1 style={{ margin: '0 0 14px', fontSize: 'clamp(36px,5vw,54px)', lineHeight: 1.04, fontWeight: 800, letterSpacing: '-.035em' }}>
+                  Will your bag fit?
+                </h1>
+                <p style={{ margin: '0 0 24px', maxWidth: 650, fontSize: 16, lineHeight: 1.65, color: '#57677c' }}>
+                  Enter your bag once, choose the baggage type and airlines you are flying with, and compare your dimensions and weight against the rules that actually apply.
+                </p>
+              </div>
+
+              <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 12 }}>
+                {TRUST_POINTS.map((point) => (
+                  <li key={point} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13.5, lineHeight: 1.55, color: '#3d4759' }}>
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" style={{ flex: 'none', marginTop: 2 }}>
+                      <path d="M4 12.5l5.5 5.5L20 6.5" />
+                    </svg>
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="checker" style={{ background: '#f7f8f9', padding: '0 24px 56px' }}>
+          <div style={{ maxWidth: 1340, margin: '0 auto' }}>
+            <Suspense fallback={<div style={{ minHeight: 520 }} />}>
+              <SizeCheckerClient />
+            </Suspense>
+          </div>
+        </section>
+
+        <section style={{ padding: '60px 24px 0', background: '#fff' }}>
+          <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+            <h2 style={{ margin: '0 0 8px', textAlign: 'center', fontSize: 'clamp(23px,3vw,28px)', fontWeight: 800, letterSpacing: '-.025em' }}>
+              What we check
+            </h2>
+            <p style={{ margin: '0 auto 28px', maxWidth: 650, textAlign: 'center', fontSize: 13.5, lineHeight: 1.7, color: '#57677c' }}>
+              A single trip can involve three different baggage allowances. We keep them separate because each is measured, charged and enforced differently.
+            </p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))', gap: 18 }}>
+              {BAG_TYPES.map((item, i) => (
+                <div key={item.title} style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 22, background: '#fff' }}>
+                  <span style={{ display: 'inline-flex', width: 32, height: 32, borderRadius: 9, alignItems: 'center', justifyContent: 'center', background: item.tint, color: item.color, fontSize: 13, fontWeight: 800, marginBottom: 16 }}>
+                    {i + 1}
+                  </span>
+                  <h3 style={{ margin: '0 0 7px', fontSize: 14.5, fontWeight: 800 }}>{item.title}</h3>
+                  <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.7, color: '#7a8798' }}>{item.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <p style={{ margin: '18px auto 0', maxWidth: 760, textAlign: 'center', fontSize: 11.5, lineHeight: 1.65, color: '#8494a8' }}>
+              Fare type, route and aircraft can change the allowance. Where a carrier publishes meaningful variants, the checker shows them separately.
+            </p>
+          </div>
+        </section>
+
+        <section style={{ padding: '64px 24px 0', background: '#fff' }}>
+          <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,360px),1fr))', gap: 34, alignItems: 'start' }}>
+            <div>
+              <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(22px,2.8vw,27px)', fontWeight: 800, letterSpacing: '-.025em' }}>
+                Measure your luggage correctly
+              </h2>
+              <p style={{ margin: '0 0 22px', fontSize: 13.5, lineHeight: 1.75, color: '#57677c' }}>
+                The most common checking error is measuring the suitcase shell but forgetting the parts that stick out. Airlines use the bag’s full external size.
+              </p>
+              <div style={{ display: 'grid', gap: 10 }}>
+                {MEASURE_STEPS.map((step, i) => (
+                  <div key={step} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, border: '1px solid #edf0f3', borderRadius: 11, padding: '13px 15px' }}>
+                    <span style={{ flex: 'none', display: 'flex', width: 24, height: 24, borderRadius: '50%', background: '#0d9488', color: '#fff', alignItems: 'center', justifyContent: 'center', fontSize: 11.5, fontWeight: 800 }}>{i + 1}</span>
+                    <span style={{ fontSize: 12.5, lineHeight: 1.6, color: '#3d4759' }}>{step}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gap: 18 }}>
+              <div style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 24, background: '#f8fafc' }}>
+                <h3 style={{ margin: '0 0 12px', fontSize: 15, fontWeight: 800 }}>Include these in the measurement</h3>
+                <div style={{ display: 'grid', gap: 9, fontSize: 12.5, color: '#57677c' }}>
+                  <span>✓ Wheels and feet</span>
+                  <span>✓ Top and side handles</span>
+                  <span>✓ External pockets when packed</span>
+                  <span>✓ Straps and protruding parts</span>
+                  <span>✓ Expanded sections if you will use them</span>
+                </div>
+              </div>
+
+              <div style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 24, background: '#fff' }}>
+                <h3 style={{ margin: '0 0 10px', fontSize: 15, fontWeight: 800 }}>Why airline rules differ</h3>
+                <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.75, color: '#57677c' }}>
+                  Aircraft storage, safety limits, fare structure and operating model all affect baggage rules. That is why the same suitcase can be accepted by one airline and rejected by another — or even have a different allowance on another route with the same carrier.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: '64px 24px 0', background: '#fff' }}>
+          <div style={{ maxWidth: 1000, margin: '0 auto', border: '1px solid #edf0f3', borderRadius: 14, padding: '26px 28px', display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: 250 }}>
+              <h2 style={{ margin: '0 0 8px', fontSize: 18, fontWeight: 800, letterSpacing: '-.02em' }}>Need the rule for one specific airline?</h2>
+              <p style={{ margin: 0, fontSize: 13, lineHeight: 1.7, color: '#57677c' }}>
+                Browse the airline directory for carrier-specific personal item, carry-on and checked baggage rules, including important route and fare exceptions.
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <Link href="/airlines" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '12px 18px', borderRadius: 9, background: '#fbbf47', color: '#3a2a05', fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>
+                Browse airlines
+              </Link>
+              <Link href="/luggage-guide" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '12px 18px', borderRadius: 9, border: '1px solid #e4eaf1', color: '#0f1c2e', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                Luggage guide
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: '64px 24px 72px', background: '#fff' }}>
+          <div style={{ maxWidth: 820, margin: '0 auto' }}>
+            <h2 style={{ margin: '0 0 24px', textAlign: 'center', fontSize: 'clamp(22px,2.8vw,27px)', fontWeight: 800, letterSpacing: '-.025em' }}>
+              Frequently Asked Questions
+            </h2>
+            {FAQS.map((item) => (
+              <details key={item.question} style={{ borderBottom: '1px solid #edf0f3' }}>
+                <summary style={{ listStyle: 'none', cursor: 'pointer', padding: '16px 4px', fontSize: 13.5, fontWeight: 700, color: '#0f1c2e' }}>
+                  {item.question}
+                </summary>
+                <p style={{ margin: 0, padding: '0 4px 18px', fontSize: 13, lineHeight: 1.7, color: '#5a6478' }}>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <Footer maxWidth={1200} gap={32} logoSize={24} logoIconSize={13} showWordmark copyrightSize={11} />
+    </div>
+  );
+}
