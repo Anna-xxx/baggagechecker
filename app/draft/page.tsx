@@ -58,6 +58,30 @@ const BAG_TYPES = [
   },
 ];
 
+const HOW_TO = [
+  {
+    n: '1',
+    bg: '#e0edff',
+    color: '#2563eb',
+    title: 'Measure Your Luggage',
+    text: 'Use a measuring tape to get exact dimensions of your suitcase including handles, wheels, and any protrusions.',
+  },
+  {
+    n: '2',
+    bg: '#e3f5f2',
+    color: '#0f766e',
+    title: 'Enter Dimensions',
+    text: 'Input your luggage measurements into our size checker above. Switch between metric and imperial units as needed.',
+  },
+  {
+    n: '3',
+    bg: '#dcfce7',
+    color: '#15803d',
+    title: 'Get Results',
+    text: 'Instantly see which airlines accept your luggage size and avoid unexpected fees at the airport.',
+  },
+];
+
 const MEASURE_STEPS = [
   'Pack the bag as you plan to travel with it.',
   'Measure height from the floor to the highest point, including wheels and handles.',
@@ -104,9 +128,7 @@ export default function DraftPage() {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,440px),1fr))', gap: 40, alignItems: 'end', marginTop: 18 }}>
               <div>
-                <h1 style={{ margin: '0 0 14px', fontSize: 'clamp(36px,5vw,54px)', lineHeight: 1.04, fontWeight: 800, letterSpacing: '-.035em' }}>
-                  Will your bag fit?
-                </h1>
+                <h1 style={{ margin: '0 0 14px', fontSize: 'clamp(36px,5vw,54px)', lineHeight: 1.04, fontWeight: 800, letterSpacing: '-.035em' }}>Will your bag fit?</h1>
                 <p style={{ margin: '0 0 24px', maxWidth: 650, fontSize: 16, lineHeight: 1.65, color: '#57677c' }}>
                   Enter your bag once, choose the baggage type and airlines you are flying with, and compare your dimensions and weight against the rules that actually apply.
                 </p>
@@ -136,9 +158,7 @@ export default function DraftPage() {
 
         <section style={{ padding: '60px 24px 0', background: '#fff' }}>
           <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-            <h2 style={{ margin: '0 0 8px', textAlign: 'center', fontSize: 'clamp(23px,3vw,28px)', fontWeight: 800, letterSpacing: '-.025em' }}>
-              The Three Baggage Types, Explained
-            </h2>
+            <h2 style={{ margin: '0 0 8px', textAlign: 'center', fontSize: 'clamp(23px,3vw,28px)', fontWeight: 800, letterSpacing: '-.025em' }}>The Three Baggage Types, Explained</h2>
             <p style={{ margin: '0 auto 28px', maxWidth: 650, textAlign: 'center', fontSize: 13.5, lineHeight: 1.7, color: '#57677c' }}>
               Airlines split what you travel with into three allowances. Each has its own size and weight limit, and the one you exceed decides what you pay.
             </p>
@@ -167,10 +187,23 @@ export default function DraftPage() {
           </div>
         </section>
 
+        <section style={{ background: '#f7f8f9', padding: '60px 24px 64px', marginTop: 64 }}>
+          <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+            <h2 style={{ margin: '0 0 28px', textAlign: 'center', fontSize: 'clamp(23px,3vw,28px)', fontWeight: 800, letterSpacing: '-.025em' }}>How to Use Our Carry-On Size Checker</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,250px),1fr))', gap: 20 }}>
+              {HOW_TO.map((item) => (
+                <div key={item.n} style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: '28px 22px', textAlign: 'center' }}>
+                  <span style={{ display: 'inline-flex', width: 36, height: 36, borderRadius: '50%', alignItems: 'center', justifyContent: 'center', background: item.bg, color: item.color, fontSize: 14, fontWeight: 800, marginBottom: 16 }}>{item.n}</span>
+                  <div style={{ fontSize: 14.5, fontWeight: 800, marginBottom: 10 }}>{item.title}</div>
+                  <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.7, color: '#7a8798' }}>{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section style={{ maxWidth: 1000, margin: '0 auto', padding: '64px 24px 0' }}>
-          <h2 style={{ margin: '0 0 28px', textAlign: 'center', fontSize: 'clamp(23px,3vw,28px)', fontWeight: 800, letterSpacing: '-.025em', lineHeight: 1.22 }}>
-            Why Airlines Have Different Luggage Rules
-          </h2>
+          <h2 style={{ margin: '0 0 28px', textAlign: 'center', fontSize: 'clamp(23px,3vw,28px)', fontWeight: 800, letterSpacing: '-.025em', lineHeight: 1.22 }}>Why Airlines Have Different Luggage Rules</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 36, alignItems: 'start' }}>
             <div>
               <p style={{ margin: '0 0 14px', fontSize: 13.5, lineHeight: 1.8, color: '#57677c' }}>
@@ -183,6 +216,7 @@ export default function DraftPage() {
                 Using our <a href="#checker">luggage size checker</a> before you travel helps you avoid unexpected fees and delays at check-in.
               </p>
             </div>
+
             <div className="grid-pair" style={{ gap: 14 }}>
               {[
                 { color: '#2563eb', title: 'Aircraft Limits', text: 'Overhead space varies by plane model', icon: <path d="M2 13l20-7-7 20-3-8z" /> },
@@ -205,9 +239,7 @@ export default function DraftPage() {
         <section style={{ padding: '64px 24px 0', background: '#fff' }}>
           <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,360px),1fr))', gap: 34, alignItems: 'start' }}>
             <div>
-              <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(22px,2.8vw,27px)', fontWeight: 800, letterSpacing: '-.025em' }}>
-                Measure your luggage correctly
-              </h2>
+              <h2 style={{ margin: '0 0 14px', fontSize: 'clamp(22px,2.8vw,27px)', fontWeight: 800, letterSpacing: '-.025em' }}>Measure your luggage correctly</h2>
               <p style={{ margin: '0 0 22px', fontSize: 13.5, lineHeight: 1.75, color: '#57677c' }}>
                 The most common checking error is measuring the suitcase shell but forgetting the parts that stick out. Airlines use the bag’s full external size.
               </p>
@@ -245,26 +277,18 @@ export default function DraftPage() {
               </p>
             </div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              <Link href="/airlines" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '12px 18px', borderRadius: 9, background: '#fbbf47', color: '#3a2a05', fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>
-                Browse airlines
-              </Link>
-              <Link href="/luggage-guide" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '12px 18px', borderRadius: 9, border: '1px solid #e4eaf1', color: '#0f1c2e', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-                Luggage guide
-              </Link>
+              <Link href="/airlines" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '12px 18px', borderRadius: 9, background: '#fbbf47', color: '#3a2a05', fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>Browse airlines</Link>
+              <Link href="/luggage-guide" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '12px 18px', borderRadius: 9, border: '1px solid #e4eaf1', color: '#0f1c2e', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>Luggage guide</Link>
             </div>
           </div>
         </section>
 
         <section style={{ padding: '64px 24px 72px', background: '#fff' }}>
           <div style={{ maxWidth: 820, margin: '0 auto' }}>
-            <h2 style={{ margin: '0 0 24px', textAlign: 'center', fontSize: 'clamp(22px,2.8vw,27px)', fontWeight: 800, letterSpacing: '-.025em' }}>
-              Frequently Asked Questions
-            </h2>
+            <h2 style={{ margin: '0 0 24px', textAlign: 'center', fontSize: 'clamp(22px,2.8vw,27px)', fontWeight: 800, letterSpacing: '-.025em' }}>Frequently Asked Questions</h2>
             {FAQS.map((item) => (
               <details key={item.question} style={{ borderBottom: '1px solid #edf0f3' }}>
-                <summary style={{ listStyle: 'none', cursor: 'pointer', padding: '16px 4px', fontSize: 13.5, fontWeight: 700, color: '#0f1c2e' }}>
-                  {item.question}
-                </summary>
+                <summary style={{ listStyle: 'none', cursor: 'pointer', padding: '16px 4px', fontSize: 13.5, fontWeight: 700, color: '#0f1c2e' }}>{item.question}</summary>
                 <p style={{ margin: 0, padding: '0 4px 18px', fontSize: 13, lineHeight: 1.7, color: '#5a6478' }}>{item.answer}</p>
               </details>
             ))}
