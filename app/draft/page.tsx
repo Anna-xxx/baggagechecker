@@ -255,13 +255,13 @@ export default function DraftPage() {
 
             <div style={{ display: 'grid', gap: 18 }}>
               <div style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 24, background: '#f8fafc' }}>
-                <h3 style={{ margin: '0 0 12px', fontSize: 15, fontWeight: 800 }}>Include these in the measurement</h3>
+                <h3 style={{ margin: '0 0 12px', fontSize: 15, fontWeight: 800 }}>Before you trust the result</h3>
                 <div style={{ display: 'grid', gap: 9, fontSize: 12.5, color: '#57677c' }}>
-                  <span>✓ Wheels and feet</span>
-                  <span>✓ Top and side handles</span>
-                  <span>✓ External pockets when packed</span>
-                  <span>✓ Straps and protruding parts</span>
-                  <span>✓ Expanded sections if you will use them</span>
+                  <span>✓ Check the operating airline, not only the airline that sold the ticket</span>
+                  <span>✓ Select the correct baggage type: personal item, carry-on or checked bag</span>
+                  <span>✓ Use the allowance for your fare and cabin class</span>
+                  <span>✓ Watch for route, aircraft and codeshare exceptions</span>
+                  <span>✓ Recheck the airline rule if your flight details change</span>
                 </div>
               </div>
             </div>
