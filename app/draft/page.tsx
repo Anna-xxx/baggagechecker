@@ -287,10 +287,12 @@ export default function DraftPage() {
                   </div>
                 </div>
                 <div style={{ display: 'grid', gap: 10 }}>
-                  {MEASURE_STEPS.map((step, i) => (
-                    <div key={step} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                      <span style={{ flex: 'none', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#e3f5f2', color: '#0f766e', fontSize: 11, fontWeight: 800 }}>{i + 1}</span>
-                      <span style={{ paddingTop: 2, fontSize: 12.5, lineHeight: 1.55, color: '#3d4759' }}>{step}</span>
+                  {MEASURE_STEPS.map((step) => (
+                    <div key={step} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 12.5, lineHeight: 1.55, color: '#3d4759' }}>
+                      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth={2.3} strokeLinecap="round" strokeLinejoin="round" style={{ flex: 'none', marginTop: 1 }}>
+                        <path d="M5 12.5l4 4L19 7" />
+                      </svg>
+                      <span>{step}</span>
                     </div>
                   ))}
                 </div>
