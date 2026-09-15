@@ -168,9 +168,11 @@ export default function DraftPage() {
         </section>
 
         <section style={{ maxWidth: 1000, margin: '0 auto', padding: '64px 24px 0' }}>
+          <h2 style={{ margin: '0 0 28px', textAlign: 'center', fontSize: 'clamp(23px,3vw,28px)', fontWeight: 800, letterSpacing: '-.025em', lineHeight: 1.22 }}>
+            Why Airlines Have Different Luggage Rules
+          </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap: 36, alignItems: 'start' }}>
             <div>
-              <h2 style={{ margin: '0 0 18px', fontSize: 'clamp(21px,2.6vw,26px)', fontWeight: 800, letterSpacing: '-.025em', lineHeight: 1.22 }}>Why Airlines Have Different Luggage Rules</h2>
               <p style={{ margin: '0 0 14px', fontSize: 13.5, lineHeight: 1.8, color: '#57677c' }}>
                 Each airline sets its own baggage restrictions based on aircraft type, business model, and operational efficiency. Low-cost carriers often have stricter size limits to maximize revenue and streamline boarding.
               </p>
