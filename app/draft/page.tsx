@@ -21,21 +21,40 @@ const TRUST_POINTS = [
 const BAG_TYPES = [
   {
     title: 'Personal item',
-    text: 'The small bag that goes under the seat in front of you — handbag, laptop bag or small backpack. Usually free, but the exact allowance depends on the airline and fare.',
+    text: 'The small bag that goes under the seat in front of you — handbag, laptop bag or small backpack. Usually free and rarely weighed.',
     tint: '#e7effc',
     color: '#2563eb',
+    icon: (
+      <>
+        <path d="M7 9a5 5 0 0 1 10 0v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" />
+        <path d="M10 9V7a2 2 0 0 1 4 0v2" />
+      </>
+    ),
   },
   {
     title: 'Carry-on',
-    text: 'The cabin bag stored in the overhead bin. Airlines commonly enforce both dimensions and weight, especially on low-cost and regional flights.',
+    text: 'The wheeled case you take into the cabin and store in the overhead bin. Sized at the gate, and weighed by many airlines.',
     tint: '#e3f5f2',
     color: '#0f766e',
+    icon: (
+      <>
+        <rect x="5" y="7" width="14" height="14" rx="2.5" />
+        <path d="M9.5 7V4.6A.6.6 0 0 1 10.1 4h3.8a.6.6 0 0 1 .6.6V7" />
+      </>
+    ),
   },
   {
     title: 'Checked baggage',
-    text: 'The suitcase handed over at check-in. Allowances may use weight concept, piece concept or route-specific dimensional limits.',
+    text: 'The large suitcase you hand over at the desk and collect at your destination. Charged by bag, with strict weight limits.',
     tint: '#fdf1dc',
     color: '#b98107',
+    icon: (
+      <>
+        <rect x="4" y="6" width="16" height="15" rx="2.5" />
+        <path d="M9 6V3.6A.6.6 0 0 1 9.6 3h4.8a.6.6 0 0 1 .6.6V6" />
+        <path d="M9.6 11v6M14.4 11v6" />
+      </>
+    ),
   },
 ];
 
@@ -124,14 +143,20 @@ export default function DraftPage() {
               A single trip can involve three different baggage allowances. We keep them separate because each is measured, charged and enforced differently.
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))', gap: 18 }}>
-              {BAG_TYPES.map((item, i) => (
-                <div key={item.title} style={{ border: '1px solid #edf0f3', borderRadius: 14, padding: 22, background: '#fff' }}>
-                  <span style={{ display: 'inline-flex', width: 32, height: 32, borderRadius: 9, alignItems: 'center', justifyContent: 'center', background: item.tint, color: item.color, fontSize: 13, fontWeight: 800, marginBottom: 16 }}>
-                    {i + 1}
-                  </span>
-                  <h3 style={{ margin: '0 0 7px', fontSize: 14.5, fontWeight: 800 }}>{item.title}</h3>
-                  <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.7, color: '#7a8798' }}>{item.text}</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))', gap: 20 }}>
+              {BAG_TYPES.map((item) => (
+                <div key={item.title} style={{ background: '#fff', border: '1px solid #edf0f3', borderRadius: 14, padding: 22 }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                    <span style={{ flex: 'none', display: 'flex', width: 32, height: 32, borderRadius: 9, background: item.tint, alignItems: 'center', justifyContent: 'center' }}>
+                      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.color} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
+                        {item.icon}
+                      </svg>
+                    </span>
+                    <div>
+                      <h3 style={{ margin: '0 0 5px', fontSize: 13.5, fontWeight: 800 }}>{item.title}</h3>
+                      <p style={{ margin: 0, fontSize: 12, lineHeight: 1.65, color: '#7a8798' }}>{item.text}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
