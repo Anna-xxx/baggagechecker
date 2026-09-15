@@ -6,11 +6,28 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   background: #f7f8f9;
   color: #0f1c2e;
   -webkit-font-smoothing: antialiased;
+}
+
+main,
+section,
+.grid-split,
+.grid-pair,
+.grid-trio,
+.grid-split > *,
+.grid-pair > *,
+.grid-trio > * {
+  min-width: 0;
 }
 
 a {
@@ -160,6 +177,39 @@ input[type='text']:focus {
 }
 
 @media (max-width: 619px) {
+  /* Keep the sticky header to one compact row of branding plus one horizontally
+     scrollable nav row. Safari otherwise wraps the nav links into an uneven third row,
+     while Chromium tends to squeeze them until labels jump. */
+  header > div {
+    padding: 10px 14px !important;
+    gap: 8px 12px !important;
+  }
+
+  header > div > div:first-child {
+    font-size: 20px !important;
+  }
+
+  header nav {
+    flex: 1 1 100% !important;
+    width: 100%;
+    margin-left: 0 !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  header nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  header nav a {
+    flex: 0 0 auto;
+    padding: 8px 10px !important;
+  }
+
   .field-value-compact {
     display: inline;
   }
@@ -171,6 +221,7 @@ input[type='text']:focus {
 
   .type-choice > button {
     flex: 1 1 0 !important;
+    min-width: 0 !important;
     flex-direction: column !important;
     align-items: center !important;
     text-align: center !important;
@@ -219,22 +270,60 @@ input[type='text']:focus {
   .field-value-compact {
     font-size: 12px !important;
   }
+
+  /* The Step 2 helper text has a desktop indent to line up with the numbered badge.
+     On a phone that simply steals useful width. */
+  #airlines > p {
+    margin-left: 0 !important;
+  }
+
+  /* Let the result summary breathe instead of forcing the bag dimensions onto the same
+     line as the verdict. Long imperial values were the main 320–390px overflow case. */
+  #result > div > div:first-child {
+    flex-wrap: wrap !important;
+  }
+
+  #result > div > div:first-child > span:last-child {
+    flex-basis: 100%;
+    margin-left: 42px !important;
+  }
 }
 
 /* On the narrowest phones still in use (360px and below) the three tiles leave about
    65px each, which "Personal item" cannot hold at the size above. Tightening the gap
    and the label buys the line back rather than letting it break in half. */
 @media (max-width: 380px) {
+  #checker,
+  #result,
+  #airlines {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .checker-inner {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
   .type-choice {
-    gap: 6px !important;
+    gap: 5px !important;
   }
 
   .type-choice > button {
-    padding: 10px 3px !important;
+    padding: 10px 2px !important;
   }
 
   .type-choice .type-title {
-    font-size: 10px !important;
+    font-size: 9.5px !important;
+  }
+
+  header nav {
+    gap: 2px !important;
+  }
+
+  header nav a {
+    padding: 7px 9px !important;
+    font-size: 12px !important;
   }
 }
 
